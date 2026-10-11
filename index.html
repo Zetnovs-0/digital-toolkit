@@ -1,2537 +1,1180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Digital Toolkit 1.1 — Build Your Setup</title>
+<title>Digital Toolkit</title>
 <style>
-  :root {
-    --bg: #0a0c10; --bg-soft: #12151c; --card: #171b24; --card-hover: #1e232e;
-    --border: #262c38; --text: #e4e8f0; --muted: #7d8598;
-    --accent: #5c7cfa; --accent-2: #9775fa;
-    --shadow: 0 8px 24px rgba(0,0,0,.45); --radius: 14px;
-    --c1: #5c7cfa; --c2: #9775fa;
-  }
-  html[data-theme="light"] {
-    --bg: #f2f4f8; --bg-soft: #ffffff; --card: #ffffff; --card-hover: #eef1f7;
-    --border: #dde2ec; --text: #1a1f2b; --muted: #5b6478;
-    --shadow: 0 6px 20px rgba(20,30,60,.07);
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-    line-height: 1.5; min-height: 100vh; transition: background .25s, color .25s;
-    overflow-x: hidden;
-  }
-  #dotGrid { position: fixed; inset: 0; z-index: -2; pointer-events: none; width: 100%; height: 100%; }
-
-  header.site-header { max-width: 1180px; margin: 0 auto; padding: 28px 24px 4px; position: relative; z-index: 10; }
-  .header-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-  h1 {
-    font-size: clamp(1.5rem, 3.2vw, 2rem); margin: 0;
-    background: linear-gradient(90deg, #5c7cfa, #9775fa, #f06595, #5c7cfa);
-    background-size: 300% auto; -webkit-background-clip: text; background-clip: text;
-    color: transparent; font-weight: 800; letter-spacing: -0.02em;
-    animation: shimmer 10s linear infinite; cursor: pointer;
-  }
-  @keyframes shimmer { to { background-position: 300% center; } }
-  .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-
-  .setup-badge {
-    background: var(--card); border: 1px solid var(--border); color: var(--text);
-    padding: 0 12px; height: 38px; border-radius: 11px;
-    display: inline-flex; align-items: center; gap: 8px;
-    cursor: pointer; font-family: inherit; font-size: .82rem; font-weight: 600;
-    transition: all .15s;
-  }
-  .setup-badge:hover { border-color: var(--accent); background: var(--card-hover); }
-  .setup-badge .sb-icon { font-size: 1rem; }
-  .setup-badge .sb-swap { color: var(--muted); font-size: .72rem; font-weight: 500; }
-
-  .icon-btn {
-    background: var(--card); border: 1px solid var(--border); color: var(--text);
-    width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
-    cursor: pointer; transition: background .2s, transform .1s; flex-shrink: 0;
-  }
-  .icon-btn:hover { background: var(--card-hover); }
-  .icon-btn:active { transform: scale(.95); }
-  .icon-btn svg { width: 18px; height: 18px; }
-  .icon-sun { display: none; }
-  html[data-theme="light"] .icon-sun { display: block; }
-  html[data-theme="light"] .icon-moon { display: none; }
-
-  .toolbar { max-width: 1180px; margin: 14px auto 0; padding: 0 24px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
-  .search {
-    flex: 1; min-width: 220px; display: flex; align-items: center; gap: 10px;
-    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-    padding: 10px 14px; transition: border-color .2s, box-shadow .2s;
-  }
-  .search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92,124,250,.15); }
-  .search svg { width: 18px; height: 18px; color: var(--muted); flex-shrink: 0; }
-  .search input {
-    flex: 1; background: transparent; border: none; outline: none;
-    color: var(--text); font-size: .95rem; font-family: inherit;
-  }
-  .search input::placeholder { color: var(--muted); }
-  .stats { color: var(--muted); font-size: .85rem; white-space: nowrap; }
-
-  main { max-width: 1180px; margin: 0 auto; padding: 20px 24px 80px; position: relative; z-index: 1; }
-
-  /* WELCOME */
-  .welcome-wrap { max-width: 720px; margin: 60px auto 0; padding: 0 24px; text-align: center; animation: enterUp .8s cubic-bezier(.2,.7,.3,1.2); }
-  @keyframes enterUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-  .welcome-eyebrow {
-    display: inline-block; font-size: .75rem; font-weight: 700;
-    letter-spacing: .14em; text-transform: uppercase;
-    color: var(--accent); padding: 5px 14px; border-radius: 999px;
-    background: rgba(92,124,250,.1); border: 1px solid rgba(92,124,250,.28);
-    margin-bottom: 18px;
-  }
-  .welcome-wrap h2 { font-size: clamp(2rem, 5.5vw, 3.4rem); margin: 0 0 16px; font-weight: 800; letter-spacing: -.035em; line-height: 1.05; }
-  .welcome-wrap h2 .grad { background: linear-gradient(120deg, #5c7cfa, #9775fa 55%, #f06595); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .welcome-wrap p { color: var(--muted); font-size: 1.1rem; margin: 0 auto 30px; max-width: 52ch; }
-  .welcome-steps { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; margin-bottom: 36px; }
-  .welcome-step { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: .82rem; color: var(--muted); min-width: 90px; }
-  .welcome-step .n {
-    width: 42px; height: 42px; border-radius: 12px;
-    background: linear-gradient(135deg, var(--c1), var(--c2));
-    display: grid; place-items: center; color: #fff;
-    font-weight: 800; font-size: 1rem;
-    box-shadow: 0 8px 20px -6px var(--c1);
-  }
-  .welcome-step .l { font-weight: 600; color: var(--text); font-size: .88rem; }
-  .welcome-cta {
-    background: linear-gradient(135deg, #5c7cfa, #9775fa); color: #fff;
-    padding: 16px 40px; border-radius: 14px; border: none; cursor: pointer;
-    font-family: inherit; font-weight: 800; font-size: 1.05rem;
-    display: inline-flex; align-items: center; gap: 10px;
-    box-shadow: 0 12px 32px -6px #5c7cfa;
-    transition: transform .18s, box-shadow .25s;
-  }
-  .welcome-cta:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -6px #5c7cfa; }
-  .welcome-cta svg { width: 18px; height: 18px; }
-  .welcome-hint { color: var(--muted); font-size: .82rem; margin-top: 18px; }
-
-  /* QUIZ */
-  .quiz-wrap { max-width: 720px; margin: 30px auto 0; padding: 0 24px; animation: enterUp .55s cubic-bezier(.2,.7,.3,1.2); }
-  .quiz-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-  .quiz-progress .bar-track { flex: 1; height: 6px; border-radius: 999px; background: var(--border); overflow: hidden; }
-  .quiz-progress .bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--c1), var(--c2)); transition: width .4s cubic-bezier(.2,.7,.3,1); }
-  .quiz-progress .txt { font-size: .78rem; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
-
-  .quiz-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 22px; padding: 32px 30px;
-    box-shadow: var(--shadow); position: relative; overflow: hidden;
-  }
-  .quiz-card::before {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(90% 60% at 50% -20%, var(--c1), transparent 60%);
-    opacity: .12;
-  }
-  .quiz-eyebrow {
-    font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
-    font-weight: 800; color: var(--c1); position: relative; z-index: 1;
-    margin-bottom: 10px;
-  }
-  .quiz-q { font-size: clamp(1.3rem, 3.2vw, 1.75rem); font-weight: 800; margin: 0 0 6px; position: relative; z-index: 1; letter-spacing: -.02em; line-height: 1.2; }
-  .quiz-sub { color: var(--muted); margin: 0 0 24px; position: relative; z-index: 1; font-size: .95rem; }
-  .quiz-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; position: relative; z-index: 1; }
-  .quiz-opt {
-    background: var(--bg-soft); border: 1px solid var(--border);
-    color: var(--text); padding: 18px 16px; border-radius: 14px;
-    cursor: pointer; font-family: inherit; font-size: .95rem; font-weight: 600;
-    display: flex; align-items: flex-start; gap: 12px;
-    transition: all .18s; text-align: left;
-  }
-  .quiz-opt .b-emoji { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
-  .quiz-opt .b-text { display: flex; flex-direction: column; gap: 2px; }
-  .quiz-opt .b-label { font-weight: 700; font-size: .95rem; }
-  .quiz-opt .b-hint { font-weight: 400; color: var(--muted); font-size: .78rem; line-height: 1.4; }
-  .quiz-opt:hover { transform: translateY(-2px); border-color: var(--c1); background: var(--card-hover); box-shadow: 0 10px 24px rgba(0,0,0,.25); }
-  .quiz-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; position: relative; z-index: 1; }
-
-  /* QUICK PICK */
-  .quick-pick {
-    margin-top: 22px; padding: 20px 18px;
-    background: var(--bg-soft); border: 1px dashed var(--border);
-    border-radius: 16px; position: relative; z-index: 1;
-  }
-  .quick-pick-label { font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; text-align: center; }
-  .quick-pick-group { margin-bottom: 16px; }
-  .quick-pick-group:last-of-type { margin-bottom: 0; }
-  .quick-pick-group-label {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-size: .68rem; font-weight: 800; letter-spacing: .1em;
-    text-transform: uppercase; color: var(--muted);
-    margin-bottom: 9px;
-  }
-  .quick-pick-group-label::before,
-  .quick-pick-group-label::after {
-    content: ""; height: 1px; width: 22px;
-    background: var(--border);
-  }
-  .quick-pick-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-  .quick-chip {
-    background: var(--card); border: 1px solid var(--border); color: var(--text);
-    padding: 9px 15px; border-radius: 11px; cursor: pointer;
-    font-family: inherit; font-size: .88rem; font-weight: 600;
-    display: inline-flex; align-items: center; gap: 7px;
-    transition: all .15s; position: relative;
-  }
-  .quick-chip:hover { border-color: var(--c1); background: var(--card-hover); transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.22); }
-  .quick-chip:active { transform: translateY(0) scale(.97); }
-  .quick-chip .qc-emoji { font-size: 1.05rem; line-height: 1; }
-  .quick-chip.selected {
-    border-color: var(--c1);
-    background: linear-gradient(135deg, rgba(92,124,250,.15), rgba(151,117,250,.15));
-    box-shadow: 0 0 0 2px var(--c1) inset;
-  }
-  .quick-chip.selected::after {
-    content: "✓"; position: absolute; top: -7px; right: -7px;
-    width: 18px; height: 18px; border-radius: 50%;
-    background: var(--c1); color: #fff;
-    display: grid; place-items: center;
-    font-size: .7rem; font-weight: 900;
-    box-shadow: 0 2px 6px rgba(0,0,0,.35);
-  }
-  .quick-pick-actions {
-    display: flex; justify-content: center; gap: 10px; margin-top: 16px;
+  /* ============ THEME ============ */
+  :root{
+    --bg:#0b0d12;
+    --panel:#141822;
+    --panel-2:#1b2130;
+    --line:#252c3d;
+    --text:#e9edf7;
+    --muted:#8992a8;
+    --accent:#5c7cfa;
+    --accent-soft:rgba(92,124,250,.14);
+    --ok:#34d399;
+    --mac:#f472b6;
+    --win:#38bdf8;
+    --lin:#fbbf24;
+    --radius:16px;
+    --tap:110ms;
   }
 
-  .btn-secondary {
-    background: transparent; border: 1px solid var(--border); color: var(--muted);
-    padding: 11px 20px; border-radius: 11px; cursor: pointer;
-    font-family: inherit; font-size: .88rem; font-weight: 600;
-    display: inline-flex; align-items: center; gap: 6px;
-    transition: all .15s;
-  }
-  .btn-secondary:hover { border-color: var(--accent); color: var(--text); background: var(--card); }
-  .btn-secondary:disabled { opacity: .45; cursor: not-allowed; }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
 
-  /* RESULT */
-  .result-wrap { max-width: 720px; margin: 30px auto 0; padding: 0 24px; animation: enterUp .55s cubic-bezier(.2,.7,.3,1.2); }
-  .result-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 22px; padding: 34px 30px; box-shadow: var(--shadow);
-    position: relative; overflow: hidden;
-  }
-  .result-card::before {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(135deg, var(--c1), var(--c2)); opacity: .14;
-  }
-  .result-card::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(600px 300px at 110% -20%, var(--c2), transparent 60%);
-    opacity: .28;
-  }
-  .result-eyebrow { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 800; color: var(--c1); position: relative; z-index: 1; margin-bottom: 12px; }
-  .result-head { display: flex; gap: 18px; align-items: center; margin-bottom: 16px; position: relative; z-index: 1; }
-  .result-logo {
-    width: 72px; height: 72px; border-radius: 18px;
-    background: #fff; display: grid; place-items: center; padding: 10px;
-    flex-shrink: 0; overflow: hidden;
-    box-shadow: 0 8px 22px rgba(0,0,0,.25);
-  }
-  .result-logo img { width: 100%; height: 100%; object-fit: contain; }
-  .result-logo .letter { font-size: 1.8rem; font-weight: 800; color: #1a1f2b; }
-  .result-title { font-size: 1.6rem; font-weight: 800; margin: 0 0 4px; letter-spacing: -.02em; position: relative; z-index: 1; }
-  .result-desc { color: var(--muted); margin: 0; font-size: .95rem; position: relative; z-index: 1; max-width: 55ch; }
-  .result-why {
-    background: var(--bg-soft); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 16px; margin-top: 18px;
-    position: relative; z-index: 1;
-  }
-  .result-why h4 { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; font-weight: 700; }
-  .result-why ul { margin: 0; padding: 0; list-style: none; }
-  .result-why li { font-size: .88rem; padding: 3px 0 3px 16px; position: relative; color: var(--text); }
-  .result-why li::before { content: "✓"; position: absolute; left: 0; color: var(--c1); font-weight: 800; }
-  .result-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; position: relative; z-index: 1; }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--c1), var(--c2)); color: #fff;
-    padding: 13px 26px; border-radius: 12px; border: none; cursor: pointer;
-    font-family: inherit; font-weight: 700; font-size: .95rem;
-    display: inline-flex; align-items: center; gap: 8px;
-    box-shadow: 0 10px 26px -6px var(--c1);
-    transition: transform .15s, box-shadow .2s;
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 32px -6px var(--c1); }
-  .btn-primary svg { width: 16px; height: 16px; }
-
-  /* GRID */
-  .group-label {
-    font-size: .76rem; font-weight: 800; text-transform: uppercase;
-    letter-spacing: .12em; color: var(--muted);
-    margin: 30px 0 12px; display: flex; align-items: center; gap: 10px;
-  }
-  .group-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
-  .group-label:first-child { margin-top: 8px; }
-
-  .scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-  .scenario-card {
-    position: relative; overflow: hidden;
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 18px; padding: 20px 20px 18px;
-    cursor: pointer; text-align: left; font-family: inherit; color: var(--text);
-    display: flex; flex-direction: column; min-height: 190px;
-    transition: transform .28s cubic-bezier(.2,.7,.3,1.2), border-color .25s, box-shadow .3s;
-    box-shadow: 0 4px 12px rgba(0,0,0,.15);
-    opacity: 0; animation: cardIn .5s ease forwards;
-  }
-  .scenario-card:nth-child(1) { animation-delay: .02s; }
-  .scenario-card:nth-child(2) { animation-delay: .06s; }
-  .scenario-card:nth-child(3) { animation-delay: .1s; }
-  .scenario-card:nth-child(4) { animation-delay: .14s; }
-  .scenario-card:nth-child(5) { animation-delay: .18s; }
-  .scenario-card:nth-child(6) { animation-delay: .22s; }
-  .scenario-card:nth-child(7) { animation-delay: .26s; }
-  .scenario-card:nth-child(8) { animation-delay: .3s; }
-  @keyframes cardIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-  .scenario-card::before {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(120% 90% at 100% 0%, var(--c1) 0%, transparent 55%),
-                radial-gradient(120% 90% at 0% 100%, var(--c2) 0%, transparent 55%);
-    opacity: .14; transition: opacity .3s;
-  }
-  .scenario-card:hover::before { opacity: .3; }
-  .scenario-card:hover { transform: translateY(-5px); border-color: var(--c1); box-shadow: 0 18px 40px rgba(0,0,0,.4), 0 0 0 1px var(--c1) inset; }
-  .scenario-card .pattern {
-    position: absolute; inset: 0; pointer-events: none;
-    opacity: .5; color: #fff;
-    transition: opacity .3s, transform .6s cubic-bezier(.2,.7,.3,1);
-  }
-  .scenario-card:hover .pattern { opacity: .85; transform: scale(1.08); }
-  .scenario-card .pattern svg { width: 100%; height: 100%; display: block; }
-  .scenario-card .icon-wrap {
-    position: relative; z-index: 1;
-    width: 46px; height: 46px; border-radius: 13px;
-    background: linear-gradient(135deg, var(--c1), var(--c2));
-    display: grid; place-items: center; color: #fff;
-    box-shadow: 0 8px 20px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.08) inset;
-    margin-bottom: auto;
-    transition: transform .3s, box-shadow .3s;
-  }
-  .scenario-card:hover .icon-wrap { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 26px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.15) inset; }
-  .scenario-card .icon-wrap svg { width: 24px; height: 24px; }
-  .scenario-card .title { position: relative; z-index: 1; font-weight: 800; font-size: 1.15rem; letter-spacing: -.01em; margin-top: 18px; }
-  .scenario-card .desc { position: relative; z-index: 1; font-size: .83rem; color: var(--muted); line-height: 1.4; margin-top: 4px; }
-  .scenario-card .count { position: relative; z-index: 1; margin-top: 14px; font-size: .76rem; font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: 6px; }
-  .scenario-card .count strong { color: var(--text); font-weight: 800; }
-  .scenario-card .count .arrow { margin-left: auto; color: var(--c1); transition: transform .25s; }
-  .scenario-card:hover .count .arrow { transform: translateX(4px); }
-
-  .show-all-wrap { display: flex; justify-content: center; margin: 34px 0 10px; }
-  .show-all-btn {
-    background: var(--card); border: 1px solid var(--border); color: var(--text);
-    padding: 14px 32px; border-radius: 14px; cursor: pointer;
-    font-family: inherit; font-size: 1rem; font-weight: 700;
-    display: inline-flex; align-items: center; gap: 10px;
-    transition: all .18s; box-shadow: var(--shadow);
-  }
-  .show-all-btn:hover { border-color: var(--accent); background: var(--card-hover); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,.3); }
-
-  .breadcrumb { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
-  .back-btn {
-    background: var(--card); border: 1px solid var(--border); color: var(--text);
-    padding: 7px 14px; border-radius: 10px; cursor: pointer;
-    font-family: inherit; font-size: .88rem;
-    display: inline-flex; align-items: center; gap: 6px; transition: all .15s;
-  }
-  .back-btn:hover { border-color: var(--c1); background: var(--card-hover); transform: translateX(-2px); }
-  .breadcrumb .current { color: var(--muted); font-size: .9rem; }
-  .breadcrumb .current strong { color: var(--text); font-weight: 700; }
-
-  .scenario-banner {
-    position: relative; overflow: hidden;
-    background: var(--card); border: 1px solid var(--border);
-    padding: 26px; border-radius: 18px; margin-bottom: 22px;
-    box-shadow: var(--shadow);
-  }
-  .scenario-banner::before {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(135deg, var(--c1), var(--c2)); opacity: .18;
-  }
-  .scenario-banner::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(500px 300px at 100% 100%, var(--c2), transparent 60%);
-    opacity: .25;
-  }
-  .scenario-banner h2 {
-    position: relative; z-index: 1;
-    margin: 0 0 4px; font-size: 1.7rem; display: flex; align-items: center; gap: 12px;
-    font-weight: 800; letter-spacing: -.015em;
-  }
-  .scenario-banner h2 .ic {
-    width: 40px; height: 40px; border-radius: 11px;
-    background: linear-gradient(135deg, var(--c1), var(--c2));
-    display: grid; place-items: center; color: #fff;
-    box-shadow: 0 6px 16px rgba(0,0,0,.3);
-  }
-  .scenario-banner h2 .ic svg { width: 22px; height: 22px; }
-  .scenario-banner p { position: relative; z-index: 1; margin: 0; opacity: .9; font-size: .95rem; }
-
-  /* Platform-split columns */
-  .columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; align-items: start; }
-  .column {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 14px; padding: 12px;
-    display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
-  }
-  .column-header {
-    display: flex; align-items: center; justify-content: space-between; gap: 8px;
-    padding: 9px 14px; border-radius: 10px;
-    background: linear-gradient(135deg, var(--c1), var(--c2));
-    color: #fff; font-weight: 700; font-size: .88rem;
-  }
-  .column-header .label { display: flex; align-items: center; gap: 8px; }
-  .column-header .count { background: rgba(255,255,255,.2); padding: 1px 8px; border-radius: 999px; font-size: .72rem; font-weight: 800; }
-
-  .sub-label {
-    font-size: .68rem; font-weight: 800; text-transform: uppercase;
-    letter-spacing: .1em; color: var(--muted);
-    display: flex; align-items: center; gap: 6px;
-    padding: 6px 2px 0;
-  }
-  .sub-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
-
-  .card {
-    background: var(--bg-soft); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px;
-    display: flex; gap: 12px; align-items: flex-start;
-    text-decoration: none; color: inherit;
-    transition: transform .15s, border-color .2s, background .2s, box-shadow .2s;
-    position: relative; overflow: hidden; cursor: pointer;
-    font-family: inherit; text-align: left;
-  }
-  .card::after {
-    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-    background: linear-gradient(180deg, var(--c1), var(--c2)); opacity: .85;
-  }
-  .card:hover { transform: translateY(-2px); border-color: var(--c1); background: var(--card-hover); box-shadow: 0 6px 18px rgba(0,0,0,.2), 0 0 0 1px var(--c1) inset; }
-  .card .logo {
-    width: 40px; height: 40px; border-radius: 10px;
-    display: grid; place-items: center; flex-shrink: 0; overflow: hidden;
-    font-weight: 800; font-size: 1.05rem; color: #fff;
-    background: linear-gradient(135deg, var(--c1), var(--c2));
-    border: 1px solid rgba(255,255,255,.08);
-  }
-  .card .logo img { width: 100%; height: 100%; object-fit: contain; padding: 6px; background: #f6f7fb; border-radius: 9px; }
-  html[data-theme="dark"] .card .logo img { background: #eef1f7; }
-  .card .logo .letter { color: #fff; }
-  .card .body { flex: 1; min-width: 0; }
-  .card .name { font-weight: 700; font-size: .95rem; margin: 0 0 4px; display: flex; align-items: center; gap: 6px; }
-  .card .name .ext { color: var(--muted); font-size: .78rem; opacity: 0; transition: opacity .15s; }
-  .card:hover .name .ext { opacity: 1; }
-  .card .desc { color: var(--muted); font-size: .84rem; margin: 0; line-height: 1.45; }
-  .card .pill-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
-  .card .tag {
-    display: inline-block; font-size: .7rem; padding: 2px 8px;
-    border-radius: 999px; font-weight: 600;
-    background: rgba(92,124,250,.14); color: var(--accent);
-    border: 1px solid rgba(92,124,250,.28);
-  }
-  .card .tag-sub {
-    background: transparent; color: var(--muted);
-    border: 1px solid var(--border); font-weight: 500;
-  }
-  .badge {
-    display: inline-flex; align-items: center; gap: 3px;
-    font-size: .68rem; padding: 2px 8px; border-radius: 999px;
-    font-weight: 700; border: 1px solid;
-  }
-  .badge-green  { color:#22c55e; border-color:rgba(34,197,94,.4);  background:rgba(34,197,94,.12); }
-  .badge-red    { color:#ef4444; border-color:rgba(239,68,68,.4);  background:rgba(239,68,68,.12); }
-  .badge-blue   { color:#3b82f6; border-color:rgba(59,130,246,.4); background:rgba(59,130,246,.12); }
-  .badge-orange { color:#f97316; border-color:rgba(249,115,22,.4); background:rgba(249,115,22,.12); }
-
-  .item-hero {
-    position: relative; overflow: hidden;
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 18px; padding: 30px 26px; margin-bottom: 22px;
-    box-shadow: var(--shadow);
-  }
-  .item-hero::before {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(135deg, var(--c1), var(--c2)); opacity: .16;
-  }
-  .item-hero::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(600px 300px at 110% -20%, var(--c2), transparent 55%);
-    opacity: .3;
-  }
-  .item-hero .hero-top { position: relative; z-index: 1; display: flex; gap: 18px; align-items: center; margin-bottom: 14px; }
-  .item-hero .hero-logo {
-    width: 68px; height: 68px; border-radius: 16px;
-    background: #fff; display: grid; place-items: center;
-    flex-shrink: 0; overflow: hidden; padding: 10px;
-    box-shadow: 0 6px 16px rgba(0,0,0,.25);
-    font-weight: 800; font-size: 1.8rem; color: #1a1f2b;
-  }
-  .item-hero .hero-logo img { width: 100%; height: 100%; object-fit: contain; }
-  .item-hero h2 { position: relative; z-index: 1; margin: 0 0 4px; font-size: 1.7rem; font-weight: 800; letter-spacing: -.015em; }
-  .item-hero .hero-desc { position: relative; z-index: 1; margin: 0; opacity: .9; font-size: .98rem; max-width: 65ch; }
-  .item-hero .hero-actions { position: relative; z-index: 1; display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
-  .item-hero .btn {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: linear-gradient(135deg, var(--c1), var(--c2)); color: #fff;
-    padding: 11px 20px; border-radius: 10px;
-    font-weight: 700; font-size: .92rem;
-    text-decoration: none; border: none; cursor: pointer; font-family: inherit;
-    transition: transform .15s, box-shadow .2s;
-    box-shadow: 0 6px 18px rgba(0,0,0,.35);
-  }
-  .item-hero .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.45); }
-
-  .section-title { display: flex; align-items: center; gap: 10px; font-size: 1.05rem; font-weight: 700; margin: 26px 0 14px; }
-  .section-title .line { flex: 1; height: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--c1), transparent); }
-
-  .ext-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
-  .ext-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px;
-    display: flex; gap: 12px; align-items: flex-start;
-    text-decoration: none; color: inherit;
-    transition: transform .15s, border-color .2s, background .2s, box-shadow .2s;
-    position: relative; overflow: hidden;
-  }
-  .ext-card::before {
-    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-    background: linear-gradient(180deg, var(--c1), var(--c2));
-  }
-  .ext-card:hover { transform: translateY(-2px); border-color: var(--c1); background: var(--card-hover); box-shadow: 0 6px 18px rgba(0,0,0,.2); }
-  .ext-card .logo {
-    width: 38px; height: 38px; border-radius: 9px;
-    background: linear-gradient(135deg, var(--c1), var(--c2));
-    display: grid; place-items: center; flex-shrink: 0;
-    font-weight: 800; color: #fff; font-size: 1rem;
-    overflow: hidden; border: 1px solid rgba(255,255,255,.1);
-  }
-  .ext-card .logo img { width: 100%; height: 100%; object-fit: contain; padding: 6px; background: #eef1f7; border-radius: 8px; }
-  .ext-card .body { flex: 1; min-width: 0; }
-  .ext-card .name { font-weight: 700; font-size: .92rem; margin: 0 0 3px; display: flex; align-items: center; gap: 6px; }
-  .ext-card .name .ext { color: var(--muted); font-size: .75rem; opacity: 0; transition: opacity .15s; }
-  .ext-card:hover .name .ext { opacity: 1; }
-  .ext-card .desc { color: var(--muted); font-size: .82rem; margin: 0; line-height: 1.45; }
-
-  .empty { text-align: center; color: var(--muted); padding: 60px 20px; }
-  .empty .big { font-size: 2.4rem; margin-bottom: 8px; }
-
-  footer.site-footer {
-    max-width: 1180px; margin: 0 auto; padding: 30px 24px 50px;
-    color: var(--muted); font-size: .85rem; text-align: center;
-    border-top: 1px solid var(--border); position: relative; z-index: 1;
+  body{
+    background:radial-gradient(1100px 560px at 50% -12%, #16203a 0%, var(--bg) 62%) fixed;
+    color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:30px 18px 70px;
+    -webkit-tap-highlight-color:transparent;
+    overflow-x:hidden;
   }
 
-  @media (max-width: 640px) {
-    header.site-header { padding: 20px 16px 4px; }
-    main, .toolbar { padding-left: 16px; padding-right: 16px; }
-    .scenario-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-    .scenario-card { padding: 16px 14px; min-height: 160px; border-radius: 16px; }
-    .scenario-card .icon-wrap { width: 38px; height: 38px; border-radius: 11px; }
-    .scenario-card .icon-wrap svg { width: 20px; height: 20px; }
-    .scenario-card .title { font-size: 1rem; margin-top: 14px; }
-    .scenario-card .desc { display: none; }
-    .columns { grid-template-columns: 1fr; }
-    .quiz-options { grid-template-columns: 1fr; }
-    .item-hero { padding: 22px 18px; }
-    .item-hero .hero-logo { width: 54px; height: 54px; }
-    .item-hero h2 { font-size: 1.35rem; }
+  .hidden{display:none !important}
+
+  /* ============ HEADER ============ */
+  .brand{
+    text-align:center;
+    margin-bottom:38px;
+  }
+  .brand h1{
+    font-size:1.55rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    margin:0 0 6px;
+    font-weight:800;
+  }
+  .brand p{
+    margin:0;
+    color:var(--muted);
+    font-size:.85rem;
+  }
+
+  /* ============ STAGES ============ */
+  .stage{
+    width:min(1020px,100%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .fade-in{animation:stageIn 260ms ease both}
+  @keyframes stageIn{
+    from{opacity:0; transform:translateY(10px)}
+    to{opacity:1; transform:translateY(0)}
+  }
+
+  /* ============ OS SELECTION ============ */
+  .os-row{
+    display:grid;
+    grid-template-columns:1fr 1.22fr 1fr;
+    gap:18px;
+    align-items:center;
+    width:100%;
+  }
+
+  .os-card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    padding:36px 18px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    color:var(--text);
+    font:inherit;
+    font-weight:700;
+    font-size:1.02rem;
+    cursor:pointer;
+    transition:transform var(--tap) ease, border-color var(--tap) ease,
+               background var(--tap) ease, box-shadow var(--tap) ease;
+  }
+  .os-card .ico{font-size:2.1rem; line-height:1}
+  .os-card .sub{font-size:.72rem; color:var(--muted); font-weight:500}
+
+  .os-card:hover{
+    transform:translateY(-4px);
+    border-color:var(--accent);
+    background:var(--panel-2);
+    box-shadow:0 14px 40px rgba(0,0,0,.4);
+  }
+  .os-card:active{transform:scale(.965)}
+
+  .os-card--center{
+    padding:52px 18px;
+    border-color:rgba(92,124,250,.5);
+    background:linear-gradient(180deg,#1a2136,#141822);
+    box-shadow:0 0 0 1px rgba(92,124,250,.08), 0 18px 50px rgba(0,0,0,.35);
+  }
+  .os-card--center .ico{font-size:2.7rem}
+
+  /* ============ FLYING OS BADGE ============ */
+  .os-flyer{
+    position:fixed;
+    z-index:9998;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--panel-2);
+    border:1px solid var(--accent);
+    border-radius:18px;
+    color:var(--text);
+    font-weight:700;
+    font-size:22px;
+    pointer-events:none;
+    box-shadow:0 16px 50px rgba(0,0,0,.55);
+    transition:
+      transform 400ms cubic-bezier(.4,0,.2,1),
+      width 400ms cubic-bezier(.4,0,.2,1),
+      height 400ms cubic-bezier(.4,0,.2,1),
+      border-radius 400ms cubic-bezier(.4,0,.2,1),
+      font-size 400ms cubic-bezier(.4,0,.2,1);
+  }
+
+  /* ============ BROWSER STAGE ============ */
+  .os-badge-row{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    margin-bottom:34px;
+    min-height:46px;
+  }
+
+  .os-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 22px;
+    border-radius:999px;
+    background:var(--panel-2);
+    border:1px solid var(--accent);
+    font-weight:700;
+    font-size:.95rem;
+    white-space:nowrap;
+    box-shadow:0 8px 28px rgba(0,0,0,.35);
+  }
+
+  .link-btn{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font:inherit;
+    font-size:.78rem;
+    cursor:pointer;
+    padding:6px 8px;
+    border-radius:8px;
+    transition:color var(--tap) ease, background var(--tap) ease;
+  }
+  .link-btn:hover{color:var(--text); background:var(--panel-2)}
+  .link-btn:active{transform:scale(.95)}
+
+  .os-badge-row .link-btn{
+    position:absolute;
+    right:0;
+    top:50%;
+    transform:translateY(-50%);
+  }
+  .os-badge-row .link-btn:active{transform:translateY(-50%) scale(.95)}
+
+  .browser-columns{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:16px;
+    width:100%;
+    align-items:start;
+  }
+
+  .browser-col{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    min-height:100%;
+  }
+
+  .browser-col--center{
+    background:linear-gradient(180deg,#171d2c,#141822);
+    border-color:rgba(92,124,250,.28);
+  }
+
+  .col-title{
+    margin:0 0 6px;
+    font-size:.72rem;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:700;
+    text-align:center;
+  }
+
+  .browser-list{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    flex:1;
+  }
+
+  .browser-btn{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    padding:11px 14px;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:11px;
+    color:var(--text);
+    font:inherit;
+    font-size:.88rem;
+    text-align:left;
+    cursor:pointer;
+    transition:border-color var(--tap) ease, background var(--tap) ease,
+               transform var(--tap) ease, color var(--tap) ease;
+  }
+  .browser-btn:hover{border-color:var(--accent); background:#202739}
+  .browser-btn:active{transform:scale(.975)}
+
+  .browser-btn.selected{
+    border-color:var(--accent);
+    background:var(--accent-soft);
+    color:#fff;
+    font-weight:600;
+  }
+  .browser-btn .tick{
+    color:var(--accent);
+    font-weight:800;
+    font-size:.85rem;
+  }
+
+  .hidden-note{
+    font-size:.68rem;
+    color:var(--muted);
+    text-align:center;
+    padding:6px 0 2px;
+    opacity:.7;
+  }
+
+  /* ============ QUIZ BUTTON ============ */
+  .quiz-btn{
+    margin-top:10px;
+    padding:13px 14px;
+    border-radius:12px;
+    border:1px dashed rgba(92,124,250,.55);
+    background:rgba(92,124,250,.08);
+    color:#c3cdff;
+    font:inherit;
+    font-size:.88rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:background var(--tap) ease, transform var(--tap) ease,
+               border-color var(--tap) ease;
+  }
+  .quiz-btn:hover{background:rgba(92,124,250,.18); border-color:var(--accent)}
+  .quiz-btn:active{transform:scale(.97)}
+
+  /* ============ PROCEED / SHOW ALL ============ */
+  .proceed-btn{
+    margin-top:30px;
+    padding:15px 54px;
+    border-radius:999px;
+    border:none;
+    background:var(--accent);
+    color:#fff;
+    font:inherit;
+    font-size:1rem;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 12px 34px rgba(92,124,250,.32);
+    transition:transform var(--tap) ease, box-shadow var(--tap) ease,
+               background var(--tap) ease;
+  }
+  .proceed-btn:hover{background:#6b88ff; box-shadow:0 16px 44px rgba(92,124,250,.45)}
+  .proceed-btn:active{transform:scale(.96)}
+
+  .show-all-btn{
+    margin-top:auto;
+    padding:13px 40px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--muted);
+    font:inherit;
+    font-size:.86rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:color var(--tap) ease, border-color var(--tap) ease,
+               transform var(--tap) ease, background var(--tap) ease;
+  }
+  .show-all-btn:hover{color:var(--text); border-color:var(--accent); background:var(--panel)}
+  .show-all-btn:active{transform:scale(.96)}
+
+  #mainMenu{
+    gap:0;
+    padding-bottom:8px;
+  }
+  #mainMenu .show-all-btn{margin-top:56px}
+
+  /* ============ TOOLS VIEW ============ */
+  .tools-head{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    margin-bottom:34px;
+    min-height:46px;
+  }
+  .tools-head .link-btn{position:absolute; top:50%; transform:translateY(-50%)}
+  .tools-head .link-btn:active{transform:translateY(-50%) scale(.95)}
+  #backBtn{left:0}
+  #toggleAllBtn{right:0}
+
+  #toolsBody{width:100%; display:flex; flex-direction:column; gap:34px}
+
+  .cat-title{
+    font-size:.8rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 14px;
+    font-weight:800;
+  }
+
+  .tool-section{margin-bottom:18px}
+
+  .section-badge{
+    display:inline-block;
+    font-size:.7rem;
+    font-weight:700;
+    letter-spacing:.05em;
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:12px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--muted);
+  }
+  .section-badge.compatible{
+    color:var(--ok);
+    border-color:rgba(52,211,153,.35);
+    background:rgba(52,211,153,.08);
+  }
+  .section-badge.incompatible{
+    color:#a2abc4;
+    border-color:var(--line);
+    background:var(--panel);
+  }
+
+  .tool-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:13px;
+  }
+
+  .tool-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:15px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    transition:border-color var(--tap) ease, transform var(--tap) ease,
+               background var(--tap) ease;
+  }
+  .tool-card:hover{border-color:rgba(92,124,250,.55); transform:translateY(-2px)}
+  .tool-card.is-selected{
+    border-color:var(--accent);
+    background:linear-gradient(180deg, rgba(92,124,250,.12), var(--panel));
+  }
+
+  .tool-head{display:flex; align-items:center; justify-content:space-between; gap:8px}
+  .tool-name{font-weight:700; font-size:.95rem}
+  .tool-desc{margin:0; font-size:.78rem; color:var(--muted); line-height:1.45}
+
+  .pill--sel{
+    font-size:.62rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    font-weight:800;
+    color:var(--accent);
+    border:1px solid rgba(92,124,250,.4);
+    background:rgba(92,124,250,.12);
+    border-radius:999px;
+    padding:3px 8px;
+    white-space:nowrap;
+  }
+
+  .os-tags{display:flex; flex-wrap:wrap; gap:5px; margin-top:auto; padding-top:4px}
+  .os-tag{
+    font-size:.63rem;
+    font-weight:700;
+    padding:3px 8px;
+    border-radius:6px;
+    background:var(--panel-2);
+    color:var(--muted);
+    border-left:2px solid var(--line);
+  }
+  .os-tag--mac{border-left-color:var(--mac)}
+  .os-tag--windows{border-left-color:var(--win)}
+  .os-tag--linux{border-left-color:var(--lin)}
+
+  /* ============ MODAL ============ */
+  .modal{
+    position:fixed;
+    inset:0;
+    background:rgba(5,7,12,.72);
+    backdrop-filter:blur(4px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:10000;
+    animation:stageIn 160ms ease both;
+  }
+
+  .modal-card{
+    position:relative;
+    width:min(520px,100%);
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:30px 26px 26px;
+    box-shadow:0 30px 90px rgba(0,0,0,.6);
+  }
+
+  .modal-close{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:32px;
+    height:32px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--muted);
+    font:inherit;
+    cursor:pointer;
+    transition:color var(--tap) ease, border-color var(--tap) ease;
+  }
+  .modal-close:hover{color:var(--text); border-color:var(--accent)}
+
+  .quiz-progress{
+    font-size:.68rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:700;
+    margin-bottom:12px;
+  }
+  .quiz-q{
+    margin:0 0 20px;
+    font-size:1.12rem;
+    line-height:1.4;
+  }
+  .quiz-answers{display:flex; flex-direction:column; gap:9px}
+
+  .quiz-answer{
+    padding:13px 16px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--panel-2);
+    color:var(--text);
+    font:inherit;
+    font-size:.88rem;
+    text-align:left;
+    cursor:pointer;
+    transition:border-color var(--tap) ease, background var(--tap) ease,
+               transform var(--tap) ease;
+  }
+  .quiz-answer:hover{border-color:var(--accent); background:#202739}
+  .quiz-answer:active{transform:scale(.98)}
+
+  .quiz-result h3{margin:0 0 8px; font-size:1.3rem}
+  .quiz-result p{margin:0 0 22px; color:var(--muted); font-size:.88rem; line-height:1.5}
+  .quiz-result .proceed-btn{margin-top:0; padding:13px 34px; font-size:.92rem}
+
+  /* ============ INSTANT CLICK CIRCLE ============ */
+  .click-circle{
+    position:fixed;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(92,124,250,.6), rgba(92,124,250,.16));
+    transform:translate(-50%,-50%) scale(.2);
+    pointer-events:none;
+    z-index:99999;
+    animation:instantCircle 110ms ease-out forwards;
+  }
+  @keyframes instantCircle{
+    0%  {transform:translate(-50%,-50%) scale(.2); opacity:1}
+    70% {opacity:.85}
+    100%{transform:translate(-50%,-50%) scale(1.6); opacity:0}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important}
+    .click-circle{display:none}
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:760px){
+    .os-row{grid-template-columns:1fr; gap:12px}
+    .os-card, .os-card--center{padding:26px 16px}
+    .os-card--center{order:-1}
+    .browser-columns{grid-template-columns:1fr}
+    .os-badge-row .link-btn{
+      position:static;
+      transform:none;
+      margin-left:10px;
+    }
+    .os-badge-row .link-btn:active{transform:scale(.95)}
+    .tools-head{flex-direction:column; gap:10px}
+    .tools-head .link-btn{position:static; transform:none}
+    .tools-head .link-btn:active{transform:scale(.95)}
+    .proceed-btn{width:100%; padding:15px 0}
+    .show-all-btn{width:100%}
   }
 </style>
 </head>
 <body>
 
-<canvas id="dotGrid"></canvas>
+  <header class="brand">
+    <h1>Digital Toolkit</h1>
+    <p>Pick your system, pick your tools.</p>
+  </header>
 
-<header class="site-header">
-  <div class="header-top">
-    <h1 id="siteTitle">Digital Toolkit <span style="font-size:.55em;vertical-align:.45em;color:#9775fa;-webkit-text-fill-color:#9775fa;font-weight:700;letter-spacing:.04em;">1.1</span></h1>
-    <div class="header-actions">
-      <button class="setup-badge" id="osBadge" style="display:none">
-        <span class="sb-icon" id="osBadgeIcon">🪟</span>
-        <span id="osBadgeLabel">Windows</span>
-        <span class="sb-swap">change</span>
-      </button>
-      <button class="setup-badge" id="browserBadge" style="display:none">
-        <span class="sb-icon" id="browserBadgeIcon">🌐</span>
-        <span id="browserBadgeLabel">Zen</span>
-        <span class="sb-swap">change</span>
-      </button>
-      <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-      </button>
+  <!-- ================= MAIN MENU ================= -->
+  <main id="mainMenu" class="stage">
+
+    <!-- STEP 1: OS SELECTION -->
+    <section id="osStage" class="stage">
+      <div class="os-row">
+        <button class="os-card" data-os="mac">
+          <span class="ico">🍎</span>
+          <span>Mac OS</span>
+          <span class="sub">macOS &amp; above</span>
+        </button>
+
+        <button class="os-card os-card--center" data-os="windows">
+          <span class="ico">🪟</span>
+          <span>Windows</span>
+          <span class="sub">10 / 11</span>
+        </button>
+
+        <button class="os-card" data-os="linux">
+          <span class="ico">🐧</span>
+          <span>Linux</span>
+          <span class="sub">any distribution</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- STEP 2: BROWSER SELECTION -->
+    <section id="browserStage" class="stage hidden">
+      <div class="os-badge-row">
+        <div id="selectedOsBadge" class="os-badge">🪟 Windows</div>
+        <button id="changeOsBtn" class="link-btn">change</button>
+      </div>
+
+      <div class="browser-columns">
+        <!-- Firefox-based -->
+        <div class="browser-col">
+          <h3 class="col-title">Firefox-based</h3>
+          <div class="browser-list" data-engine="firefox"></div>
+        </div>
+
+        <!-- Others + Quiz -->
+        <div class="browser-col browser-col--center">
+          <h3 class="col-title">Others</h3>
+          <div class="browser-list" data-engine="other"></div>
+          <button id="takeQuizBtn" class="quiz-btn">✨ Take the quiz</button>
+        </div>
+
+        <!-- Chromium-based -->
+        <div class="browser-col">
+          <h3 class="col-title">Chromium-based</h3>
+          <div class="browser-list" data-engine="chromium"></div>
+        </div>
+      </div>
+
+      <button id="proceedBtn" class="proceed-btn">Proceed →</button>
+    </section>
+
+    <!-- ALWAYS VISIBLE -->
+    <button id="showAllBtn" class="show-all-btn">Show all tools</button>
+  </main>
+
+  <!-- ================= TOOLS VIEW ================= -->
+  <section id="toolsView" class="stage hidden">
+    <div class="tools-head">
+      <button id="backBtn" class="link-btn">← Back</button>
+      <div id="toolsBadge" class="os-badge">🪟 Windows</div>
+      <button id="toggleAllBtn" class="link-btn">Show all tools</button>
+    </div>
+    <div id="toolsBody"></div>
+  </section>
+
+  <!-- ================= QUIZ MODAL ================= -->
+  <div id="quizModal" class="modal hidden">
+    <div class="modal-card">
+      <button id="quizClose" class="modal-close" aria-label="Close">✕</button>
+      <div id="quizContent"></div>
     </div>
   </div>
-</header>
 
-<div class="toolbar" id="toolbar" style="display:none">
-  <label class="search">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-    <input id="searchInput" type="search" placeholder="Search tools…" autocomplete="off" />
-  </label>
-  <span class="stats" id="stats"></span>
-</div>
-
-<main id="content"></main>
-
-<footer class="site-footer">
-  <p>Single-file site. Your picks persist in localStorage — reset with the badges above.</p>
-</footer>
-
-<script src="logos/manifest.js"></script>
 <script>
-/* ============================================================
-   LOGO SYSTEM
-   ------------------------------------------------------------
-   Cascading logo resolution:
-     0. YOUR OWN logos  (files in /logos, mapped in logos/manifest.js)
-     1. Curated high-quality source (Simple Icons / official SVG)
-     2. Logo.dev  (best general source, uses your API token)
-     3. Unavatar  (aggregator fallback)
-     4. Google favicon @256 (last-ditch)
-     5. Styled letter avatar (never breaks)
-   To serve a logo yourself: drop a file into logos/ and map it in
-   logos/manifest.js (see logos/README.md). Bump "version" there
-   when you replace a file so browsers refetch it.
-   ============================================================ */
-const LOGO_DEV_TOKEN = "sk_CpdmWoi_SJKq3M-pc_5qvA";
-
-/* ---- Local logos (served from your /logos folder) ----
-   The mapping lives in logos/manifest.js — a plain <script> include,
-   so it loads even when index.html is opened directly from disk. */
-const LOCAL_LOGOS = window.LOCAL_LOGOS_MANIFEST?.logos || {};
-const LOCAL_LOGOS_VERSION = window.LOCAL_LOGOS_MANIFEST?.version || "";
-
-function localLogoFor(name) {
-  const file = LOCAL_LOGOS[name];
-  if (!file) return null;
-  const v = LOCAL_LOGOS_VERSION ? `?v=${encodeURIComponent(LOCAL_LOGOS_VERSION)}` : "";
-  return `logos/${file}${v}`;
-}
-
-/* Optional per-item overrides for tools whose URL domain isn't
-   the brand's real domain (or where we want a specific source). */
-const LOGO_OVERRIDES = {
-  "PowerToys":    { domain: "microsoft.com" },
-  "ShareX":       { domain: "getsharex.com" },
-  "balenaEtcher": { domain: "balena.io" },
-  "7-Zip":        { domain: "7-zip.org" },
-  "XMCL":         { domain: "xmcl.app" },
-  "Cobalt":       { domain: "cobalt.tools" },
-  "Hiddify":      { domain: "hiddify.com" },
-  "Radio Garden": { domain: "radio.garden" },
-  "Windy":        { domain: "windy.com" },
-  "TutaMail":     { domain: "tuta.com" },
-  "Organic Maps": { domain: "organicmaps.app" },
-  "Reverso":      { domain: "reverso.net" },
-  "Clonezilla":   { domain: "clonezilla.org" },
-  "Flameshot":    { domain: "flameshot.org" },
-  "DaVinci Resolve": { domain: "blackmagicdesign.com" },
-  "Audacity":     { domain: "audacityteam.org" },
-  "Falkon":       { domain: "falkon.org" },
-  "qutebrowser":  { domain: "qutebrowser.org" },
-  "Ladybird":     { domain: "ladybird.org" },
-  "Mullvad Browser": { domain: "mullvad.net" },
-  "Safari":       { domain: "apple.com" }
+/* =========================================================
+   DATA
+   ========================================================= */
+const OS_META = {
+  mac:     { label:'Mac OS',  icon:'🍎' },
+  windows: { label:'Windows', icon:'🪟' },
+  linux:   { label:'Linux',   icon:'🐧' }
 };
 
-function extractDomain(url) {
-  try {
-    const u = new URL(url);
-    return u.hostname.replace(/^www\./, "");
-  } catch (e) { return ""; }
+const OS_LABEL = {
+  mac:     '🍎 Mac',
+  windows: '🪟 Windows',
+  linux:   '🐧 Linux'
+};
+
+const BROWSERS = [
+  { name:'Firefox',        engine:'firefox',  os:['windows','mac','linux'] },
+  { name:'LibreWolf',      engine:'firefox',  os:['windows','mac','linux'] },
+  { name:'Mullvad Browser',engine:'firefox',  os:['windows','mac','linux'] },
+  { name:'Tor Browser',    engine:'firefox',  os:['windows','mac','linux'] },
+  { name:'Waterfox',       engine:'firefox',  os:['windows','mac','linux'] },
+
+  { name:'Brave',          engine:'other',    os:['windows','mac','linux'] },
+  { name:'Vivaldi',        engine:'other',    os:['windows','mac','linux'] },
+  { name:'Opera',          engine:'other',    os:['windows','mac','linux'] },
+  { name:'Arc',            engine:'other',    os:['windows','mac'] },
+  { name:'Safari',         engine:'other',    os:['mac'] },
+  { name:'GNOME Web',      engine:'other',    os:['linux'] },
+
+  { name:'Chrome',         engine:'chromium', os:['windows','mac','linux'] },
+  { name:'Edge',           engine:'chromium', os:['windows','mac','linux'] },
+  { name:'Chromium',       engine:'chromium', os:['windows','mac','linux'] }
+];
+
+const TOOL_CATEGORIES = [
+  {
+    name:'Browsers',
+    items:[
+      { name:'Firefox',   desc:'Open-source browser with strong privacy defaults.',      os:['windows','mac','linux'] },
+      { name:'Chrome',    desc:'Google\u2019s Chromium browser, widest extension support.', os:['windows','mac','linux'] },
+      { name:'Brave',     desc:'Chromium with built-in ad and tracker blocking.',       os:['windows','mac','linux'] },
+      { name:'Edge',      desc:'Microsoft\u2019s Chromium browser, deep Windows integration.', os:['windows','mac','linux'] },
+      { name:'Safari',    desc:'Apple\u2019s WebKit browser, best battery life on Mac.',  os:['mac'] },
+      { name:'GNOME Web', desc:'Lightweight WebKit browser for GNOME desktops.',        os:['linux'] }
+    ]
+  },
+  {
+    name:'Code editors',
+    items:[
+      { name:'VS Code',      desc:'Extensible editor with a huge extension ecosystem.', os:['windows','mac','linux'] },
+      { name:'Neovim',       desc:'Modal terminal editor, fast and scriptable.',       os:['windows','mac','linux'] },
+      { name:'Sublime Text', desc:'Fast native editor with a minimal footprint.',      os:['windows','mac','linux'] },
+      { name:'Notepad++',    desc:'Lightweight Windows editor with syntax highlighting.', os:['windows'] },
+      { name:'TextMate',     desc:'Native macOS editor with bundles and macros.',      os:['mac'] },
+      { name:'gedit',        desc:'Simple GNOME text editor for quick edits.',         os:['linux'] }
+    ]
+  },
+  {
+    name:'Terminals',
+    items:[
+      { name:'Windows Terminal', desc:'Tabbed terminal with GPU rendering.',            os:['windows'] },
+      { name:'iTerm2',           desc:'Feature-rich macOS terminal replacement.',       os:['mac'] },
+      { name:'Alacritty',        desc:'GPU-accelerated terminal, config-file driven.',  os:['windows','mac','linux'] },
+      { name:'Warp',             desc:'Modern terminal with AI command search.',        os:['windows','mac','linux'] },
+      { name:'GNOME Terminal',   desc:'Default terminal for GNOME-based distros.',      os:['linux'] },
+      { name:'Hyper',            desc:'Electron-based terminal with plugin themes.',    os:['windows','mac','linux'] }
+    ]
+  },
+  {
+    name:'Utilities',
+    items:[
+      { name:'7-Zip',       desc:'Archive manager with high compression ratios.',      os:['windows'] },
+      { name:'PowerToys',   desc:'Windows power-user tweaks and window management.',   os:['windows'] },
+      { name:'Rufus',       desc:'Bootable USB creator for Windows ISOs.',             os:['windows'] },
+      { name:'Homebrew',    desc:'Package manager for macOS and Linux.',               os:['mac','linux'] },
+      { name:'Rectangle',   desc:'Keyboard-driven window snapping for macOS.',         os:['mac'] },
+      { name:'balenaEtcher',desc:'Cross-platform image flasher for SD cards and USB.', os:['windows','mac','linux'] }
+    ]
+  }
+];
+
+const QUIZ = [
+  {
+    q:'How much do you want ads and trackers blocked out of the box?',
+    a:[
+      { t:'A lot — privacy first',        v:'firefox'  },
+      { t:'Some protection is nice',      v:'other'    },
+      { t:'I install extensions for that',v:'chromium' }
+    ]
+  },
+  {
+    q:'How important are Chrome Web Store extensions to you?',
+    a:[
+      { t:'Essential',              v:'chromium' },
+      { t:'Nice to have',           v:'other'    },
+      { t:'I barely use extensions',v:'firefox'  }
+    ]
+  },
+  {
+    q:'How do you feel about telemetry and data collection?',
+    a:[
+      { t:'I actively avoid it', v:'firefox'  },
+      { t:'Neutral',             v:'other'    },
+      { t:'I don\u2019t mind',   v:'chromium' }
+    ]
+  }
+];
+
+const QUIZ_RESULT = { firefox:'Firefox', other:'Brave', chromium:'Chromium' };
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const state = {
+  os: null,
+  browsers: new Set(),
+  showAll: false,
+  quizIndex: 0,
+  quizScore: { firefox:0, other:0, chromium:0 }
+};
+
+const STORE_KEY = 'dt.state.v2';
+
+function save(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      os: state.os,
+      browsers: [...state.browsers]
+    }));
+  }catch(e){ /* storage disabled — ignore */ }
 }
 
-/* Build the ordered list of candidate logo URLs for an item. */
-function logoSources(item) {
-  const sources = [];
-
-  // 0. Your own logo, mapped in logos/manifest.js — served from you.
-  const local = localLogoFor(item.name);
-  if (local) sources.push(local);
-
-  // Determine the domain to query logo services with.
-  const override = LOGO_OVERRIDES[item.name];
-  const domain = (override && override.domain) || extractDomain(item.url);
-
-  // 1. Curated high-quality logo (Simple Icons CDN, official SVG, etc.).
-  //    Skip Google favicon URLs — those are handled later as a fallback.
-  if (item.logo && !/google\.com\/s2\/favicons/.test(item.logo)) {
-    sources.push(item.logo);
-  }
-
-  // 2. Logo.dev — high quality, brand-accurate, cached globally.
-  if (domain) {
-    const url =
-      `https://img.logo.dev/${domain}` +
-      `?token=${LOGO_DEV_TOKEN}` +
-      `&size=128&format=png&retina=true&fallback=404`;
-    sources.push(url);
-  }
-
-  // 3. Unavatar — aggregates multiple upstream providers.
-  if (domain) {
-    sources.push(`https://unavatar.io/${domain}`);
-  }
-
-  // 4. Google favicon at 256px — reliable but lower quality.
-  if (domain) {
-    sources.push(`https://www.google.com/s2/favicons?domain=${domain}&sz=256`);
-  }
-
-  // 5. Whatever was in item.logo originally (might be a Google URL).
-  if (item.logo && !sources.includes(item.logo)) {
-    sources.push(item.logo);
-  }
-
-  // Deduplicate while preserving order.
-  return sources.filter((v, i, a) => v && a.indexOf(v) === i);
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    if(data.os && OS_META[data.os]) state.os = data.os;
+    if(Array.isArray(data.browsers)) state.browsers = new Set(data.browsers);
+  }catch(e){ /* ignore corrupt state */ }
 }
 
-/* Render an <img> with the full fallback chain embedded in a data attribute. */
-function logoHTML(item) {
-  const letter = escapeHTML((item.name[0] || "?").toUpperCase());
-  const sources = logoSources(item);
-  if (!sources.length) return `<span class="letter">${letter}</span>`;
-  const remaining = sources.slice(1);
-  return `<img src="${escapeHTML(sources[0])}" data-srcs='${escapeHTML(JSON.stringify(remaining))}' data-letter="${letter}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="window.logoFallback(this)">`;
+/* =========================================================
+   INSTANT CLICK CIRCLE
+   ========================================================= */
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+document.addEventListener('pointerdown', (e) => {
+  if(reduceMotion) return;
+  if(e.pointerType === 'mouse' && e.button !== 0) return;
+
+  const circle = document.createElement('span');
+  circle.className = 'click-circle';
+  circle.style.left = e.clientX + 'px';
+  circle.style.top  = e.clientY + 'px';
+  document.body.appendChild(circle);
+  setTimeout(() => circle.remove(), 130);
+}, { passive:true });
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = (sel) => document.querySelector(sel);
+
+function osBadgeText(os){
+  const m = OS_META[os];
+  return m ? `${m.icon} ${m.label}` : '🌐 All systems';
 }
 
-/* Called by <img onerror>. Advances to the next source, or falls back to a letter. */
-window.logoFallback = function (img) {
-  let queue = [];
-  try { queue = JSON.parse(img.dataset.srcs || "[]"); } catch (e) {}
-  if (queue.length) {
-    const next = queue.shift();
-    img.dataset.srcs = JSON.stringify(queue);
-    img.src = next;
+/* =========================================================
+   STEP 1 — OS SELECTION
+   ========================================================= */
+document.querySelectorAll('.os-card').forEach(card => {
+  card.addEventListener('click', () => chooseOS(card));
+});
+
+function chooseOS(card){
+  const os = card.dataset.os;
+  if(!OS_META[os]) return;
+
+  state.os = os;
+
+  // Drop any previously selected browser that isn't available on this OS
+  [...state.browsers].forEach(name => {
+    const b = BROWSERS.find(x => x.name === name);
+    if(b && !b.os.includes(os)) state.browsers.delete(name);
+  });
+  save();
+
+  const label = osBadgeText(os);
+  const badge = $('#selectedOsBadge');
+  const browserStage = $('#browserStage');
+  const osStage = $('#osStage');
+
+  // --- set badge content BEFORE measuring
+  badge.textContent = label;
+
+  // --- measure the target position (render invisibly, then restore)
+  browserStage.classList.remove('hidden');
+  browserStage.style.visibility = 'hidden';
+
+  const startRect = card.getBoundingClientRect();
+  const endRect   = badge.getBoundingClientRect();
+
+  browserStage.style.visibility = '';
+  browserStage.classList.add('hidden');
+
+  // --- create the flying clone
+  const flyer = document.createElement('div');
+  flyer.className = 'os-flyer';
+  flyer.textContent = label;
+  flyer.style.left   = startRect.left   + 'px';
+  flyer.style.top    = startRect.top    + 'px';
+  flyer.style.width  = startRect.width  + 'px';
+  flyer.style.height = startRect.height + 'px';
+  document.body.appendChild(flyer);
+
+  // --- animate to the badge position
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      flyer.style.transform    = `translate(${endRect.left - startRect.left}px, ${endRect.top - startRect.top}px)`;
+      flyer.style.width        = endRect.width  + 'px';
+      flyer.style.height       = endRect.height + 'px';
+      flyer.style.borderRadius = '999px';
+      flyer.style.fontSize     = '15px';
+    });
+  });
+
+  // --- swap stages once it lands
+  setTimeout(() => {
+    flyer.remove();
+    osStage.classList.add('hidden');
+
+    browserStage.classList.remove('hidden');
+    browserStage.classList.remove('fade-in');
+    void browserStage.offsetWidth;   // force reflow so the animation replays
+    browserStage.classList.add('fade-in');
+
+    renderBrowsers();
+  }, 420);
+}
+
+// Change system → back to OS selection
+$('#changeOsBtn').addEventListener('click', () => {
+  $('#browserStage').classList.add('hidden');
+  $('#osStage').classList.remove('hidden');
+  $('#osStage').classList.remove('fade-in');
+  void $('#osStage').offsetWidth;
+  $('#osStage').classList.add('fade-in');
+});
+
+/* =========================================================
+   STEP 2 — BROWSER SELECTION
+   ========================================================= */
+function renderBrowsers(){
+  ['firefox','other','chromium'].forEach(engine => {
+    const list = document.querySelector(`.browser-list[data-engine="${engine}"]`);
+    if(!list) return;
+    list.innerHTML = '';
+
+    const available = BROWSERS.filter(b =>
+      b.engine === engine && (!state.os || b.os.includes(state.os))
+    );
+    const hiddenCount = BROWSERS.filter(b =>
+      b.engine === engine && state.os && !b.os.includes(state.os)
+    ).length;
+
+    available.forEach(b => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'browser-btn' + (state.browsers.has(b.name) ? ' selected' : '');
+      btn.dataset.name = b.name;
+      btn.innerHTML = `<span>${b.name}</span>` +
+                      (state.browsers.has(b.name) ? '<span class="tick">✓</span>' : '');
+      btn.addEventListener('click', () => toggleBrowser(b.name, btn));
+      list.appendChild(btn);
+    });
+
+    if(hiddenCount > 0){
+      const note = document.createElement('div');
+      note.className = 'hidden-note';
+      note.textContent = `${hiddenCount} not available on ${OS_META[state.os].label}`;
+      list.appendChild(note);
+    }
+  });
+
+  updateProceed();
+}
+
+function toggleBrowser(name, btn){
+  const isOn = state.browsers.has(name);
+  if(isOn) state.browsers.delete(name);
+  else     state.browsers.add(name);
+  save();
+
+  const nowOn = !isOn;
+  btn.classList.toggle('selected', nowOn);
+
+  const existingTick = btn.querySelector('.tick');
+  if(nowOn && !existingTick){
+    const tick = document.createElement('span');
+    tick.className = 'tick';
+    tick.textContent = '✓';
+    btn.appendChild(tick);
+  }else if(!nowOn && existingTick){
+    existingTick.remove();
+  }
+
+  updateProceed();
+}
+
+function updateProceed(){
+  const n = state.browsers.size;
+  $('#proceedBtn').textContent = n > 0 ? `Proceed with ${n} →` : 'Proceed →';
+}
+
+/* =========================================================
+   PROCEED / SHOW ALL
+   ========================================================= */
+$('#proceedBtn').addEventListener('click', () => showTools(false));
+$('#showAllBtn').addEventListener('click', () => showTools(true));
+
+function showTools(showAll){
+  state.showAll = showAll;
+
+  $('#mainMenu').classList.add('hidden');
+  const view = $('#toolsView');
+  view.classList.remove('hidden');
+
+  $('#toolsBadge').textContent = showAll ? '🌐 All systems' : osBadgeText(state.os);
+  $('#toggleAllBtn').textContent = showAll ? 'Only my system' : 'Show all tools';
+
+  renderTools();
+  window.scrollTo({ top:0, behavior:'instant' in window ? 'instant' : 'auto' });
+}
+
+$('#backBtn').addEventListener('click', () => {
+  $('#toolsView').classList.add('hidden');
+  $('#mainMenu').classList.remove('hidden');
+  window.scrollTo({ top:0 });
+});
+
+$('#toggleAllBtn').addEventListener('click', () => {
+  state.showAll = !state.showAll;
+  $('#toolsBadge').textContent = state.showAll ? '🌐 All systems' : osBadgeText(state.os);
+  $('#toggleAllBtn').textContent = state.showAll ? 'Only my system' : 'Show all tools';
+  renderTools();
+});
+
+/* =========================================================
+   TOOLS VIEW RENDERING
+   ========================================================= */
+function renderTools(){
+  const body = $('#toolsBody');
+  body.innerHTML = '';
+
+  const os = state.showAll ? null : state.os;
+
+  TOOL_CATEGORIES.forEach(cat => {
+    const section = document.createElement('section');
+    section.className = 'category';
+
+    const title = document.createElement('h2');
+    title.className = 'cat-title';
+    title.textContent = cat.name;
+    section.appendChild(title);
+
+    if(!os){
+      // No OS filter → single grid, every card carries OS tags
+      const grid = document.createElement('div');
+      grid.className = 'tool-grid';
+      cat.items.forEach(t => grid.appendChild(toolCard(t)));
+      section.appendChild(grid);
+    }else{
+      const compatible   = cat.items.filter(t =>  t.os.includes(os));
+      const incompatible = cat.items.filter(t => !t.os.includes(os));
+
+      if(compatible.length){
+        section.appendChild(buildSection(
+          '✅ Available for your system', 'compatible', compatible
+        ));
+      }
+      if(incompatible.length){
+        section.appendChild(buildSection(
+          '🔒 For other systems', 'incompatible', incompatible
+        ));
+      }
+    }
+
+    body.appendChild(section);
+  });
+}
+
+function buildSection(label, variant, items){
+  const wrap = document.createElement('div');
+  wrap.className = 'tool-section ' + variant;
+
+  const badge = document.createElement('div');
+  badge.className = 'section-badge ' + variant;
+  badge.textContent = label;
+  wrap.appendChild(badge);
+
+  const grid = document.createElement('div');
+  grid.className = 'tool-grid';
+  items.forEach(t => grid.appendChild(toolCard(t)));
+  wrap.appendChild(grid);
+
+  return wrap;
+}
+
+function toolCard(tool){
+  const el = document.createElement('article');
+  el.className = 'tool-card';
+
+  const isSelected = state.browsers.has(tool.name);
+  if(isSelected) el.classList.add('is-selected');
+
+  const tags = tool.os
+    .map(o => `<span class="os-tag os-tag--${o}">${OS_LABEL[o]}</span>`)
+    .join('');
+
+  el.innerHTML = `
+    <div class="tool-head">
+      <span class="tool-name">${tool.name}</span>
+      ${isSelected ? '<span class="pill--sel">selected</span>' : ''}
+    </div>
+    <p class="tool-desc">${tool.desc}</p>
+    <div class="os-tags">${tags}</div>
+  `;
+
+  return el;
+}
+
+/* =========================================================
+   QUIZ
+   ========================================================= */
+$('#takeQuizBtn').addEventListener('click', openQuiz);
+$('#quizClose').addEventListener('click', closeQuiz);
+$('#quizModal').addEventListener('click', (e) => {
+  if(e.target === $('#quizModal')) closeQuiz();
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') closeQuiz();
+});
+
+function openQuiz(){
+  state.quizIndex = 0;
+  state.quizScore = { firefox:0, other:0, chromium:0 };
+  $('#quizModal').classList.remove('hidden');
+  renderQuizQuestion();
+}
+
+function closeQuiz(){
+  $('#quizModal').classList.add('hidden');
+}
+
+function renderQuizQuestion(){
+  const content = $('#quizContent');
+  const i = state.quizIndex;
+
+  if(i >= QUIZ.length){
+    renderQuizResult();
     return;
   }
-  const letter = img.dataset.letter || "?";
-  img.outerHTML = `<span class="letter">${letter}</span>`;
-};
 
-/* ============================================================
-   OS CANDIDATES
-   ============================================================ */
-const OS_CANDIDATES = {
-  win:     { label: "Windows 11", emoji: "🪟", url: "https://www.microsoft.com/software-download/windows11", logo: "https://cdn.simpleicons.org/windows", color: ["#1e40af", "#0ea5e9"], desc: "The most compatible desktop OS. Widest app + game support, but heavier and less private." },
-  mac:     { label: "macOS",      emoji: "🍎", url: "https://www.apple.com/macos/", logo: "https://cdn.simpleicons.org/apple", color: ["#7c3aed", "#c026d3"], desc: "Polished, beautiful, and deeply integrated with Apple hardware." },
-  mint:    { label: "Linux Mint", emoji: "🌿", url: "https://linuxmint.com/download.php", logo: "https://cdn.simpleicons.org/linuxmint", color: ["#166534", "#14532d"], desc: "The easiest Linux — familiar layout, works out of the box, great on old PCs." },
-  ubuntu:  { label: "Ubuntu",     emoji: "🟠", url: "https://ubuntu.com/download/desktop", logo: "https://cdn.simpleicons.org/ubuntu", color: ["#b45309", "#9a3412"], desc: "Polished GNOME desktop, huge community, excellent hardware support." },
-  popos:   { label: "Pop!_OS",    emoji: "🔷", url: "https://pop.system76.com/", logo: "https://cdn.simpleicons.org/popos", color: ["#7c3aed", "#5b21b6"], desc: "Ubuntu-based with a tiling workflow and NVIDIA-friendly install." },
-  debian:  { label: "Debian",     emoji: "🌀", url: "https://www.debian.org/download", logo: "https://cdn.simpleicons.org/debian", color: ["#9d174d", "#831843"], desc: "Legendary stability. Feels a bit older but runs forever." },
-  fedora:  { label: "Fedora",     emoji: "🎩", url: "https://fedoraproject.org/workstation/download", logo: "https://cdn.simpleicons.org/fedora", color: ["#1e40af", "#1e3a8a"], desc: "Bleeding-edge Linux. Latest packages, latest bugs, best for developers." },
-  arch:    { label: "Arch Linux", emoji: "🏔️", url: "https://archlinux.org/download/", logo: "https://cdn.simpleicons.org/archlinux", color: ["#0891b2", "#0e7490"], desc: "You build it yourself. Full control, endless tinkering, incredible Wiki." },
-  cachyos: { label: "CachyOS",    emoji: "⚡", url: "https://cachyos.org/", logo: "https://cdn.simpleicons.org/cachyos", color: ["#b91c1c", "#991b1b"], desc: "Performance-tuned Arch. Optimized kernels and packages for speed." },
-  nixos:   { label: "NixOS",      emoji: "❄️", url: "https://nixos.org/download", logo: "https://cdn.simpleicons.org/nixos", color: ["#0891b2", "#155e75"], desc: "Declarative, reproducible, completely different from anything else." }
-};
-
-/* ============================================================
-   OS QUIZ
-   ============================================================ */
-const OS_QUIZ = [
-  {
-    id: "games",
-    q: "How often do you play games?",
-    sub: "This affects how compatible your OS needs to be.",
-    options: [
-      { id: "heavy", emoji: "🎮", label: "AAA / competitive", hint: "I need full compatibility",
-        scores: { win: 4, mac: 1, mint: 1, ubuntu: 1, popos: 2, fedora: 1, arch: 2, cachyos: 2, debian: 1, nixos: 1 } },
-      { id: "light", emoji: "🕹️", label: "Casual / indie", hint: "Most games, lighter play",
-        scores: { win: 3, mac: 2, mint: 2, ubuntu: 2, popos: 2, fedora: 2, arch: 2, cachyos: 2, debian: 2, nixos: 1 } },
-      { id: "rare", emoji: "🚫", label: "Rarely or never", hint: "Games don't matter here",
-        scores: { win: 1, mac: 3, mint: 3, ubuntu: 3, popos: 2, fedora: 3, arch: 2, cachyos: 1, debian: 3, nixos: 2 } }
-    ]
-  },
-  {
-    id: "power",
-    q: "How powerful is your PC?",
-    sub: "Be honest — this changes the recommendation a lot.",
-    options: [
-      { id: "modern", emoji: "🚀", label: "Recent & fast", hint: "Modern CPU, plenty of RAM",
-        scores: { win: 3, mac: 3, mint: 2, ubuntu: 3, popos: 3, fedora: 3, arch: 3, cachyos: 3, debian: 2, nixos: 3 } },
-      { id: "mid", emoji: "👍", label: "A few years old", hint: "Still smooth for most things",
-        scores: { win: 3, mac: 2, mint: 3, ubuntu: 3, popos: 3, fedora: 2, arch: 3, cachyos: 2, debian: 3, nixos: 2 } },
-      { id: "old", emoji: "🐢", label: "Old or weak", hint: "Every bit of speed counts",
-        scores: { win: 1, mac: 1, mint: 4, ubuntu: 2, popos: 2, fedora: 1, arch: 2, cachyos: 1, debian: 3, nixos: 1 } }
-    ]
-  },
-  {
-    id: "priority",
-    q: "What matters most to you?",
-    sub: "Your daily vibe.",
-    options: [
-      { id: "works", emoji: "✅", label: "It just works", hint: "I don't want to tinker",
-        scores: { win: 3, mac: 4, mint: 4, ubuntu: 3, popos: 3, fedora: 2, arch: 1, cachyos: 2, debian: 3, nixos: 1 } },
-      { id: "control", emoji: "🛠️", label: "Full control", hint: "I want to customise everything",
-        scores: { win: 1, mac: 1, mint: 2, ubuntu: 3, popos: 3, fedora: 3, arch: 4, cachyos: 3, debian: 3, nixos: 4 } },
-      { id: "privacy", emoji: "🔒", label: "Privacy & freedom", hint: "No telemetry, no tracking",
-        scores: { win: 1, mac: 1, mint: 4, ubuntu: 3, popos: 3, fedora: 3, arch: 3, cachyos: 3, debian: 4, nixos: 4 } },
-      { id: "performance", emoji: "⚡", label: "Raw performance", hint: "Every frame and millisecond counts",
-        scores: { win: 3, mac: 3, mint: 2, ubuntu: 3, popos: 3, fedora: 3, arch: 4, cachyos: 4, debian: 2, nixos: 3 } }
-    ]
-  },
-  {
-    id: "budget",
-    q: "Are you open to buying new hardware?",
-    sub: "Some paths need fresh silicon.",
-    options: [
-      { id: "no", emoji: "♻️", label: "No, reuse my PC", hint: "I want to keep what I have",
-        scores: { win: 3, mac: 0, mint: 4, ubuntu: 4, popos: 4, fedora: 3, arch: 3, cachyos: 3, debian: 4, nixos: 3 } },
-      { id: "maybe", emoji: "🤔", label: "Maybe, if needed", hint: "I'm open to it",
-        scores: { win: 3, mac: 3, mint: 3, ubuntu: 3, popos: 3, fedora: 3, arch: 3, cachyos: 3, debian: 3, nixos: 3 } },
-      { id: "yes", emoji: "🛒", label: "Yes, I'm buying", hint: "Fresh hardware soon",
-        scores: { win: 3, mac: 4, mint: 2, ubuntu: 2, popos: 3, fedora: 3, arch: 2, cachyos: 2, debian: 2, nixos: 2 } }
-    ]
-  }
-];
-
-/* ============================================================
-   BROWSERS (grouped)
-   ============================================================ */
-const BROWSER_CATEGORIES = [
-  { id: "firefox",  label: "Firefox-based",  emoji: "🦊" },
-  { id: "chromium", label: "Chromium-based", emoji: "🌐" },
-  { id: "other",    label: "Other engines",  emoji: "✨" }
-];
-
-const BROWSERS = {
-  /* ---------- Firefox-based ---------- */
-  zen: {
-    name: "Zen", category: "firefox", emoji: "🦊",
-    url: "https://zen-browser.app/", logo: "https://cdn.simpleicons.org/zenbrowser",
-    color: ["#c2410c", "#9a3412"],
-    desc: "Firefox-based, gorgeous vertical tabs, workspaces, split view.",
-    reason: ["Beautiful, modern UI", "Handles dozens of tabs elegantly", "Firefox engine — anti-tracking by default"]
-  },
-  firefox: {
-    name: "Firefox", category: "firefox", emoji: "🔥",
-    url: "https://www.mozilla.org/firefox/new/", logo: "https://cdn.simpleicons.org/firefox",
-    color: ["#c2410c", "#7c2d12"],
-    desc: "Mozilla's mainstream browser. Reliable, open-source, great extension ecosystem.",
-    reason: ["Independent engine — no Chromium monoculture", "Strong privacy defaults", "Huge extension library"]
-  },
-  librewolf: {
-    name: "LibreWolf", category: "firefox", emoji: "🐺",
-    url: "https://librewolf.net/", logo: "https://cdn.simpleicons.org/librewolf",
-    color: ["#0f766e", "#134e4a"],
-    desc: "Firefox hardened for privacy. No telemetry, uBlock Origin built-in.",
-    reason: ["Privacy out of the box", "No telemetry or sponsored content", "Based on Firefox — familiar"]
-  },
-  mullvad: {
-    name: "Mullvad Browser", category: "firefox", emoji: "🕶️",
-    url: "https://mullvad.net/browser", logo: "https://cdn.simpleicons.org/mullvad",
-    color: ["#facc15", "#a16207"],
-    desc: "Tor Browser without Tor. Anti-fingerprinting by default.",
-    reason: ["Tor-grade fingerprinting resistance", "Made with the Tor Project", "No account needed"]
-  },
-  waterfox: {
-    name: "Waterfox", category: "firefox", emoji: "💧",
-    url: "https://www.waterfox.net/", logo: "https://cdn.simpleicons.org/waterfox",
-    color: ["#0284c7", "#075985"],
-    desc: "Firefox fork focused on speed, privacy and classic extensions.",
-    reason: ["Fast Firefox fork", "Privacy-conscious defaults", "Supports older XUL extensions"]
-  },
-
-  /* ---------- Chromium-based ---------- */
-  helium: {
-    name: "Helium", category: "chromium", emoji: "🎈",
-    url: "https://helium.computer/", logo: "https://cdn.simpleicons.org/helium",
-    color: ["#0891b2", "#0e7490"],
-    desc: "Chromium stripped to the bones. Fastest launch and rendering.",
-    reason: ["Chromium-based — full extension support", "Absolutely minimal chrome", "Fastest perceived speed"]
-  },
-  chrome: {
-    name: "Google Chrome", category: "chromium", emoji: "🌐",
-    url: "https://www.google.com/chrome/", logo: "https://cdn.simpleicons.org/googlechrome",
-    color: ["#dc2626", "#991b1b"],
-    desc: "The world's most popular browser. Best site compatibility, deep Google integration.",
-    reason: ["Best site compatibility", "Huge extension ecosystem", "Syncs across all your devices"]
-  },
-  chromium: {
-    name: "Chromium", category: "chromium", emoji: "🧪",
-    url: "https://www.chromium.org/getting-involved/download-chromium/", logo: "https://cdn.simpleicons.org/chromium",
-    color: ["#2563eb", "#1e40af"],
-    desc: "The open-source core of Chrome. No Google tracking, no proprietary blobs.",
-    reason: ["Pure open-source Chromium", "No Google telemetry", "Best site compatibility, minus the tracking"]
-  },
-  brave: {
-    name: "Brave", category: "chromium", emoji: "🦁",
-    url: "https://brave.com/download/", logo: "https://cdn.simpleicons.org/brave",
-    color: ["#f97316", "#c2410c"],
-    desc: "Chromium with built-in ad-block, tracker blocking and optional crypto rewards.",
-    reason: ["Blocks ads and trackers by default", "Chromium speed + extension support", "Optional private search"]
-  },
-  edge: {
-    name: "Microsoft Edge", category: "chromium", emoji: "🌊",
-    url: "https://www.microsoft.com/edge", logo: "https://cdn.simpleicons.org/microsoftedge",
-    color: ["#0ea5e9", "#0369a1"],
-    desc: "Microsoft's Chromium browser. Vertical tabs, collections, deep Windows integration.",
-    reason: ["Deep Windows integration", "Vertical tabs and workspaces", "Chromium compatibility"]
-  },
-  vivaldi: {
-    name: "Vivaldi", category: "chromium", emoji: "🎻",
-    url: "https://vivaldi.com/", logo: "https://cdn.simpleicons.org/vivaldi",
-    color: ["#dc2626", "#991b1b"],
-    desc: "The power-user's Chromium browser. Tab stacks, tiling, mail, calendar, notes.",
-    reason: ["Incredibly customizable", "Built-in mail, calendar, notes", "Tab stacks and tiling"]
-  },
-  opera: {
-    name: "Opera", category: "chromium", emoji: "🎭",
-    url: "https://www.opera.com/", logo: "https://cdn.simpleicons.org/opera",
-    color: ["#dc2626", "#991b1b"],
-    desc: "Chromium with free VPN, ad-block and a built-in sidebar of mini-apps.",
-    reason: ["Free built-in VPN", "Integrated messengers and tools", "Chromium extension support"]
-  },
-
-  /* ---------- Other engines ---------- */
-  safari: {
-    name: "Safari", category: "other", emoji: "🧭",
-    url: "https://www.apple.com/safari/", logo: "https://cdn.simpleicons.org/safari",
-    color: ["#0284c7", "#075985"],
-    desc: "Apple's browser. Fastest on Mac, incredibly power-efficient.",
-    reason: ["Best battery life on Mac", "Deep macOS / iOS integration", "iCloud sync and Apple Pay"],
-    os: ["mac"]
-  },
-  gnomeweb: {
-    name: "GNOME Web", category: "other", emoji: "🦎",
-    url: "https://apps.gnome.org/Epiphany/", logo: "https://cdn.simpleicons.org/gnome",
-    color: ["#4ade80", "#166534"],
-    desc: "Epiphany — GNOME's native WebKit browser. Simple, clean, integrates with GNOME.",
-    reason: ["Native GNOME look", "WebKit engine — different from Chromium", "Lightweight and simple"],
-    os: ["linux"]
-  },
-  falkon: {
-    name: "Falkon", category: "other", emoji: "🦅",
-    url: "https://www.falkon.org/", logo: "https://cdn.simpleicons.org/falkon",
-    color: ["#0891b2", "#0e7490"],
-    desc: "Lightweight Qt/WebEngine browser from KDE. Very fast on older hardware.",
-    reason: ["Extremely light on resources", "Great for old PCs", "Qt / KDE integration"],
-    os: ["linux"]
-  },
-  qutebrowser: {
-    name: "qutebrowser", category: "other", emoji: "⌨️",
-    url: "https://qutebrowser.org/", logo: "https://cdn.simpleicons.org/qt",
-    color: ["#16a34a", "#166534"],
-    desc: "Keyboard-driven browser with vim-like bindings. For terminal lovers.",
-    reason: ["Vim-style keyboard control", "Minimal, distraction-free", "Highly scriptable"]
-  },
-  ladybird: {
-    name: "Ladybird", category: "other", emoji: "🐞",
-    url: "https://ladybird.org/", logo: "",
-    color: ["#dc2626", "#991b1b"],
-    desc: "A brand-new, independent browser engine written from scratch.",
-    reason: ["Completely new engine", "Not Firefox, not Chromium", "Independent and open source"]
-  }
-};
-
-/* ============================================================
-   BROWSER QUIZ (Zen / Helium / Safari-only-on-mac)
-   ============================================================ */
-const BROWSER_QUIZ = [
-  {
-    id: "focus",
-    q: "Speed or design?",
-    sub: "What do you care about more in a browser?",
-    options: [
-      { id: "speed",  emoji: "⚡", label: "Speed above all",  hint: "Every millisecond counts", scores: { helium: 4, zen: 1, safari: 2 } },
-      { id: "design", emoji: "🎨", label: "Beautiful design", hint: "I stare at it all day",  scores: { helium: 1, zen: 4, safari: 3 } },
-      { id: "both",   emoji: "⚖️", label: "Both matter",      hint: "Balance, please",       scores: { helium: 3, zen: 3, safari: 3 } }
-    ]
-  },
-  {
-    id: "tabs",
-    q: "How many tabs do you usually keep open?",
-    sub: "Be honest, we won't judge.",
-    options: [
-      { id: "few",  emoji: "1️⃣", label: "1 – 5 tabs",  hint: "Clean and simple",   scores: { helium: 3, zen: 2, safari: 3 } },
-      { id: "some", emoji: "📚", label: "6 – 15 tabs", hint: "A healthy middle",   scores: { helium: 2, zen: 3, safari: 2 } },
-      { id: "many", emoji: "🌪️", label: "20+, always", hint: "Chaos is my system", scores: { helium: 1, zen: 4, safari: 1 } }
-    ]
-  },
-  {
-    id: "privacy",
-    q: "How much do you care about privacy?",
-    sub: "Ads, trackers, fingerprinting…",
-    options: [
-      { id: "high", emoji: "🛡️", label: "Very much",  hint: "I want to be invisible",    scores: { helium: 1, zen: 4, safari: 1 } },
-      { id: "some", emoji: "🔒", label: "Somewhat",   hint: "I don't want to be tracked", scores: { helium: 2, zen: 3, safari: 4 } },
-      { id: "low",  emoji: "😌", label: "Not really", hint: "I just want a good browser", scores: { helium: 4, zen: 3, safari: 3 } }
-    ]
-  },
-  {
-    id: "extensions",
-    q: "Do you rely on browser extensions?",
-    sub: "Some extensions only exist for Chromium/Firefox.",
-    options: [
-      { id: "yes", emoji: "🧩", label: "Yes, heavily", hint: "I need the full store",   scores: { helium: 4, zen: 2, safari: 1 } },
-      { id: "no",  emoji: "🙅", label: "Not really",   hint: "I can live without them", scores: { helium: 2, zen: 4, safari: 4 } }
-    ]
-  }
-];
-
-/* ============================================================
-   GROUPS + ICONS + PATTERNS
-   ============================================================ */
-const GROUPS = [
-  { title: "Setup & System", scenarioIds: ["system-tools"] },
-  { title: "Essentials",     scenarioIds: ["browsers", "ai", "translate", "communication", "network", "downloads", "web"] },
-  { title: "Create & Work",  scenarioIds: ["office", "video-editing"] },
-  { title: "Media & Fun",    scenarioIds: ["minecraft"] }
-];
-
-const ICONS = {
-  browsers: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 8h18"/><circle cx="6" cy="6" r=".7" fill="currentColor"/><circle cx="8.5" cy="6" r=".7" fill="currentColor"/></svg>`,
-  ai: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z"/><circle cx="18.5" cy="18.5" r="1.2" fill="currentColor"/></svg>`,
-  translate: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6h9M6.5 3v3c0 5 2 8 5 10"/><path d="M4 16c2-1 4-3 5.5-6"/><path d="M13 21l4-10 4 10M14.5 17h5"/></svg>`,
-  communication: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.3 9.3 0 0 1-3.3-.6L3 21l1.8-5.2A8.3 8.3 0 0 1 3.6 11.5 8.4 8.4 0 0 1 12.6 3 8.4 8.4 0 0 1 21 11.5Z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg>`,
-  network: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3.5v5c0 5-3.5 8.5-8 9.5-4.5-1-8-4.5-8-9.5v-5z"/><path d="M9 12l2 2 4-4"/></svg>`,
-  downloads: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 19h16"/></svg>`,
-  minecraft: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 4.5v9L12 21l-9-4.5v-9z"/><path d="M12 3v9M12 12l9-4.5M12 12l-9-4.5"/></svg>`,
-  web: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>`,
-  "system-tools": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
-  office: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>`,
-  "video-editing": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M2 15h20M7 4v5M12 4v5M17 4v5M7 15v5M12 15v5M17 15v5"/></svg>`
-};
-
-const PATTERNS = {
-  browsers: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="360" cy="40" r="40" opacity=".28"/><circle cx="360" cy="40" r="70" opacity=".22"/><circle cx="360" cy="40" r="100" opacity=".16"/><circle cx="360" cy="40" r="130" opacity=".11"/><circle cx="360" cy="40" r="160" opacity=".07"/></g></svg>`,
-  ai: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1" opacity=".22" fill="none"><path d="M40 50 L120 100 L90 180 L190 210 L260 150 L340 100 L380 170"/></g><g fill="currentColor" opacity=".55"><circle cx="40" cy="50" r="3"/><circle cx="120" cy="100" r="3"/><circle cx="90" cy="180" r="3"/><circle cx="190" cy="210" r="3"/><circle cx="260" cy="150" r="3"/><circle cx="340" cy="100" r="3"/><circle cx="380" cy="170" r="3"/></g></svg>`,
-  translate: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1" opacity=".22"><path d="M-40 240 L240 -40"/><path d="M40 240 L320 -40"/><path d="M120 240 L400 -40"/><path d="M200 240 L480 -40"/></g></svg>`,
-  communication: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1.4" opacity=".25"><path d="M40 60h110a16 16 0 0 1 16 16v40a16 16 0 0 1-16 16H78l-26 22v-22H40a16 16 0 0 1-16-16V76a16 16 0 0 1 16-16z"/><path d="M250 130h100a16 16 0 0 1 16 16v36a16 16 0 0 1-16 16h-24v20l-24-20h-52a16 16 0 0 1-16-16v-36a16 16 0 0 1 16-16z"/></g></svg>`,
-  network: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1" opacity=".22" fill="none"><path d="M40 40 l16 -10 l16 10 l0 20 l-16 10 l-16 -10 z"/><path d="M104 40 l16 -10 l16 10 l0 20 l-16 10 l-16 -10 z"/><path d="M168 40 l16 -10 l16 10 l0 20 l-16 10 l-16 -10 z"/><path d="M72 68 l16 -10 l16 10 l0 20 l-16 10 l-16 -10 z"/><path d="M136 68 l16 -10 l16 10 l0 20 l-16 10 l-16 -10 z"/></g></svg>`,
-  downloads: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1.5" opacity=".22" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M60 40 v22 m0 0 l-7 -7 m7 7 l7 -7"/><path d="M160 40 v22 m0 0 l-7 -7 m7 7 l7 -7"/><path d="M260 40 v22 m0 0 l-7 -7 m7 7 l7 -7"/><path d="M360 40 v22 m0 0 l-7 -7 m7 7 l7 -7"/></g></svg>`,
-  minecraft: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1" opacity=".22" fill="none" stroke-linejoin="round"><path d="M60 30 l22 13 l-22 13 l-22 -13 z"/><path d="M60 30 v26 m0 0 l22 -13 m-22 13 l-22 -13"/><path d="M180 30 l22 13 l-22 13 l-22 -13 z"/><path d="M180 30 v26 m0 0 l22 -13 m-22 13 l-22 -13"/></g></svg>`,
-  web: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1" opacity=".22" fill="none"><ellipse cx="200" cy="120" rx="150" ry="105"/><ellipse cx="200" cy="120" rx="105" ry="105"/><ellipse cx="200" cy="120" rx="55" ry="105"/><line x1="50" y1="120" x2="350" y2="120"/></g></svg>`,
-  "system-tools": `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1" opacity=".22" fill="none"><circle cx="90" cy="70" r="22"/><circle cx="90" cy="70" r="9"/><path d="M90 42v-6M90 104v-6M62 70h-6M124 70h-6"/><circle cx="310" cy="160" r="26"/><circle cx="310" cy="160" r="10"/><path d="M310 128v-6M310 198v-6M278 160h-6M348 160h-6"/></g></svg>`,
-  office: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1.5" opacity=".2" fill="none" stroke-linecap="round"><path d="M60 50h80M60 72h120M60 94h100M60 116h110"/><path d="M60 160h80M60 182h120M60 204h100"/><path d="M260 50h80M260 72h120M260 94h100"/></g></svg>`,
-  "video-editing": `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1.5" opacity=".22"><path d="M60 60h280M60 100h280M60 140h280M60 180h280"/></g></svg>`
-};
-
-/* ============================================================
-   SCENARIOS
-   ============================================================ */
-const SCENARIOS = [
-  {
-    id: "browsers", title: "Browsers", emoji: "🦊",
-    desc: "Alternatives to your daily driver — with recommended extensions",
-    color: ["#c2410c", "#9a3412"],
-    subscenarios: [
-      { id: "daily", title: "Daily Driver", emoji: "🏠" },
-      { id: "speed", title: "Speed & Minimalism", emoji: "⚡" }
-    ],
-    items: [
-      { name: "Zen", url: "https://zen-browser.app/", desc: "Firefox-based, best design, packed with useful features. Medium speed — perfect for tabs you don't want to close.", logo: "https://cdn.simpleicons.org/zenbrowser", subscenarios: ["daily"], tag: "daily driver",
-        childrenLabel: "Recommended extensions for Zen",
-        children: [
-          { name: "uBlock Origin", url: "https://ublockorigin.com/", desc: "One of the best ad-blockers.", logo: "https://cdn.simpleicons.org/ublockorigin" },
-          { name: "Bitwarden", url: "https://bitwarden.com/", desc: "Open-source password manager.", logo: "https://cdn.simpleicons.org/bitwarden" },
-          { name: "Dark Reader", url: "https://darkreader.org/", desc: "Makes any website dark themed.", logo: "https://cdn.simpleicons.org/darkreader" },
-          { name: "Wayback Machine", url: "https://addons.mozilla.org/firefox/addon/wayback-machine_new/", desc: "Instant access to archived versions of any page.", logo: "https://cdn.simpleicons.org/internetarchive" }
-        ]
-      },
-      { name: "Helium", url: "https://helium.computer/", desc: "Chromium-based, the fastest you can find. Minimalist design optimized for speed.", logo: "https://cdn.simpleicons.org/helium", subscenarios: ["speed"], tag: "fastest",
-        childrenLabel: "Recommended extensions for Helium",
-        children: [
-          { name: "uBlock Origin", url: "https://ublockorigin.com/", desc: "The best ad-blocker for Chromium.", logo: "https://cdn.simpleicons.org/ublockorigin" },
-          { name: "Bitwarden", url: "https://bitwarden.com/", desc: "Open-source password manager.", logo: "https://cdn.simpleicons.org/bitwarden" },
-          { name: "Dark Reader", url: "https://darkreader.org/", desc: "Makes any website dark themed.", logo: "https://cdn.simpleicons.org/darkreader" }
-        ]
-      },
-      { name: "Firefox", url: "https://www.mozilla.org/firefox/new/", desc: "The mainstream Firefox. Independent engine, huge extension library, strong privacy defaults.", logo: "https://cdn.simpleicons.org/firefox", subscenarios: ["daily"], tag: "mainstream" },
-      { name: "LibreWolf", url: "https://librewolf.net/", desc: "Firefox hardened for privacy. No telemetry, uBlock Origin built in.", logo: "https://cdn.simpleicons.org/librewolf", subscenarios: ["daily"], tag: "privacy" },
-      { name: "Brave", url: "https://brave.com/download/", desc: "Chromium with built-in ad-block and tracker blocking. Chromium speed, less tracking.", logo: "https://cdn.simpleicons.org/brave", subscenarios: ["daily", "speed"], tag: "privacy + speed" },
-      { name: "Google Chrome", url: "https://www.google.com/chrome/", desc: "The world's most popular browser. Best site compatibility and extension support.", logo: "https://cdn.simpleicons.org/googlechrome", subscenarios: ["daily"], tag: "most compatible" },
-      { name: "Vivaldi", url: "https://vivaldi.com/", desc: "Power-user Chromium with tab stacks, tiling, mail, calendar and notes built in.", logo: "https://cdn.simpleicons.org/vivaldi", subscenarios: ["daily"], tag: "power user" },
-      { name: "Safari", url: "https://www.apple.com/safari/", desc: "Apple's browser. Fastest and most power-efficient on macOS.", logo: "https://cdn.simpleicons.org/safari", subscenarios: ["daily"], tag: "macOS only", os: ["mac"] }
-    ]
-  },
-  {
-    id: "ai", title: "AI Assistants", emoji: "🤖",
-    desc: "Smart helpers for chat, coding and questions",
-    color: ["#5b21b6", "#7c3aed"],
-    subscenarios: [
-      { id: "coding", title: "Coding & Dev", emoji: "💻" },
-      { id: "search", title: "Quick Search", emoji: "🔍" },
-      { id: "general", title: "General Chat", emoji: "💬" }
-    ],
-    items: [
-      { name: "DeepSeek", url: "https://deepseek.com/", desc: "Powerful for coding and general use. Excellent reasoning for the price.", logo: "https://cdn.simpleicons.org/deepseek", subscenarios: ["coding", "general"], tag: "top pick" },
-      { name: "Gemini", url: "https://gemini.google.com/", desc: "Go-to for quick answers on mobile.", logo: "https://cdn.simpleicons.org/googlegemini", subscenarios: ["search", "general"] }
-    ]
-  },
-  {
-    id: "translate", title: "Translation", emoji: "🌐",
-    desc: "Converting text between languages",
-    color: ["#0f766e", "#115e59"],
-    subscenarios: [
-      { id: "fast", title: "Fast Lookups", emoji: "⚡" },
-      { id: "best", title: "Best Quality", emoji: "🏆" }
-    ],
-    items: [
-      { name: "Google Translate", url: "https://translate.google.com/", desc: "Fast and universal.", logo: "https://cdn.simpleicons.org/googletranslate", subscenarios: ["fast"] },
-      { name: "DeepL", url: "https://www.deepl.com/translator", desc: "Best-in-class quality. Natural, context-aware translations.", logo: "https://cdn.simpleicons.org/deepl", subscenarios: ["best"], tag: "best quality" },
-      { name: "Reverso", url: "https://www.reverso.net/", desc: "Translation with real-world context and examples.", logo: "", subscenarios: ["fast"] }
-    ]
-  },
-  {
-    id: "communication", title: "Communication", emoji: "💬",
-    desc: "Email, chat and messaging — where your accounts and conversations live",
-    color: ["#9d174d", "#831843"],
-    subscenarios: [
-      { id: "main", title: "Everyday Inbox", emoji: "📥" },
-      { id: "secure", title: "Important Accounts", emoji: "🔒" },
-      { id: "discord", title: "Discord", emoji: "🎮" },
-      { id: "whatsapp", title: "WhatsApp", emoji: "💬" }
-    ],
-    items: [
-      { name: "Gmail", url: "https://mail.google.com/", desc: "Free, huge storage, deeply integrated with Google.", logo: "https://cdn.simpleicons.org/gmail", subscenarios: ["main"] },
-      { name: "TutaMail", url: "https://tuta.com/", desc: "Fast, encrypted, privacy-first.", logo: "", subscenarios: ["secure"], tag: "private" },
-      { name: "Equibop", url: "https://github.com/Equicord/Equibop/releases", desc: "Enhanced Discord client with plugins and themes.", logo: "https://cdn.simpleicons.org/discord", subscenarios: ["discord"] },
-      { name: "ZapZap", url: "https://github.com/rafatosta/zapzap/releases", desc: "Enhanced WhatsApp desktop for Linux.", logo: "https://cdn.simpleicons.org/whatsapp", subscenarios: ["whatsapp"], os: ["linux"] }
-    ]
-  },
-  {
-    id: "network", title: "Network & Privacy", emoji: "🛡️",
-    desc: "Stay private and connected",
-    color: ["#991b1b", "#7f1d1d"],
-    subscenarios: [{ id: "vpn", title: "VPN / Proxy", emoji: "🔐" }],
-    items: [
-      { name: "Hiddify", url: "https://hiddify.com/", desc: "Proxy / VPN client. Easy to set up.", logo: "", subscenarios: ["vpn"] }
-    ]
-  },
-  {
-    id: "downloads", title: "Downloads", emoji: "⬇️",
-    desc: "Getting files and content",
-    color: ["#166534", "#14532d"],
-    subscenarios: [
-      { id: "video", title: "Video & Content", emoji: "🎬" },
-      { id: "torrent", title: "Torrents", emoji: "🌊" }
-    ],
-    items: [
-      { name: "Cobalt", url: "https://cobalt.tools/", desc: "Best download tool for YouTube and other sites.", logo: "", subscenarios: ["video"], tag: "recommended" },
-      { name: "qBittorrent", url: "https://www.qbittorrent.org/download", desc: "Open-source torrent client. No ads.", logo: "https://cdn.simpleicons.org/qbittorrent", subscenarios: ["torrent"] }
-    ]
-  },
-  {
-    id: "minecraft", title: "Minecraft", emoji: "⛏️",
-    desc: "Launching and managing your game",
-    color: ["#4d7c0f", "#3f6212"],
-    subscenarios: [
-      { id: "main", title: "Main Launcher", emoji: "⭐" },
-      { id: "alt", title: "Alternative", emoji: "🔄" }
-    ],
-    items: [
-      { name: "XMCL", url: "https://xmcl.app/", desc: "Best interface, innovative features, very active development.", logo: "", subscenarios: ["main"], tag: "top pick",
-        badges: [{ text: "Pirate ✅", color: "green", tip: "Enable Developer Options in XMCL." }] },
-      { name: "Prism Launcher", url: "https://prismlauncher.org/download", desc: "Great for old Minecraft versions and low-end PCs.", logo: "https://cdn.simpleicons.org/prismlauncher", subscenarios: ["alt"],
-        badges: [{ text: "Pirate ❌", color: "red", tip: "Prism does not support pirate accounts." }] }
-    ]
-  },
-  {
-    id: "web", title: "Useful Websites", emoji: "🌍",
-    desc: "Bookmark-worthy sites",
-    color: ["#1e40af", "#1e3a8a"],
-    subscenarios: [
-      { id: "weather", title: "Weather", emoji: "🌦️" },
-      { id: "maps", title: "Maps", emoji: "🗺️" },
-      { id: "music", title: "Music", emoji: "🎵" },
-      { id: "radio", title: "Radio", emoji: "📻" }
-    ],
-    items: [
-      { name: "Windy", url: "https://www.windy.com/", desc: "Best weather visualization on the web.", logo: "", subscenarios: ["weather"] },
-      { name: "Google Maps", url: "https://maps.google.com/", desc: "Reliable default for navigation.", logo: "https://cdn.simpleicons.org/googlemaps", subscenarios: ["maps"] },
-      { name: "Organic Maps", url: "https://organicmaps.app/", desc: "Offline OpenStreetMap navigation.", logo: "", subscenarios: ["maps"] },
-      { name: "OpenStreetMap", url: "https://www.openstreetmap.org/", desc: "The free, community-built world map.", logo: "https://cdn.simpleicons.org/openstreetmap", subscenarios: ["maps"] },
-      { name: "SoundCloud", url: "https://soundcloud.com/", desc: "Music and audio streaming.", logo: "https://cdn.simpleicons.org/soundcloud", subscenarios: ["music"] },
-      { name: "Radio Garden", url: "https://radio.garden/", desc: "Spin a globe and listen to live radio.", logo: "", subscenarios: ["radio"] }
-    ]
-  },
-  {
-    id: "system-tools", title: "System Tools", emoji: "🧰",
-    desc: "Utilities that make your system easier to live with",
-    color: ["#475569", "#334155"],
-    subscenarios: [
-      { id: "compression", title: "Compression", emoji: "📦" },
-      { id: "imaging", title: "Disk & USB", emoji: "💿" },
-      { id: "capture", title: "Screenshots", emoji: "📸" },
-      { id: "tweaks", title: "System Tweaks", emoji: "⚙️" }
-    ],
-    items: [
-      { name: "7-Zip", url: "https://www.7-zip.org/download.html", desc: "The classic free archiver.", logo: "https://cdn.simpleicons.org/7zip", subscenarios: ["compression"], tag: "essential", os: ["win"] },
-      { name: "ShareX", url: "https://getsharex.com/", desc: "Powerful screenshot and screen-recording tool on Windows.", logo: "", subscenarios: ["capture"], tag: "Windows only", os: ["win"] },
-      { name: "PowerToys", url: "https://learn.microsoft.com/windows/powertoys/", desc: "Microsoft's power-user toolkit. FancyZones, PowerRename, OCR and more.", logo: "", subscenarios: ["tweaks"], tag: "Windows only", os: ["win"] },
-      { name: "balenaEtcher", url: "https://etcher.balena.io/", desc: "Beautiful, foolproof USB writer.", logo: "https://cdn.simpleicons.org/balena", subscenarios: ["imaging"] },
-      { name: "Clonezilla", url: "https://clonezilla.org/downloads.php", desc: "Bare-metal disk imaging and cloning.", logo: "", subscenarios: ["imaging"], tag: "backup" },
-      { name: "Flameshot", url: "https://flameshot.org/", desc: "Powerful, simple screenshot tool for Linux.", logo: "", subscenarios: ["capture"], tag: "Linux", os: ["linux"] }
-    ]
-  },
-  {
-    id: "office", title: "Office & Documents", emoji: "📄",
-    desc: "Word processing, spreadsheets, presentations — without the subscription",
-    color: ["#0369a1", "#075985"],
-    subscenarios: [{ id: "suite", title: "Office Suite", emoji: "📝" }],
-    items: [
-      { name: "LibreOffice", url: "https://www.libreoffice.org/download/download-libreoffice/", desc: "The definitive free office suite. Writer, Calc, Impress — full MS Office compatibility.", logo: "https://cdn.simpleicons.org/libreoffice", subscenarios: ["suite"], tag: "essential" }
-    ]
-  },
-  {
-    id: "video-editing", title: "Video & Audio", emoji: "🎬",
-    desc: "Editing and producing your own media",
-    color: ["#7c2d12", "#9a3412"],
-    subscenarios: [
-      { id: "editing", title: "Video Editors", emoji: "🎥" },
-      { id: "audio", title: "Audio", emoji: "🎵" }
-    ],
-    items: [
-      { name: "DaVinci Resolve", url: "https://www.blackmagicdesign.com/products/davinciresolve", desc: "Professional-grade video editor, colour grader and VFX suite.", logo: "", subscenarios: ["editing"], tag: "pro-grade free" },
-      { name: "Audacity", url: "https://www.audacityteam.org/download/", desc: "The classic free audio editor.", logo: "https://cdn.simpleicons.org/audacity", subscenarios: ["audio"], tag: "essential" }
-    ]
-  }
-];
-
-/* ============================================================
-   STATE
-   ============================================================ */
-function loadArray(key) {
-  try { return JSON.parse(localStorage.getItem(key) || "[]"); }
-  catch(e) { return []; }
-}
-const state = {
-  osList: loadArray("osList"),
-  browserList: loadArray("browserList"),
-  view: "welcome",
-  scenarioId: null,
-  itemName: null,
-  query: "",
-  theme: localStorage.getItem("theme") || "dark",
-  osAnswers: {},
-  browserAnswers: {},
-  pendingOsSelection: new Set(),
-  pendingBrowserSelection: new Set()
-};
-(function migrate() {
-  const oldOs = localStorage.getItem("os");
-  const oldDistro = localStorage.getItem("distro");
-  const oldBrowser = localStorage.getItem("browser");
-  if (oldOs && state.osList.length === 0) {
-    if (oldOs === "linux" && oldDistro) state.osList = [oldDistro];
-    else state.osList = [oldOs];
-    localStorage.setItem("osList", JSON.stringify(state.osList));
-  }
-  if (oldBrowser && state.browserList.length === 0) {
-    state.browserList = [oldBrowser];
-    localStorage.setItem("browserList", JSON.stringify(state.browserList));
-  }
-  localStorage.removeItem("os");
-  localStorage.removeItem("distro");
-  localStorage.removeItem("browser");
-})();
-
-document.documentElement.setAttribute("data-theme", state.theme);
-let lastNonSearchRoute = "#/home";
-
-function osLabelFor(id) {
-  if (!id) return "—";
-  const c = OS_CANDIDATES[id];
-  return c ? c.label : id;
-}
-function osEmojiFor(id) {
-  const c = OS_CANDIDATES[id];
-  return c ? c.emoji : "💻";
-}
-function osLabelList() {
-  if (!state.osList.length) return "—";
-  if (state.osList.length === 1) return osLabelFor(state.osList[0]);
-  return `${osLabelFor(state.osList[0])} + ${state.osList.length - 1} more`;
-}
-function osEmojiList() {
-  if (!state.osList.length) return "💻";
-  return state.osList.map(osEmojiFor).slice(0, 3).join("");
-}
-function browserLabelList() {
-  if (!state.browserList.length) return "—";
-  const nameOf = (id) => BROWSERS[id] ? BROWSERS[id].name : id;
-  if (state.browserList.length === 1) return nameOf(state.browserList[0]);
-  return `${nameOf(state.browserList[0])} + ${state.browserList.length - 1} more`;
-}
-function browserEmojiList() {
-  if (!state.browserList.length) return "🌐";
-  return state.browserList.map(id => BROWSERS[id] ? BROWSERS[id].emoji : "🌐").slice(0, 3).join("");
-}
-function osTagFor(id) {
-  if (id === "win") return "win";
-  if (id === "mac") return "mac";
-  return "linux";
-}
-function isUsingBothBrowsers() {
-  return state.browserList.includes("zen") && state.browserList.includes("helium");
-}
-function isScenarioHidden(id) {
-  if (id === "browsers" && isUsingBothBrowsers()) return true;
-  return false;
-}
-function browserAvailableForOS(browserId) {
-  const b = BROWSERS[browserId];
-  if (!b || !b.os) return true;
-  return state.osList.some((selId) => b.os.includes(osTagFor(selId)));
-}
-
-/* ============================================================
-   ROUTING
-   ============================================================ */
-function parseHash() {
-  const h = (location.hash || "#/").slice(1);
-  const parts = h.split("/").filter(Boolean);
-  if (!parts.length) return { view: "welcome" };
-  const [a, b, c] = parts;
-  switch (a) {
-    case "welcome":        return { view: "welcome" };
-    case "os-quiz":        return { view: "os-quiz" };
-    case "os-result":      return { view: "os-result" };
-    case "browser-quiz":   return { view: "browser-quiz" };
-    case "browser-result": return { view: "browser-result" };
-    case "home":           return { view: "scenarios" };
-    case "all":            return { view: "all" };
-    case "scenario":       return { view: "scenario", scenarioId: b || null };
-    case "item":           return { view: "item", scenarioId: b || null, itemName: c ? decodeURIComponent(c) : null };
-    case "search":         return { view: "search", query: b ? decodeURIComponent(b) : "" };
-    default:               return { view: "welcome" };
-  }
-}
-function go(hash) {
-  if ((location.hash || "#/") === hash) { handleRoute(); return; }
-  location.hash = hash;
-}
-function handleRoute() {
-  const route = parseHash();
-
-  if (["scenarios","all","scenario","item","search"].includes(route.view)) {
-    if (!state.osList.length) { history.replaceState(null, "", "#/welcome"); return handleRoute(); }
-    if (!state.browserList.length) { history.replaceState(null, "", "#/browser-quiz"); return handleRoute(); }
-  }
-  if (route.view === "browser-quiz" && !state.osList.length) { history.replaceState(null, "", "#/os-quiz"); return handleRoute(); }
-  if (route.view === "browser-result" && !state.osList.length) { history.replaceState(null, "", "#/os-quiz"); return handleRoute(); }
-  if (route.view === "scenario" && !route.scenarioId) { history.replaceState(null, "", "#/home"); return handleRoute(); }
-  if (route.view === "item" && (!route.scenarioId || !route.itemName)) { history.replaceState(null, "", "#/home"); return handleRoute(); }
-  if ((route.view === "scenario" || route.view === "item") && isScenarioHidden(route.scenarioId)) {
-    history.replaceState(null, "", "#/home"); return handleRoute();
-  }
-
-  state.view = route.view;
-  state.scenarioId = route.scenarioId || null;
-  state.itemName = route.itemName || null;
-
-  if (route.view === "search") {
-    state.query = (route.query || "").toLowerCase();
-    const inp = document.getElementById("searchInput");
-    if (inp) inp.value = route.query || "";
-  } else {
-    state.query = "";
-    const inp = document.getElementById("searchInput");
-    if (inp) inp.value = "";
-    if (["scenarios","scenario","item","all"].includes(route.view)) {
-      lastNonSearchRoute = location.hash || "#/home";
-    }
-  }
-  render();
-}
-window.addEventListener("popstate", handleRoute);
-window.addEventListener("hashchange", handleRoute);
-
-/* ============================================================
-   HELPERS
-   ============================================================ */
-const escapeHTML = (s) =>
-  String(s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-
-function findByScenario(id) { return SCENARIOS.find((s) => s.id === id); }
-function applyScenarioColor(scenario) {
-  if (!scenario) return;
-  document.documentElement.style.setProperty("--c1", scenario.color[0]);
-  document.documentElement.style.setProperty("--c2", scenario.color[1]);
-}
-function resetColors() {
-  document.documentElement.style.setProperty("--c1", "#5c7cfa");
-  document.documentElement.style.setProperty("--c2", "#9775fa");
-}
-function getIcon(id) { return ICONS[id] || ICONS["system-tools"]; }
-function getPattern(id) { return PATTERNS[id] || ""; }
-
-function osAvailable(item) {
-  if (!state.osList.length) return true;
-  const itemOS = item.os || ["win", "linux", "mac"];
-  return state.osList.some((selId) => itemOS.includes(osTagFor(selId)));
-}
-function visibleItems(scenario) { return scenario.items.filter(osAvailable); }
-function visibleChildren(item) { return (item.children || []).filter(osAvailable); }
-
-function activeScenarios() { return SCENARIOS.filter((sc) => !isScenarioHidden(sc.id)); }
-function visibleScenarios() {
-  return activeScenarios()
-    .map((sc) => ({ ...sc, items: visibleItems(sc) }))
-    .filter((sc) => sc.items.length > 0);
-}
-
-const OS_BUCKETS = {
-  win:   { id: "win",   label: "Windows",        emoji: "🪟" },
-  linux: { id: "linux", label: "Linux",          emoji: "🐧" },
-  mac:   { id: "mac",   label: "macOS",          emoji: "🍎" },
-  cross: { id: "cross", label: "Cross-platform", emoji: "🌐" }
-};
-const BUCKET_ORDER = ["win", "linux", "mac", "cross"];
-
-function bucketForItem(item) {
-  const set = item.os || ["win", "linux", "mac"];
-  if (set.length >= 2) return "cross";
-  if (set.includes("win")) return "win";
-  if (set.includes("linux")) return "linux";
-  if (set.includes("mac")) return "mac";
-  return "cross";
-}
-
-/* ============================================================
-   CARD
-   ============================================================ */
-function renderCard(item, scenario, opts) {
-  opts = opts || {};
-  const children = visibleChildren(item);
-  const hasChildren = children.length > 0;
-  const tag = hasChildren ? "button" : "a";
-  const styleAttr = scenario ? ` style="--c1:${scenario.color[0]};--c2:${scenario.color[1]}"` : "";
-  const attrs = hasChildren
-    ? `type="button" data-item="${escapeHTML(item.name)}"${styleAttr}`
-    : `href="${escapeHTML(item.url)}" target="_blank" rel="noopener"${styleAttr}`;
-  const pills = [];
-  if (opts.subTitles && opts.subTitles.length) {
-    opts.subTitles.forEach((t) => pills.push(`<span class="tag tag-sub">${escapeHTML(t)}</span>`));
-  }
-  if (item.tag) pills.push(`<span class="tag">${escapeHTML(item.tag)}</span>`);
-  (item.badges || []).forEach((b) => {
-    pills.push(`<span class="badge badge-${b.color || "blue"}">${escapeHTML(b.text)}</span>`);
-  });
-  if (hasChildren) pills.push(`<span class="tag">${children.length} add-on${children.length === 1 ? "" : "s"} →</span>`);
-  return `
-    <${tag} class="card" ${attrs}>
-      <div class="logo">${logoHTML(item)}</div>
-      <div class="body">
-        <div class="name"><span>${escapeHTML(item.name)}</span><span class="ext">${hasChildren ? "→" : "↗"}</span></div>
-        <p class="desc">${escapeHTML(item.desc)}</p>
-        ${pills.length ? `<div class="pill-row">${pills.join("")}</div>` : ""}
-      </div>
-    </${tag}>
+  const item = QUIZ[i];
+  content.innerHTML = `
+    <div class="quiz-progress">Question ${i + 1} of ${QUIZ.length}</div>
+    <h3 class="quiz-q">${item.q}</h3>
+    <div class="quiz-answers"></div>
   `;
-}
 
-function renderColumnBody(items, scenario) {
-  const multiSub = scenario.subscenarios.length > 1;
-  if (!multiSub) {
-    return items.map((it) => renderCard(it, scenario)).join("");
-  }
-  const blocks = [];
-  scenario.subscenarios.forEach((sub) => {
-    const subItems = items.filter((it) => it.subscenarios.includes(sub.id));
-    if (!subItems.length) return;
-    blocks.push(`
-      <div class="sub-label"><span>${sub.emoji}</span><span>${escapeHTML(sub.title)}</span></div>
-      ${subItems.map((it) => renderCard(it, scenario, { subTitles: [] })).join("")}
-    `);
+  const answers = content.querySelector('.quiz-answers');
+  item.a.forEach(ans => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'quiz-answer';
+    btn.textContent = ans.t;
+    btn.addEventListener('click', () => {
+      state.quizScore[ans.v]++;
+      state.quizIndex++;
+      renderQuizQuestion();
+    });
+    answers.appendChild(btn);
   });
-  return blocks.join("");
 }
 
-/* ============================================================
-   VIEWS
-   ============================================================ */
-function renderWelcomeView() {
-  document.getElementById("toolbar").style.display = "none";
-  document.getElementById("osBadge").style.display = "none";
-  document.getElementById("browserBadge").style.display = "none";
-  resetColors();
+function renderQuizResult(){
+  const s = state.quizScore;
+  let winner = 'other';
+  if(s.firefox  >= s.other && s.firefox  >= s.chromium) winner = 'firefox';
+  else if(s.chromium >= s.other && s.chromium >= s.firefox) winner = 'chromium';
 
-  return `
-    <div class="welcome-wrap">
-      <span class="welcome-eyebrow">Setup wizard</span>
-      <h2>Build your perfect <span class="grad">digital toolkit</span></h2>
-      <p>Answer a few quick questions and I'll recommend an OS, a browser, and every app you actually need. Or just pick what you already have — multi-select is fine.</p>
-      <div class="welcome-steps">
-        <div class="welcome-step">
-          <div class="n" style="--c1:#5c7cfa;--c2:#9775fa">1</div>
-          <div class="l">Your OS</div>
-          <div>pick one or many</div>
-        </div>
-        <div class="welcome-step">
-          <div class="n" style="--c1:#c2410c;--c2:#9a3412">2</div>
-          <div class="l">Your browser</div>
-          <div>pick one or many</div>
-        </div>
-        <div class="welcome-step">
-          <div class="n" style="--c1:#0891b2;--c2:#22d3ee">3</div>
-          <div class="l">Your toolkit</div>
-          <div>Apps & tools</div>
-        </div>
-      </div>
-      <button class="welcome-cta" data-action="start-quiz">
-        Start setup
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </button>
-      <p class="welcome-hint">Takes about 90 seconds. Your answers stay on your device.</p>
+  const recommended = pickAvailable(QUIZ_RESULT[winner]);
+
+  $('#quizContent').innerHTML = `
+    <div class="quiz-result">
+      <h3>🎯 ${recommended}</h3>
+      <p>Based on your answers, <strong>${recommended}</strong> looks like the best fit
+         for ${state.os ? OS_META[state.os].label : 'your system'}.</p>
+      <button id="quizAccept" class="proceed-btn">Select ${recommended}</button>
     </div>
   `;
-}
 
-function renderOsQuizView() {
-  document.getElementById("toolbar").style.display = "none";
-  document.getElementById("osBadge").style.display = "none";
-  document.getElementById("browserBadge").style.display = "none";
-  resetColors();
-
-  const answers = state.osAnswers;
-  const idx = OS_QUIZ.findIndex((q) => !answers[q.id]);
-  if (idx === -1) { go("#/os-result"); return ""; }
-  const q = OS_QUIZ[idx];
-  const step = idx + 1;
-  const total = OS_QUIZ.length;
-  const progress = ((step - 1) / total) * 100;
-
-  const opts = q.options.map((o) => `
-    <button class="quiz-opt" data-quiz="os" data-qid="${q.id}" data-oid="${o.id}">
-      <span class="b-emoji">${o.emoji}</span>
-      <span class="b-text">
-        <span class="b-label">${escapeHTML(o.label)}</span>
-        <span class="b-hint">${escapeHTML(o.hint)}</span>
-      </span>
-    </button>
-  `).join("");
-
-  const quickChips = Object.entries(OS_CANDIDATES).map(([id, o]) => {
-    const sel = state.pendingOsSelection.has(id) ? " selected" : "";
-    return `
-      <button class="quick-chip${sel}" data-quick-os="${id}">
-        <span class="qc-emoji">${o.emoji}</span>
-        <span>${escapeHTML(o.label)}</span>
-      </button>
-    `;
-  }).join("");
-
-  const count = state.pendingOsSelection.size;
-
-  return `
-    <div class="quiz-wrap">
-      <div class="quiz-progress">
-        <span class="txt">OS · ${step} of ${total}</span>
-        <span class="bar-track"><span class="bar-fill" style="width:${progress}%"></span></span>
-      </div>
-      <div class="quiz-card" style="--c1:#5c7cfa;--c2:#9775fa">
-        <div class="quiz-eyebrow">Finding your OS</div>
-        <h2 class="quiz-q">${escapeHTML(q.q)}</h2>
-        <p class="quiz-sub">${escapeHTML(q.sub)}</p>
-        <div class="quiz-options">${opts}</div>
-        <div class="quiz-actions">
-          ${idx > 0 ? `<button class="btn-secondary" data-action="os-back">← Back</button>` : `<button class="btn-secondary" data-action="welcome">← Back to start</button>`}
-        </div>
-
-        <div class="quick-pick">
-          <div class="quick-pick-label">Or skip the quiz — select every OS you use (multiple OK):</div>
-          <div class="quick-pick-chips">${quickChips}</div>
-          <div class="quick-pick-actions">
-            <button class="btn-primary" data-action="confirm-quick-os" ${count === 0 ? "disabled" : ""}>
-              Continue with ${count || "0"} ${count === 1 ? "OS" : "OSes"}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function computeOsResult() {
-  const totals = {};
-  Object.keys(OS_CANDIDATES).forEach((k) => totals[k] = 0);
-  OS_QUIZ.forEach((q) => {
-    const ans = state.osAnswers[q.id];
-    if (!ans) return;
-    const opt = q.options.find((o) => o.id === ans);
-    if (!opt) return;
-    Object.entries(opt.scores).forEach(([k, v]) => { totals[k] = (totals[k] || 0) + v; });
-  });
-  const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
-  return { topId: sorted[0][0], sorted };
-}
-
-function renderOsResultView() {
-  document.getElementById("toolbar").style.display = "none";
-  document.getElementById("osBadge").style.display = "none";
-  document.getElementById("browserBadge").style.display = "none";
-
-  const { topId, sorted } = computeOsResult();
-  const top = OS_CANDIDATES[topId] || OS_CANDIDATES.mint;
-  document.documentElement.style.setProperty("--c1", top.color[0]);
-  document.documentElement.style.setProperty("--c2", top.color[1]);
-
-  const runnersUp = sorted.slice(1, 3).map(([id]) => OS_CANDIDATES[id]).filter(Boolean);
-
-  const reasons = [];
-  if (state.osAnswers.power === "old") reasons.push("Lightweight enough for older hardware");
-  if (state.osAnswers.games === "heavy") reasons.push("Handles demanding games");
-  if (state.osAnswers.games === "rare") reasons.push("Games aren't a priority");
-  if (state.osAnswers.priority === "privacy") reasons.push("Privacy-respecting by default");
-  if (state.osAnswers.priority === "control") reasons.push("You get full control of the system");
-  if (state.osAnswers.priority === "works") reasons.push("Works without tinkering");
-  if (state.osAnswers.priority === "performance") reasons.push("Optimized for performance");
-  if (state.osAnswers.budget === "no") reasons.push("Runs great on your current hardware");
-  if (!reasons.length) reasons.push("A solid match for your answers");
-
-  const osLogoSrc = localLogoFor(top.label) || top.logo || "";
-  const topLogo = `<div class="result-logo">${
-    osLogoSrc
-      ? `<img src="${escapeHTML(osLogoSrc)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML='<span class=\\'letter\\'>${escapeHTML(top.emoji)}</span>'">`
-      : `<span class="letter">${escapeHTML(top.emoji)}</span>`
-  }</div>`;
-
-  return `
-    <div class="result-wrap">
-      <div class="result-card">
-        <div class="result-eyebrow">Your OS</div>
-        <div class="result-head">
-          ${topLogo}
-          <div>
-            <h2 class="result-title">${escapeHTML(top.label)}</h2>
-            <p class="result-desc">${escapeHTML(top.desc)}</p>
-          </div>
-        </div>
-        <div class="result-why">
-          <h4>Why this fits you</h4>
-          <ul>${reasons.map((r) => `<li>${escapeHTML(r)}</li>`).join("")}</ul>
-        </div>
-        ${runnersUp.length ? `
-          <div class="result-why" style="margin-top:12px">
-            <h4>Also worth a look</h4>
-            <ul>${runnersUp.map((r) => `<li>${escapeHTML(r.label)}</li>`).join("")}</ul>
-          </div>
-        ` : ""}
-        <div class="result-actions">
-          <button class="btn-primary" data-action="accept-os" data-os="${topId}">
-            Use ${escapeHTML(top.label)}
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </button>
-          <button class="btn-secondary" data-action="os-restart">← Retake quiz</button>
-          <a class="btn-secondary" href="${escapeHTML(top.url)}" target="_blank" rel="noopener" style="text-decoration:none">Download page ↗</a>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderBrowserQuizView() {
-  document.getElementById("toolbar").style.display = "none";
-  document.getElementById("osBadge").style.display = "";
-  document.getElementById("browserBadge").style.display = "none";
-  updateBadges();
-
-  const answers = state.browserAnswers;
-  const idx = BROWSER_QUIZ.findIndex((q) => !answers[q.id]);
-  if (idx === -1) { go("#/browser-result"); return ""; }
-  const q = BROWSER_QUIZ[idx];
-  const step = idx + 1;
-  const total = BROWSER_QUIZ.length;
-  const progress = ((step - 1) / total) * 100;
-
-  const opts = q.options.map((o) => `
-    <button class="quiz-opt" data-quiz="browser" data-qid="${q.id}" data-oid="${o.id}">
-      <span class="b-emoji">${o.emoji}</span>
-      <span class="b-text">
-        <span class="b-label">${escapeHTML(o.label)}</span>
-        <span class="b-hint">${escapeHTML(o.hint)}</span>
-      </span>
-    </button>
-  `).join("");
-
-  const groupsHTML = BROWSER_CATEGORIES.map((cat) => {
-    const ids = Object.keys(BROWSERS).filter((id) => BROWSERS[id].category === cat.id && browserAvailableForOS(id));
-    if (!ids.length) return "";
-    const chips = ids.map((id) => {
-      const b = BROWSERS[id];
-      const sel = state.pendingBrowserSelection.has(id) ? " selected" : "";
-      return `
-        <button class="quick-chip${sel}" data-quick-browser="${id}">
-          <span class="qc-emoji">${b.emoji}</span>
-          <span>${escapeHTML(b.name)}</span>
-        </button>
-      `;
-    }).join("");
-    return `
-      <div class="quick-pick-group">
-        <div class="quick-pick-group-label"><span>${cat.emoji}</span><span>${escapeHTML(cat.label)}</span></div>
-        <div class="quick-pick-chips">${chips}</div>
-      </div>
-    `;
-  }).join("");
-
-  const count = state.pendingBrowserSelection.size;
-
-  return `
-    <div class="quiz-wrap">
-      <div class="quiz-progress">
-        <span class="txt">Browser · ${step} of ${total}</span>
-        <span class="bar-track"><span class="bar-fill" style="width:${progress}%"></span></span>
-      </div>
-      <div class="quiz-card" style="--c1:#c2410c;--c2:#9a3412">
-        <div class="quiz-eyebrow">Finding your browser</div>
-        <h2 class="quiz-q">${escapeHTML(q.q)}</h2>
-        <p class="quiz-sub">${escapeHTML(q.sub)}</p>
-        <div class="quiz-options">${opts}</div>
-        <div class="quiz-actions">
-          <button class="btn-secondary" data-action="browser-back">← Back</button>
-        </div>
-
-        <div class="quick-pick">
-          <div class="quick-pick-label">Or skip the quiz — select every browser you use (multi-select OK):</div>
-          ${groupsHTML}
-          <div class="quick-pick-actions">
-            <button class="btn-primary" data-action="confirm-quick-browser" ${count === 0 ? "disabled" : ""}>
-              Continue with ${count || "0"} browser${count === 1 ? "" : "s"}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function eligibleQuizBrowserIds() {
-  const set = ["zen", "helium"];
-  if (state.osList.includes("mac")) set.push("safari");
-  return set;
-}
-
-function computeBrowserResult() {
-  const eligible = eligibleQuizBrowserIds();
-  const totals = {};
-  eligible.forEach((k) => { if (BROWSERS[k]) totals[k] = 0; });
-  BROWSER_QUIZ.forEach((q) => {
-    const ans = state.browserAnswers[q.id];
-    if (!ans) return;
-    const opt = q.options.find((o) => o.id === ans);
-    if (!opt) return;
-    Object.entries(opt.scores).forEach(([k, v]) => {
-      if (k in totals) totals[k] += v;
-    });
-  });
-  const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
-  return { topId: sorted[0][0], sorted };
-}
-
-function renderBrowserResultView() {
-  document.getElementById("toolbar").style.display = "none";
-  document.getElementById("osBadge").style.display = "";
-  document.getElementById("browserBadge").style.display = "none";
-  updateBadges();
-
-  const { topId, sorted } = computeBrowserResult();
-  const top = BROWSERS[topId] || BROWSERS.zen;
-  document.documentElement.style.setProperty("--c1", top.color[0]);
-  document.documentElement.style.setProperty("--c2", top.color[1]);
-
-  const runnersUp = sorted.slice(1, 3).map(([id]) => BROWSERS[id]).filter(Boolean);
-
-  const platformNote = state.osList.includes("mac")
-    ? "Quiz candidates on macOS: Zen, Helium and Safari."
-    : "Quiz candidates: Zen and Helium only. (Add macOS to your setup if you want Safari considered.)";
-
-  const topLogo = `<div class="result-logo">${logoHTML(top)}</div>`;
-
-  return `
-    <div class="result-wrap">
-      <div class="result-card">
-        <div class="result-eyebrow">Your browser</div>
-        <div class="result-head">
-          ${topLogo}
-          <div>
-            <h2 class="result-title">${escapeHTML(top.name)}</h2>
-            <p class="result-desc">${escapeHTML(top.desc)}</p>
-          </div>
-        </div>
-        <div class="result-why">
-          <h4>Why this fits you</h4>
-          <ul>${(top.reason || []).map((r) => `<li>${escapeHTML(r)}</li>`).join("")}</ul>
-        </div>
-        ${runnersUp.length ? `
-          <div class="result-why" style="margin-top:12px">
-            <h4>Also worth trying</h4>
-            <ul>${runnersUp.map((r) => `<li>${escapeHTML(r.name)}</li>`).join("")}</ul>
-          </div>
-        ` : ""}
-        <p style="position:relative;z-index:1;font-size:.78rem;color:var(--muted);margin-top:14px">${escapeHTML(platformNote)}</p>
-        <div class="result-actions">
-          <button class="btn-primary" data-action="accept-browser" data-browser="${topId}">
-            Use ${escapeHTML(top.name)} — show me my toolkit
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </button>
-          <button class="btn-secondary" data-action="browser-restart">← Retake quiz</button>
-          <a class="btn-secondary" href="${escapeHTML(top.url)}" target="_blank" rel="noopener" style="text-decoration:none">Open ${escapeHTML(top.name)} ↗</a>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderScenariosView() {
-  resetColors();
-  document.getElementById("toolbar").style.display = "";
-  updateBadges();
-
-  const visible = visibleScenarios();
-  const total = visible.reduce((n, s) => n + s.items.length, 0);
-  document.getElementById("stats").textContent = `${total} tool${total === 1 ? "" : "s"} · ${osLabelList()} · ${browserLabelList()}`;
-
-  const groupsHTML = GROUPS.map((group) => {
-    const scenarios = group.scenarioIds
-      .map((id) => visible.find((s) => s.id === id))
-      .filter(Boolean);
-    if (!scenarios.length) return "";
-    return `
-      <div class="group-label"><span>${escapeHTML(group.title)}</span></div>
-      <div class="scenario-grid">
-        ${scenarios.map((s) => `
-          <button class="scenario-card" data-scenario="${s.id}" style="--c1:${s.color[0]};--c2:${s.color[1]}">
-            <div class="pattern">${getPattern(s.id)}</div>
-            <div class="icon-wrap">${getIcon(s.id)}</div>
-            <div class="title">${escapeHTML(s.title)}</div>
-            <div class="desc">${escapeHTML(s.desc)}</div>
-            <div class="count"><strong>${s.items.length}</strong> tool${s.items.length === 1 ? "" : "s"}<span class="arrow">→</span></div>
-          </button>
-        `).join("")}
-      </div>
-    `;
-  }).join("");
-
-  return `
-    ${groupsHTML}
-    <div class="show-all-wrap">
-      <button class="show-all-btn" data-action="show-all">📦 Show everything (${total} tools)</button>
-    </div>
-  `;
-}
-
-function renderScenarioView() {
-  const original = findByScenario(state.scenarioId);
-  if (!original) { go("#/home"); return ""; }
-  if (isScenarioHidden(original.id)) { go("#/home"); return ""; }
-  const scenario = { ...original, items: visibleItems(original) };
-  if (!scenario.items.length) { go("#/home"); return ""; }
-
-  applyScenarioColor(scenario);
-  document.getElementById("toolbar").style.display = "";
-  updateBadges();
-
-  const buckets = { win: [], linux: [], mac: [], cross: [] };
-  scenario.items.forEach((it) => buckets[bucketForItem(it)].push(it));
-  const usedBuckets = BUCKET_ORDER.filter((k) => buckets[k].length > 0);
-
-  const columns = usedBuckets.map((key) => {
-    const meta = OS_BUCKETS[key];
-    const items = buckets[key];
-    return `
-      <div class="column">
-        <div class="column-header">
-          <span class="label"><span>${meta.emoji}</span><span>${escapeHTML(meta.label)}</span></span>
-          <span class="count">${items.length}</span>
-        </div>
-        ${renderColumnBody(items, scenario)}
-      </div>
-    `;
-  }).join("");
-
-  document.getElementById("stats").textContent = `${scenario.items.length} tool${scenario.items.length === 1 ? "" : "s"} · ${osLabelList()}`;
-
-  const splitNote = usedBuckets.length > 1
-    ? `Split across ${usedBuckets.length} platform groups.`
-    : `All ${scenario.items.length} work on your setup.`;
-
-  return `
-    <div class="breadcrumb">
-      <button class="back-btn" data-action="home">← All categories</button>
-      <span class="current">Category: <strong>${escapeHTML(scenario.title)}</strong></span>
-    </div>
-    <div class="scenario-banner">
-      <h2><span class="ic">${getIcon(scenario.id)}</span>${escapeHTML(scenario.title)}</h2>
-      <p>${escapeHTML(scenario.desc)} — ${splitNote}</p>
-    </div>
-    <div class="columns">${columns}</div>
-  `;
-}
-
-function renderItemView() {
-  const original = findByScenario(state.scenarioId);
-  if (!original) { go("#/home"); return ""; }
-  if (isScenarioHidden(original.id)) { go("#/home"); return ""; }
-  const item = original.items.find((i) => i.name === state.itemName);
-  if (!item) { go("#/scenario/" + original.id); return ""; }
-  const kids = visibleChildren(item);
-  if (!kids.length) { go("#/scenario/" + original.id); return ""; }
-
-  applyScenarioColor(original);
-  updateBadges();
-
-  const label = item.childrenLabel || `Recommended for ${item.name}`;
-  document.getElementById("stats").textContent = `${kids.length} recommendation${kids.length === 1 ? "" : "s"} · ${osLabelList()}`;
-
-  return `
-    <div class="breadcrumb">
-      <button class="back-btn" data-action="home">← All categories</button>
-      <button class="back-btn" data-action="back-scenario">← ${escapeHTML(original.title)}</button>
-      <span class="current">Tool: <strong>${escapeHTML(item.name)}</strong></span>
-    </div>
-    <div class="item-hero">
-      <div class="hero-top">
-        <div class="hero-logo">${logoHTML(item)}</div>
-        <div><h2>${escapeHTML(item.name)}</h2></div>
-      </div>
-      <p class="hero-desc">${escapeHTML(item.desc)}</p>
-      <div class="hero-actions">
-        <a class="btn" href="${escapeHTML(item.url)}" target="_blank" rel="noopener">Open / Download ↗</a>
-      </div>
-    </div>
-    <div class="section-title"><span>🧩</span><span>${escapeHTML(label)} — for ${osLabelList()}</span><span class="line"></span></div>
-    <div class="ext-grid">
-      ${kids.map((child) => `
-        <a class="ext-card" href="${escapeHTML(child.url)}" target="_blank" rel="noopener">
-          <div class="logo">${logoHTML(child)}</div>
-          <div class="body">
-            <div class="name"><span>${escapeHTML(child.name)}</span><span class="ext">↗</span></div>
-            <p class="desc">${escapeHTML(child.desc)}</p>
-          </div>
-        </a>
-      `).join("")}
-    </div>
-  `;
-}
-
-function renderAllView() {
-  resetColors();
-  updateBadges();
-  const visible = visibleScenarios();
-  const allTools = [];
-  visible.forEach((sc) => sc.items.forEach((item) => allTools.push({ item, scenario: sc })));
-  document.getElementById("stats").textContent = `${allTools.length} tools · ${osLabelList()}`;
-
-  return `
-    <div class="breadcrumb">
-      <button class="back-btn" data-action="home">← All categories</button>
-      <span class="current">Showing <strong>everything</strong> for ${osLabelList()}</span>
-    </div>
-    <div class="scenario-banner" style="--c1:#5c7cfa;--c2:#9775fa">
-      <h2><span class="ic">${ICONS["system-tools"]}</span>Everything</h2>
-      <p>All ${allTools.length} tools for ${osLabelList()} + ${browserLabelList()}.</p>
-    </div>
-    <div class="columns" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">
-      ${allTools.map(({ item, scenario }) => renderCard(item, scenario)).join("")}
-    </div>
-  `;
-}
-
-function renderSearchView() {
-  resetColors();
-  updateBadges();
-  const q = state.query;
-  const results = [];
-  for (const sc of activeScenarios()) {
-    for (const item of visibleItems(sc)) {
-      const hay = (item.name + " " + item.desc + " " + sc.title).toLowerCase();
-      if (hay.includes(q)) results.push({ kind: "tool", item, scenario: sc });
-      visibleChildren(item).forEach((child) => {
-        const childHay = (child.name + " " + child.desc + " " + sc.title).toLowerCase();
-        if (childHay.includes(q)) results.push({ kind: "child", item: child, scenario: sc, parent: item });
-      });
-    }
-  }
-  document.getElementById("stats").textContent = `${results.length} match${results.length === 1 ? "" : "es"} · ${osLabelList()}`;
-
-  if (!results.length) {
-    return `<div class="breadcrumb"><button class="back-btn" data-action="home">← All categories</button><span class="current">Search: <strong>${escapeHTML(state.query)}</strong></span></div>
-    <div class="empty"><div class="big">🔍</div><p>Nothing matches "${escapeHTML(state.query)}" for ${osLabelList()}.</p></div>`;
-  }
-
-  return `
-    <div class="breadcrumb"><button class="back-btn" data-action="home">← All categories</button><span class="current">Search: <strong>${escapeHTML(state.query)}</strong></span></div>
-    <div class="scenario-banner" style="--c1:#5c7cfa;--c2:#9775fa">
-      <h2><span class="ic">${ICONS.ai}</span>Results</h2>
-      <p>${results.length} match${results.length === 1 ? "" : "es"}.</p>
-    </div>
-    <div class="columns" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">
-      ${results.map((r) => {
-        if (r.kind === "tool") return renderCard(r.item, r.scenario);
-        return `
-          <a class="card" href="${escapeHTML(r.item.url)}" target="_blank" rel="noopener" style="--c1:${r.scenario.color[0]};--c2:${r.scenario.color[1]}">
-            <div class="logo">${logoHTML(r.item)}</div>
-            <div class="body">
-              <div class="name"><span>${escapeHTML(r.item.name)}</span><span class="ext">↗</span></div>
-              <p class="desc">${escapeHTML(r.item.desc)}</p>
-              <div class="pill-row"><span class="tag">for ${escapeHTML(r.parent.name)}</span></div>
-            </div>
-          </a>
-        `;
-      }).join("")}
-    </div>
-  `;
-}
-
-function updateBadges() {
-  const osB = document.getElementById("osBadge");
-  const brB = document.getElementById("browserBadge");
-  const osL = document.getElementById("osBadgeLabel");
-  const osI = document.getElementById("osBadgeIcon");
-  const brL = document.getElementById("browserBadgeLabel");
-  const brI = document.getElementById("browserBadgeIcon");
-  if (state.osList.length) {
-    osB.style.display = "";
-    osL.textContent = osLabelList();
-    osI.textContent = osEmojiList();
-  } else osB.style.display = "none";
-  if (state.browserList.length) {
-    brB.style.display = "";
-    brL.textContent = browserLabelList();
-    brI.textContent = browserEmojiList();
-  } else brB.style.display = "none";
-}
-
-/* ============================================================
-   RENDER + BIND
-   ============================================================ */
-function render() {
-  const content = document.getElementById("content");
-
-  if (state.view === "welcome") content.innerHTML = renderWelcomeView();
-  else if (state.view === "os-quiz") content.innerHTML = renderOsQuizView();
-  else if (state.view === "os-result") content.innerHTML = renderOsResultView();
-  else if (state.view === "browser-quiz") content.innerHTML = renderBrowserQuizView();
-  else if (state.view === "browser-result") content.innerHTML = renderBrowserResultView();
-  else if (state.view === "search") content.innerHTML = renderSearchView();
-  else if (state.view === "all") content.innerHTML = renderAllView();
-  else if (state.view === "item") content.innerHTML = renderItemView();
-  else if (state.view === "scenario") content.innerHTML = renderScenarioView();
-  else content.innerHTML = renderScenariosView();
-
-  bindClicks();
-  bindTilt();
-}
-
-function bindClicks() {
-  const content = document.getElementById("content");
-
-  content.querySelectorAll('[data-action="start-quiz"]').forEach((el) => {
-    el.addEventListener("click", () => {
-      state.osAnswers = {};
-      state.browserAnswers = {};
-      state.pendingOsSelection = new Set();
-      state.pendingBrowserSelection = new Set();
-      go("#/os-quiz");
-    });
-  });
-  content.querySelectorAll('[data-action="welcome"]').forEach((el) => {
-    el.addEventListener("click", () => go("#/welcome"));
-  });
-
-  content.querySelectorAll(".quiz-opt").forEach((el) => {
-    el.addEventListener("click", () => {
-      const quiz = el.dataset.quiz;
-      const qid = el.dataset.qid;
-      const oid = el.dataset.oid;
-      if (quiz === "os") state.osAnswers[qid] = oid;
-      else state.browserAnswers[qid] = oid;
-      render();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  });
-
-  /* Quick-pick chips update in place — no re-render, so the card never
-     replays its entrance animation and the page never shifts or scrolls. */
-  function updateQuickPickButton(sel, action, noun1, nounN) {
-    const btn = content.querySelector(`[data-action="${action}"]`);
-    if (!btn) return;
-    const n = sel.size;
-    for (const node of btn.childNodes) {
-      if (node.nodeType === Node.TEXT_NODE) {
-        node.textContent = ` Continue with ${n} ${n === 1 ? noun1 : nounN} `;
-        break;
-      }
-    }
-    btn.disabled = n === 0;
-  }
-
-  content.querySelectorAll('[data-quick-os]').forEach((el) => {
-    el.addEventListener("click", () => {
-      const id = el.dataset.quickOs;
-      if (state.pendingOsSelection.has(id)) state.pendingOsSelection.delete(id);
-      else state.pendingOsSelection.add(id);
-      el.classList.toggle("selected", state.pendingOsSelection.has(id));
-      updateQuickPickButton(state.pendingOsSelection, "confirm-quick-os", "OS", "OSes");
-    });
-  });
-
-  content.querySelectorAll('[data-quick-browser]').forEach((el) => {
-    el.addEventListener("click", () => {
-      const id = el.dataset.quickBrowser;
-      if (state.pendingBrowserSelection.has(id)) state.pendingBrowserSelection.delete(id);
-      else state.pendingBrowserSelection.add(id);
-      el.classList.toggle("selected", state.pendingBrowserSelection.has(id));
-      updateQuickPickButton(state.pendingBrowserSelection, "confirm-quick-browser", "browser", "browsers");
-    });
-  });
-
-  content.querySelectorAll('[data-action="confirm-quick-os"]').forEach((el) => {
-    el.addEventListener("click", () => {
-      if (!state.pendingOsSelection.size) return;
-      state.osList = Array.from(state.pendingOsSelection);
-      localStorage.setItem("osList", JSON.stringify(state.osList));
-      state.pendingBrowserSelection = new Set(
-        Array.from(state.pendingBrowserSelection).filter(browserAvailableForOS)
-      );
-      state.browserAnswers = {};
-      go("#/browser-quiz");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  });
-
-  content.querySelectorAll('[data-action="confirm-quick-browser"]').forEach((el) => {
-    el.addEventListener("click", () => {
-      if (!state.pendingBrowserSelection.size) return;
-      state.browserList = Array.from(state.pendingBrowserSelection);
-      localStorage.setItem("browserList", JSON.stringify(state.browserList));
-      history.replaceState(null, "", "#/home");
-      handleRoute();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  });
-
-  content.querySelectorAll('[data-action="os-back"]').forEach((el) => {
-    el.addEventListener("click", () => {
-      const keys = Object.keys(state.osAnswers);
-      if (keys.length) { delete state.osAnswers[keys[keys.length - 1]]; }
-      render();
-    });
-  });
-
-  content.querySelectorAll('[data-action="browser-back"]').forEach((el) => {
-    el.addEventListener("click", () => {
-      const keys = Object.keys(state.browserAnswers);
-      if (keys.length) { delete state.browserAnswers[keys[keys.length - 1]]; }
-      else { go("#/os-result"); return; }
-      render();
-    });
-  });
-
-  content.querySelectorAll('[data-action="os-restart"]').forEach((el) => {
-    el.addEventListener("click", () => { state.osAnswers = {}; go("#/os-quiz"); });
-  });
-  content.querySelectorAll('[data-action="browser-restart"]').forEach((el) => {
-    el.addEventListener("click", () => { state.browserAnswers = {}; go("#/browser-quiz"); });
-  });
-
-  content.querySelectorAll('[data-action="accept-os"]').forEach((el) => {
-    el.addEventListener("click", () => {
-      const id = el.dataset.os;
-      state.osList = [id];
-      localStorage.setItem("osList", JSON.stringify(state.osList));
-      state.browserAnswers = {};
-      state.pendingBrowserSelection = new Set();
-      go("#/browser-quiz");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  });
-
-  content.querySelectorAll('[data-action="accept-browser"]').forEach((el) => {
-    el.addEventListener("click", () => {
-      state.browserList = [el.dataset.browser];
-      localStorage.setItem("browserList", JSON.stringify(state.browserList));
-      history.replaceState(null, "", "#/home");
-      handleRoute();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  });
-
-  content.querySelectorAll(".scenario-card").forEach((el) => {
-    el.addEventListener("click", () => {
-      go("#/scenario/" + el.dataset.scenario);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  });
-
-  content.querySelectorAll('[data-action="home"]').forEach((el) => {
-    el.addEventListener("click", () => go("#/home"));
-  });
-  content.querySelectorAll('[data-action="back-scenario"]').forEach((el) => {
-    el.addEventListener("click", () => go("#/scenario/" + state.scenarioId));
-  });
-  content.querySelectorAll('[data-action="show-all"]').forEach((el) => {
-    el.addEventListener("click", () => { go("#/all"); window.scrollTo({ top: 0, behavior: "smooth" }); });
-  });
-  content.querySelectorAll('[data-item]').forEach((el) => {
-    el.addEventListener("click", () => {
-      go(`#/item/${state.scenarioId}/${encodeURIComponent(el.dataset.item)}`);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+  $('#quizAccept').addEventListener('click', () => {
+    selectBrowserByName(recommended);
+    closeQuiz();
   });
 }
 
-function bindTilt() {
-  document.querySelectorAll(".scenario-card").forEach((el) => {
-    let raf = null;
-    el.addEventListener("mousemove", (e) => {
-      const rect = el.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top) / rect.height;
-      const rx = (y - 0.5) * -6;
-      const ry = (x - 0.5) * 6;
-      if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-5px)`;
-      });
-    });
-    el.addEventListener("mouseleave", () => {
-      if (raf) cancelAnimationFrame(raf);
-      el.style.transform = "";
-    });
-  });
+/* Return the requested browser, or the closest available one for the chosen OS */
+function pickAvailable(name){
+  const target = BROWSERS.find(b => b.name === name);
+  if(!target) return name;
+  if(!state.os || target.os.includes(state.os)) return target.name;
+
+  const fallback = BROWSERS.find(b =>
+    b.engine === target.engine && b.os.includes(state.os)
+  );
+  return fallback ? fallback.name : target.name;
 }
 
-/* ============================================================
-   NEURAL-LINK BACKGROUND
-   A free-roaming constellation. Dots drift all over the
-   screen (no grid), linking up with whoever is nearby.
-   The cursor doesn't capture them — it just stirs the swarm:
-   nearby dots lean into its direction of travel, swirl lazily
-   around it and ease out of its way, like fish around a hand.
-   Clicking detonates a shockwave that scatters everything,
-   after which the field settles back to a lazy cruise.
-   ============================================================ */
-(function initNeuralGrid() {
-  const canvas = document.getElementById("dotGrid");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d", { alpha: true });
-  let dots = [];
-  let pulses = [];
-  const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, vx: 0, vy: 0 };
-  let dpr = Math.min(window.devicePixelRatio || 1, 2);
-  let W = 0, H = 0;
-  let t = 0;
-
-  const LINK_DIST = 140;            // max distance for dot-to-dot links
-  const LINK_DIST2 = LINK_DIST * LINK_DIST;
-  const CURSOR_LINK_R = 250;        // radius for cursor-to-dot links
-  const CURSOR_LINK_R2 = CURSOR_LINK_R * CURSOR_LINK_R;
-  const MOUSE_R = 170;              // cursor influence radius
-  const MOUSE_R2 = MOUSE_R * MOUSE_R;
-  const PULSE_R = 140;              // click shockwave radius (much smaller in 1.1)
-  const CRUISE = 0.28;              // relaxed drift speed (slowed down in 1.1)
-  const MAX_SPEED = 0.75;           // hard speed cap (click needs headroom)
-  const MAX_DOTS = 1000;            // spawned dots beyond this fade away
-
-  function resize() {
-    W = window.innerWidth;
-    H = window.innerHeight;
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
-    canvas.style.width = W + "px";
-    canvas.style.height = H + "px";
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    build();
-  }
-  function build() {
-    const count = Math.max(60, Math.min(550, Math.round((W * H) / 5000)));
-    dots = [];
-    for (let i = 0; i < count; i++) {
-      dots.push({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        vx: (Math.random() - 0.5) * CRUISE * 2,
-        vy: (Math.random() - 0.5) * CRUISE * 2,
-        p: Math.random() * Math.PI * 2,     // steering phase
-        sp: 0.3 + Math.random() * 0.5,      // steering speed
-        r: 1.0 + Math.random() * 1.1,       // dot radius
-        z: 0.65 + Math.random() * 0.7,      // depth: parallax speed & size
-        life: 1,                            // fade in/out multiplier
-        dying: false,                       // capped dots fade away
-        base: true                          // field dots are permanent
-      });
-    }
-  }
-
-  /* Click / tap: shockwave ring + outward kick, plus a fresh burst of
-     spawned dots that bloom at the click point. Spawned dots fade in;
-     once the field grows past MAX_DOTS, the oldest spawned ones start
-     fading away. */
-  function spawnPulse(x, y) {
-    pulses.push({ x, y, r: 4, life: 1 });
-    for (const d of dots) {
-      const dx = d.x - x, dy = d.y - y;
-      const dist = Math.hypot(dx, dy) || 1;
-      if (dist > PULSE_R) continue;
-      const f = (1 - dist / PULSE_R) * 8;
-      d.vx += (dx / dist) * f;
-      d.vy += (dy / dist) * f;
-    }
-    // New dots bloom around the click point.
-    for (let i = 0; i < 10; i++) {
-      const a = Math.random() * Math.PI * 2;
-      const kick = 0.4 + Math.random() * 1.4;
-      dots.push({
-        x: x + (Math.random() - 0.5) * 24,
-        y: y + (Math.random() - 0.5) * 24,
-        vx: Math.cos(a) * kick,
-        vy: Math.sin(a) * kick,
-        p: Math.random() * Math.PI * 2,
-        sp: 0.3 + Math.random() * 0.5,
-        r: 1.0 + Math.random() * 1.1,
-        z: 0.65 + Math.random() * 0.7,
-        life: 0,
-        dying: false,
-        base: false
-      });
-    }
-    // Over the cap? Oldest spawned dots begin to fade out.
-    let excess = dots.length - MAX_DOTS;
-    for (let i = 0; i < dots.length && excess > 0; i++) {
-      const d = dots[i];
-      if (!d.base && !d.dying) { d.dying = true; excess--; }
-    }
-  }
-
-  function loop() {
-    t += 0.016;
-    ctx.clearRect(0, 0, W, H);
-    const isLight = document.documentElement.getAttribute("data-theme") === "light";
-    const baseR = isLight ? 50 : 96;
-    const baseG = isLight ? 70 : 128;
-    const baseB = isLight ? 190 : 252;
-
-    /* Smoothed cursor velocity (direction of travel). */
-    if (mouse.x > -1000 && mouse.px > -1000) {
-      mouse.vx += ((mouse.x - mouse.px) - mouse.vx) * 0.25;
-      mouse.vy += ((mouse.y - mouse.py) - mouse.vy) * 0.25;
-    } else {
-      mouse.vx *= 0.8;
-      mouse.vy *= 0.8;
-    }
-    mouse.px = mouse.x;
-    mouse.py = mouse.y;
-    const mSpeed = Math.hypot(mouse.vx, mouse.vy);
-    const mLen = mSpeed || 1;
-    const flow = Math.min(1, mSpeed / 18);   // 0 when cursor rests
-
-    /* Physics update. Spawned dots fade in; capped ones fade out and
-       are removed once fully gone. */
-    for (let i = dots.length - 1; i >= 0; i--) {
-      const d = dots[i];
-      if (d.dying) {
-        d.life -= 0.035;
-        if (d.life <= 0) { dots.splice(i, 1); continue; }
-      } else if (d.life < 1) {
-        d.life = Math.min(1, d.life + 0.04);
-      }
-
-      // Organic steering — each dot's path curves on its own.
-      d.vx += Math.sin(t * d.sp + d.p) * 0.02;
-      d.vy += Math.cos(t * d.sp * 0.9 + d.p * 1.7) * 0.02;
-
-      // Cursor: no capture, just a stir. Nearby dots lean into
-      // its direction of travel, swirl lazily around it and ease
-      // out of its way — like fish around a hand.
-      const dx = d.x - mouse.x, dy = d.y - mouse.y;
-      const d2 = dx * dx + dy * dy;
-      if (mouse.x > -1000 && d2 < MOUSE_R2 && d2 > 0.01) {
-        const dist = Math.sqrt(d2);
-        const prox = 1 - dist / MOUSE_R;
-        const push = prox * prox;            // gentle falloff at the edge
-        // lean into the cursor's direction of travel
-        d.vx += (mouse.vx / mLen) * push * flow * 0.30;
-        d.vy += (mouse.vy / mLen) * push * flow * 0.30;
-        // lazy tangential swirl around it
-        d.vx += (-dy / dist) * push * 0.10;
-        d.vy += (dx / dist) * push * 0.10;
-        // faint clearing — drift away instead of clustering
-        d.vx += (dx / dist) * push * 0.05;
-        d.vy += (dy / dist) * push * 0.05;
-      }
-
-      // Homeostatic speed: bursts decay back to a lazy cruise.
-      const spd2 = d.vx * d.vx + d.vy * d.vy;
-      if (spd2 > MAX_SPEED * MAX_SPEED) {
-        const k = MAX_SPEED / Math.sqrt(spd2);
-        d.vx *= k; d.vy *= k;
-      } else if (spd2 < CRUISE * CRUISE) {
-        const k = Math.min(1.03, Math.sqrt((CRUISE * CRUISE) / Math.max(spd2, 1e-4)));
-        d.vx *= k; d.vy *= k;
-      }
-
-      // Move. (position integration — velocity becomes displacement)
-      d.x += d.vx * d.z;
-      d.y += d.vy * d.z;
-
-      // Wrap around the screen edges.
-      if (d.x < -20) d.x = W + 20; else if (d.x > W + 20) d.x = -20;
-      if (d.y < -20) d.y = H + 20; else if (d.y > H + 20) d.y = -20;
-    }
-
-    /* Expanding shockwave rings. */
-    for (let i = pulses.length - 1; i >= 0; i--) {
-      const p = pulses[i];
-      p.r += 5;
-      p.life *= 0.93;
-      if (p.life < 0.03 || p.r > PULSE_R) { pulses.splice(i, 1); continue; }
-      ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${(p.life * 0.6).toFixed(3)})`;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-
-    /* Constellation links — connect dots that drift close together. */
-    ctx.lineWidth = 0.6;
-    for (let i = 0; i < dots.length; i++) {
-      const a = dots[i];
-      for (let j = i + 1; j < dots.length; j++) {
-        const b = dots[j];
-        const dx = a.x - b.x;
-        if (dx > LINK_DIST || dx < -LINK_DIST) continue;
-        const dy = a.y - b.y;
-        if (dy > LINK_DIST || dy < -LINK_DIST) continue;
-        const d2 = dx * dx + dy * dy;
-        if (d2 > LINK_DIST2) continue;
-        const alpha = (1 - Math.sqrt(d2) / LINK_DIST) * 0.25 * Math.min(a.life, b.life);
-        ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${alpha.toFixed(3)})`;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
-      }
-    }
-
-    /* Cursor links — the pointer weaves itself into the web. */
-    for (const d of dots) {
-      const dx = d.x - mouse.x, dy = d.y - mouse.y;
-      const d2 = dx * dx + dy * dy;
-      if (mouse.x < -1000 || d2 > CURSOR_LINK_R2) continue;
-      const s = 1 - Math.sqrt(d2) / CURSOR_LINK_R;
-      ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${(s * 0.45 * d.life).toFixed(3)})`;
-      ctx.lineWidth = 0.5 + s * 1.6;
-      ctx.beginPath();
-      ctx.moveTo(mouse.x, mouse.y);
-      ctx.lineTo(d.x, d.y);
-      ctx.stroke();
-    }
-
-    /* Dots — brighter and bigger near the cursor or when moving fast. */
-    for (const d of dots) {
-      const dx = d.x - mouse.x, dy = d.y - mouse.y;
-      const d2 = dx * dx + dy * dy;
-      const s = (mouse.x > -1000 && d2 < MOUSE_R2) ? 1 - Math.sqrt(d2) / MOUSE_R : 0;
-      const spd = Math.hypot(d.vx, d.vy);
-      const energy = Math.min(1, Math.max(0, (spd - CRUISE) / (MAX_SPEED - CRUISE)));
-      const alpha = Math.min(1, 0.22 + s * 0.4 + energy * 0.35) * d.life;
-      const size = (d.r * d.z + energy * 1.2) * (0.5 + 0.5 * d.life);
-      ctx.fillStyle = `rgba(${Math.round(baseR + s * 50)}, ${Math.round(baseG - s * 30)}, ${Math.round(baseB + s * 3)}, ${alpha.toFixed(3)})`;
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    /* Cursor glow. */
-    if (mouse.x > -1000 && mouse.y > -1000) {
-      ctx.fillStyle = `rgba(${baseR + 40}, ${baseG - 20}, ${baseB}, 0.7)`;
-      ctx.beginPath();
-      ctx.arc(mouse.x, mouse.y, 2.2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    requestAnimationFrame(loop);
-  }
-  window.addEventListener("resize", resize);
-  window.addEventListener("mousemove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
-  window.addEventListener("mouseleave", () => { mouse.x = -9999; mouse.y = -9999; });
-  window.addEventListener("click", (e) => {
-    if (e.target && e.target.closest && e.target.closest("a,button,input,textarea,select,label")) return;
-    spawnPulse(e.clientX, e.clientY);
-  });
-  document.addEventListener("touchstart", (e) => {
-    if (e.touches[0]) {
-      mouse.x = e.touches[0].clientX;
-      mouse.y = e.touches[0].clientY;
-      spawnPulse(mouse.x, mouse.y);
-    }
-  }, { passive: true });
-  document.addEventListener("touchmove", (e) => {
-    if (e.touches[0]) { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; }
-  }, { passive: true });
-  document.addEventListener("touchend", () => { mouse.x = -9999; mouse.y = -9999; });
-  resize();
-  loop();
-})();
-
-/* ============================================================
-   GLOBAL EVENTS
-   ============================================================ */
-document.getElementById("themeToggle").addEventListener("click", () => {
-  state.theme = state.theme === "dark" ? "light" : "dark";
-  document.documentElement.setAttribute("data-theme", state.theme);
-  localStorage.setItem("theme", state.theme);
-});
-
-document.getElementById("osBadge").addEventListener("click", () => {
-  state.osAnswers = {};
-  state.browserAnswers = {};
-  state.osList = [];
-  state.browserList = [];
-  state.pendingOsSelection = new Set();
-  state.pendingBrowserSelection = new Set();
-  localStorage.removeItem("osList");
-  localStorage.removeItem("browserList");
-  history.replaceState(null, "", "#/welcome");
-  handleRoute();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-document.getElementById("browserBadge").addEventListener("click", () => {
-  state.browserAnswers = {};
-  state.browserList = [];
-  state.pendingBrowserSelection = new Set();
-  localStorage.removeItem("browserList");
-  history.replaceState(null, "", "#/browser-quiz");
-  handleRoute();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-document.getElementById("siteTitle").addEventListener("click", () => {
-  if (state.osList.length && state.browserList.length) go("#/home");
-  else go("#/welcome");
-});
-
-document.getElementById("searchInput").addEventListener("input", (e) => {
-  const v = e.target.value.trim();
-  if (v) {
-    history.replaceState(null, "", "#/search/" + encodeURIComponent(v));
-    state.query = v.toLowerCase();
-    state.view = "search";
-    render();
-  } else {
-    go(lastNonSearchRoute);
-  }
-});
-
-/* ============================================================
-   INIT
-   ============================================================ */
-if (!location.hash || location.hash === "#") {
-  history.replaceState(null, "", "#/welcome");
+function selectBrowserByName(name){
+  const finalName = pickAvailable(name);
+  state.browsers.add(finalName);
+  save();
+  renderBrowsers();
 }
-handleRoute();
+
+/* =========================================================
+   BOOT
+   ========================================================= */
+load();
+updateProceed();
 </script>
 </body>
 </html>
