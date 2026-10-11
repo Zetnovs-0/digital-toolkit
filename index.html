@@ -108,9 +108,10 @@
     font-family: inherit; font-weight: 800; font-size: 1.05rem;
     display: inline-flex; align-items: center; gap: 10px;
     box-shadow: 0 12px 32px -6px #5c7cfa;
-    transition: transform .18s, box-shadow .25s;
+    transition: transform .08s ease-out, box-shadow .12s ease-out;
   }
-  .welcome-cta:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -6px #5c7cfa; }
+  .welcome-cta:hover { transform: translateY(-1px) scale(.99); box-shadow: 0 14px 30px -6px #5c7cfa; }
+  .welcome-cta:active { transform: scale(.96); transition-duration: .05s; }
   .welcome-cta svg { width: 18px; height: 18px; }
   .welcome-hint { color: var(--muted); font-size: .82rem; margin-top: 18px; }
 
@@ -144,13 +145,15 @@
     color: var(--text); padding: 18px 16px; border-radius: 14px;
     cursor: pointer; font-family: inherit; font-size: .95rem; font-weight: 600;
     display: flex; align-items: flex-start; gap: 12px;
-    transition: all .18s; text-align: left;
+    transition: border-color .1s ease-out, background .1s ease-out, box-shadow .1s ease-out;
+    text-align: left;
   }
   .quiz-opt .b-emoji { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
   .quiz-opt .b-text { display: flex; flex-direction: column; gap: 2px; }
   .quiz-opt .b-label { font-weight: 700; font-size: .95rem; }
   .quiz-opt .b-hint { font-weight: 400; color: var(--muted); font-size: .78rem; line-height: 1.4; }
-  .quiz-opt:hover { transform: translateY(-2px); border-color: var(--c1); background: var(--card-hover); box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+  .quiz-opt:hover { border-color: var(--c1); background: var(--card-hover); box-shadow: 0 6px 14px rgba(0,0,0,.2); }
+  .quiz-opt:active { transform: scale(.97); transition-duration: .05s; }
   .quiz-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; position: relative; z-index: 1; }
 
   /* QUICK PICK */
@@ -179,10 +182,11 @@
     padding: 9px 15px; border-radius: 11px; cursor: pointer;
     font-family: inherit; font-size: .88rem; font-weight: 600;
     display: inline-flex; align-items: center; gap: 7px;
-    transition: all .15s; position: relative;
+    transition: border-color .1s ease-out, background .1s ease-out, box-shadow .1s ease-out;
+    position: relative;
   }
-  .quick-chip:hover { border-color: var(--c1); background: var(--card-hover); transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.22); }
-  .quick-chip:active { transform: translateY(0) scale(.97); }
+  .quick-chip:hover { border-color: var(--c1); background: var(--card-hover); box-shadow: 0 4px 10px rgba(0,0,0,.18); }
+  .quick-chip:active { transform: scale(.95); transition-duration: .05s; }
   .quick-chip .qc-emoji { font-size: 1.05rem; line-height: 1; }
   .quick-chip.selected {
     border-color: var(--c1);
@@ -198,7 +202,69 @@
     box-shadow: 0 2px 6px rgba(0,0,0,.35);
   }
   .quick-pick-actions {
-    display: flex; justify-content: center; gap: 10px; margin-top: 16px;
+    display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 16px; flex-wrap: wrap;
+  }
+
+  /* OS CHOICE — Windows in center, macOS left, Linux right */
+  .os-choice-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: stretch; }
+  .os-choice-grid .os-opt-win { grid-column: 2; grid-row: 1; }
+  .os-choice-grid .os-opt-mac  { grid-column: 1; grid-row: 1; justify-self: end; }
+  .os-choice-grid .os-opt-linux{ grid-column: 3; grid-row: 1; justify-self: start; }
+  .os-opt {
+    background: var(--bg-soft); border: 1px solid var(--border); color: var(--text);
+    padding: 20px 18px; border-radius: 16px; cursor: pointer; font-family: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    width: 170px; text-align: center; transition: border-color .1s ease-out, background .1s ease-out, box-shadow .1s ease-out; position: relative;
+  }
+  .os-opt:hover { border-color: var(--c1); background: var(--card-hover); box-shadow: 0 6px 14px rgba(0,0,0,.2); }
+  .os-opt:active { transform: scale(.96); transition-duration: .05s; }
+  .os-opt.selected {
+    border-color: var(--c1);
+    background: linear-gradient(135deg, rgba(92,124,250,.15), rgba(151,117,250,.15));
+    box-shadow: 0 0 0 2px var(--c1) inset;
+  }
+  .os-opt.selected::after {
+    content: "✓"; position: absolute; top: -8px; right: -8px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--c1); color: #fff;
+    display: grid; place-items: center; font-size: .72rem; font-weight: 900;
+    box-shadow: 0 2px 6px rgba(0,0,0,.35);
+  }
+  .os-opt .logo { width: 46px; height: 46px; border-radius: 12px; background: #fff; display: grid; place-items: center; overflow: hidden; padding: 7px; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+  .os-opt .logo img { width: 100%; height: 100%; object-fit: contain; }
+  .os-opt .logo .letter { font-size: 1.4rem; font-weight: 800; color: #1a1f2b; }
+  .os-opt .o-label { font-weight: 800; font-size: 1rem; }
+  .os-opt .o-hint { color: var(--muted); font-size: .75rem; line-height: 1.35; }
+  @media (max-width: 640px) {
+    .os-choice-grid { grid-template-columns: 1fr; }
+    .os-choice-grid .os-opt-win, .os-choice-grid .os-opt-mac, .os-choice-grid .os-opt-linux { grid-column: 1; grid-row: auto; justify-self: stretch; }
+    .os-choice-grid .os-opt-win { order: -1; }
+    .os-opt { width: auto; }
+  }
+
+  /* BROWSER SELECTION — firefox left, others center, chromium right */
+  .browser-cols { display: grid; grid-template-columns: 1fr 1.05fr 1fr; gap: 12px; align-items: start; }
+  .browser-col { min-width: 0; }
+  .browser-col-label {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .browser-col-label::before, .browser-col-label::after { content: ""; height: 1px; width: 16px; background: var(--border); }
+  .browser-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .browser-center-inner { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  @media (max-width: 760px) { .browser-cols { grid-template-columns: 1fr; } }
+
+  /* Chosen OS badge — centered at the top of the selection screen */
+  .chosen-os { display: flex; justify-content: center; margin-bottom: 18px; animation: enterUp .4s cubic-bezier(.2,.7,.3,1.2); }
+
+  /* Tool cards unavailable on your setup (listed under the badge) */
+  .card.unavailable { opacity: .6; border-style: dashed; }
+  .card.unavailable:hover { opacity: .85; }
+  .os-ind {
+    display: inline-flex; align-items: center; gap: 3px; font-size: .68rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 999px;
+    background: rgba(148,163,184,.12); color: var(--muted); border: 1px solid var(--border);
   }
 
   .btn-secondary {
@@ -206,9 +272,10 @@
     padding: 11px 20px; border-radius: 11px; cursor: pointer;
     font-family: inherit; font-size: .88rem; font-weight: 600;
     display: inline-flex; align-items: center; gap: 6px;
-    transition: all .15s;
+    transition: border-color .1s ease-out, color .1s ease-out, background .1s ease-out;
   }
   .btn-secondary:hover { border-color: var(--accent); color: var(--text); background: var(--card); }
+  .btn-secondary:active { transform: scale(.96); transition-duration: .05s; }
   .btn-secondary:disabled { opacity: .45; cursor: not-allowed; }
 
   /* RESULT */
@@ -255,9 +322,10 @@
     font-family: inherit; font-weight: 700; font-size: .95rem;
     display: inline-flex; align-items: center; gap: 8px;
     box-shadow: 0 10px 26px -6px var(--c1);
-    transition: transform .15s, box-shadow .2s;
+    transition: transform .08s ease-out, box-shadow .12s ease-out;
   }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 32px -6px var(--c1); }
+  .btn-primary:hover { transform: translateY(-1px) scale(.99); box-shadow: 0 10px 22px -6px var(--c1); }
+  .btn-primary:active { transform: scale(.96); transition-duration: .05s; }
   .btn-primary svg { width: 16px; height: 16px; }
 
   /* GRID */
@@ -276,7 +344,7 @@
     border-radius: 18px; padding: 20px 20px 18px;
     cursor: pointer; text-align: left; font-family: inherit; color: var(--text);
     display: flex; flex-direction: column; min-height: 190px;
-    transition: transform .28s cubic-bezier(.2,.7,.3,1.2), border-color .25s, box-shadow .3s;
+    transition: transform .1s ease-out, border-color .12s ease-out, box-shadow .15s ease-out;
     box-shadow: 0 4px 12px rgba(0,0,0,.15);
     opacity: 0; animation: cardIn .5s ease forwards;
   }
@@ -296,7 +364,8 @@
     opacity: .14; transition: opacity .3s;
   }
   .scenario-card:hover::before { opacity: .3; }
-  .scenario-card:hover { transform: translateY(-5px); border-color: var(--c1); box-shadow: 0 18px 40px rgba(0,0,0,.4), 0 0 0 1px var(--c1) inset; }
+  .scenario-card:hover { transform: translateY(-2px); border-color: var(--c1); box-shadow: 0 8px 20px rgba(0,0,0,.35), 0 0 0 1px var(--c1) inset; }
+  .scenario-card:active { transform: scale(.97); transition-duration: .05s; }
   .scenario-card .pattern {
     position: absolute; inset: 0; pointer-events: none;
     opacity: .5; color: #fff;
@@ -328,9 +397,10 @@
     padding: 14px 32px; border-radius: 14px; cursor: pointer;
     font-family: inherit; font-size: 1rem; font-weight: 700;
     display: inline-flex; align-items: center; gap: 10px;
-    transition: all .18s; box-shadow: var(--shadow);
+    transition: border-color .1s ease-out, background .1s ease-out, box-shadow .1s ease-out; box-shadow: var(--shadow);
   }
-  .show-all-btn:hover { border-color: var(--accent); background: var(--card-hover); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,.3); }
+  .show-all-btn:hover { border-color: var(--accent); background: var(--card-hover); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+  .show-all-btn:active { transform: scale(.96); transition-duration: .05s; }
 
   .breadcrumb { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
   .back-btn {
@@ -401,15 +471,16 @@
     border-radius: 12px; padding: 14px;
     display: flex; gap: 12px; align-items: flex-start;
     text-decoration: none; color: inherit;
-    transition: transform .15s, border-color .2s, background .2s, box-shadow .2s;
+    transition: transform .08s ease-out, border-color .12s ease-out, background .12s ease-out, box-shadow .12s ease-out;
     position: relative; overflow: hidden; cursor: pointer;
     font-family: inherit; text-align: left;
   }
+  .card:active { transform: scale(.97); transition-duration: .05s; }
   .card::after {
     content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
     background: linear-gradient(180deg, var(--c1), var(--c2)); opacity: .85;
   }
-  .card:hover { transform: translateY(-2px); border-color: var(--c1); background: var(--card-hover); box-shadow: 0 6px 18px rgba(0,0,0,.2), 0 0 0 1px var(--c1) inset; }
+  .card:hover { transform: translateY(-1px); border-color: var(--c1); background: var(--card-hover); box-shadow: 0 4px 12px rgba(0,0,0,.2), 0 0 0 1px var(--c1) inset; }
   .card .logo {
     width: 40px; height: 40px; border-radius: 10px;
     display: grid; place-items: center; flex-shrink: 0; overflow: hidden;
@@ -718,16 +789,9 @@ window.logoFallback = function (img) {
    OS CANDIDATES
    ============================================================ */
 const OS_CANDIDATES = {
-  win:     { label: "Windows 11", emoji: "🪟", url: "https://www.microsoft.com/software-download/windows11", logo: "https://cdn.simpleicons.org/windows", color: ["#1e40af", "#0ea5e9"], desc: "The most compatible desktop OS. Widest app + game support, but heavier and less private." },
-  mac:     { label: "macOS",      emoji: "🍎", url: "https://www.apple.com/macos/", logo: "https://cdn.simpleicons.org/apple", color: ["#7c3aed", "#c026d3"], desc: "Polished, beautiful, and deeply integrated with Apple hardware." },
-  mint:    { label: "Linux Mint", emoji: "🌿", url: "https://linuxmint.com/download.php", logo: "https://cdn.simpleicons.org/linuxmint", color: ["#166534", "#14532d"], desc: "The easiest Linux — familiar layout, works out of the box, great on old PCs." },
-  ubuntu:  { label: "Ubuntu",     emoji: "🟠", url: "https://ubuntu.com/download/desktop", logo: "https://cdn.simpleicons.org/ubuntu", color: ["#b45309", "#9a3412"], desc: "Polished GNOME desktop, huge community, excellent hardware support." },
-  popos:   { label: "Pop!_OS",    emoji: "🔷", url: "https://pop.system76.com/", logo: "https://cdn.simpleicons.org/popos", color: ["#7c3aed", "#5b21b6"], desc: "Ubuntu-based with a tiling workflow and NVIDIA-friendly install." },
-  debian:  { label: "Debian",     emoji: "🌀", url: "https://www.debian.org/download", logo: "https://cdn.simpleicons.org/debian", color: ["#9d174d", "#831843"], desc: "Legendary stability. Feels a bit older but runs forever." },
-  fedora:  { label: "Fedora",     emoji: "🎩", url: "https://fedoraproject.org/workstation/download", logo: "https://cdn.simpleicons.org/fedora", color: ["#1e40af", "#1e3a8a"], desc: "Bleeding-edge Linux. Latest packages, latest bugs, best for developers." },
-  arch:    { label: "Arch Linux", emoji: "🏔️", url: "https://archlinux.org/download/", logo: "https://cdn.simpleicons.org/archlinux", color: ["#0891b2", "#0e7490"], desc: "You build it yourself. Full control, endless tinkering, incredible Wiki." },
-  cachyos: { label: "CachyOS",    emoji: "⚡", url: "https://cachyos.org/", logo: "https://cdn.simpleicons.org/cachyos", color: ["#b91c1c", "#991b1b"], desc: "Performance-tuned Arch. Optimized kernels and packages for speed." },
-  nixos:   { label: "NixOS",      emoji: "❄️", url: "https://nixos.org/download", logo: "https://cdn.simpleicons.org/nixos", color: ["#0891b2", "#155e75"], desc: "Declarative, reproducible, completely different from anything else." }
+  win:   { label: "Windows", emoji: "🪟", cls: "win", url: "https://www.microsoft.com/software-download/windows11", logo: "https://cdn.simpleicons.org/windows", color: ["#1e40af", "#0ea5e9"], hint: "Widest app & game support", desc: "The most compatible desktop OS. Widest app + game support, but heavier and less private." },
+  mac:   { label: "macOS",   emoji: "🍎", cls: "mac", url: "https://www.apple.com/macos/", logo: "https://cdn.simpleicons.org/apple", color: ["#7c3aed", "#c026d3"], hint: "Polished, Apple hardware", desc: "Polished, beautiful, and deeply integrated with Apple hardware." },
+  linux: { label: "Linux",   emoji: "🐧", cls: "linux", url: "https://www.debian.org/CD/", logo: "https://cdn.simpleicons.org/linux", color: ["#166534", "#14532d"], hint: "Free & open — any distro", desc: "Free and open-source. Pick any distribution you like — they all run the same tools." }
 };
 
 /* ============================================================
@@ -740,11 +804,11 @@ const OS_QUIZ = [
     sub: "This affects how compatible your OS needs to be.",
     options: [
       { id: "heavy", emoji: "🎮", label: "AAA / competitive", hint: "I need full compatibility",
-        scores: { win: 4, mac: 1, mint: 1, ubuntu: 1, popos: 2, fedora: 1, arch: 2, cachyos: 2, debian: 1, nixos: 1 } },
+        scores: { win: 4, mac: 1, linux: 2 } },
       { id: "light", emoji: "🕹️", label: "Casual / indie", hint: "Most games, lighter play",
-        scores: { win: 3, mac: 2, mint: 2, ubuntu: 2, popos: 2, fedora: 2, arch: 2, cachyos: 2, debian: 2, nixos: 1 } },
+        scores: { win: 3, mac: 2, linux: 2 } },
       { id: "rare", emoji: "🚫", label: "Rarely or never", hint: "Games don't matter here",
-        scores: { win: 1, mac: 3, mint: 3, ubuntu: 3, popos: 2, fedora: 3, arch: 2, cachyos: 1, debian: 3, nixos: 2 } }
+        scores: { win: 1, mac: 3, linux: 3 } }
     ]
   },
   {
@@ -753,11 +817,11 @@ const OS_QUIZ = [
     sub: "Be honest — this changes the recommendation a lot.",
     options: [
       { id: "modern", emoji: "🚀", label: "Recent & fast", hint: "Modern CPU, plenty of RAM",
-        scores: { win: 3, mac: 3, mint: 2, ubuntu: 3, popos: 3, fedora: 3, arch: 3, cachyos: 3, debian: 2, nixos: 3 } },
+        scores: { win: 3, mac: 3, linux: 3 } },
       { id: "mid", emoji: "👍", label: "A few years old", hint: "Still smooth for most things",
-        scores: { win: 3, mac: 2, mint: 3, ubuntu: 3, popos: 3, fedora: 2, arch: 3, cachyos: 2, debian: 3, nixos: 2 } },
+        scores: { win: 3, mac: 2, linux: 3 } },
       { id: "old", emoji: "🐢", label: "Old or weak", hint: "Every bit of speed counts",
-        scores: { win: 1, mac: 1, mint: 4, ubuntu: 2, popos: 2, fedora: 1, arch: 2, cachyos: 1, debian: 3, nixos: 1 } }
+        scores: { win: 1, mac: 1, linux: 4 } }
     ]
   },
   {
@@ -766,13 +830,13 @@ const OS_QUIZ = [
     sub: "Your daily vibe.",
     options: [
       { id: "works", emoji: "✅", label: "It just works", hint: "I don't want to tinker",
-        scores: { win: 3, mac: 4, mint: 4, ubuntu: 3, popos: 3, fedora: 2, arch: 1, cachyos: 2, debian: 3, nixos: 1 } },
+        scores: { win: 3, mac: 4, linux: 2 } },
       { id: "control", emoji: "🛠️", label: "Full control", hint: "I want to customise everything",
-        scores: { win: 1, mac: 1, mint: 2, ubuntu: 3, popos: 3, fedora: 3, arch: 4, cachyos: 3, debian: 3, nixos: 4 } },
+        scores: { win: 1, mac: 1, linux: 4 } },
       { id: "privacy", emoji: "🔒", label: "Privacy & freedom", hint: "No telemetry, no tracking",
-        scores: { win: 1, mac: 1, mint: 4, ubuntu: 3, popos: 3, fedora: 3, arch: 3, cachyos: 3, debian: 4, nixos: 4 } },
+        scores: { win: 1, mac: 1, linux: 4 } },
       { id: "performance", emoji: "⚡", label: "Raw performance", hint: "Every frame and millisecond counts",
-        scores: { win: 3, mac: 3, mint: 2, ubuntu: 3, popos: 3, fedora: 3, arch: 4, cachyos: 4, debian: 2, nixos: 3 } }
+        scores: { win: 3, mac: 3, linux: 4 } }
     ]
   },
   {
@@ -781,11 +845,11 @@ const OS_QUIZ = [
     sub: "Some paths need fresh silicon.",
     options: [
       { id: "no", emoji: "♻️", label: "No, reuse my PC", hint: "I want to keep what I have",
-        scores: { win: 3, mac: 0, mint: 4, ubuntu: 4, popos: 4, fedora: 3, arch: 3, cachyos: 3, debian: 4, nixos: 3 } },
+        scores: { win: 3, mac: 0, linux: 4 } },
       { id: "maybe", emoji: "🤔", label: "Maybe, if needed", hint: "I'm open to it",
-        scores: { win: 3, mac: 3, mint: 3, ubuntu: 3, popos: 3, fedora: 3, arch: 3, cachyos: 3, debian: 3, nixos: 3 } },
+        scores: { win: 3, mac: 3, linux: 3 } },
       { id: "yes", emoji: "🛒", label: "Yes, I'm buying", hint: "Fresh hardware soon",
-        scores: { win: 3, mac: 4, mint: 2, ubuntu: 2, popos: 3, fedora: 3, arch: 2, cachyos: 2, debian: 2, nixos: 2 } }
+        scores: { win: 3, mac: 4, linux: 2 } }
     ]
   }
 ];
@@ -802,35 +866,35 @@ const BROWSER_CATEGORIES = [
 const BROWSERS = {
   /* ---------- Firefox-based ---------- */
   zen: {
-    name: "Zen", category: "firefox", emoji: "🦊",
+    name: "Zen", category: "firefox", class: "Firefox-based", emoji: "🦊",
     url: "https://zen-browser.app/", logo: "https://cdn.simpleicons.org/zenbrowser",
     color: ["#c2410c", "#9a3412"],
     desc: "Firefox-based, gorgeous vertical tabs, workspaces, split view.",
     reason: ["Beautiful, modern UI", "Handles dozens of tabs elegantly", "Firefox engine — anti-tracking by default"]
   },
   firefox: {
-    name: "Firefox", category: "firefox", emoji: "🔥",
+    name: "Firefox", category: "firefox", class: "Firefox-based", emoji: "🔥",
     url: "https://www.mozilla.org/firefox/new/", logo: "https://cdn.simpleicons.org/firefox",
     color: ["#c2410c", "#7c2d12"],
     desc: "Mozilla's mainstream browser. Reliable, open-source, great extension ecosystem.",
     reason: ["Independent engine — no Chromium monoculture", "Strong privacy defaults", "Huge extension library"]
   },
   librewolf: {
-    name: "LibreWolf", category: "firefox", emoji: "🐺",
+    name: "LibreWolf", category: "firefox", class: "Firefox-based", emoji: "🐺",
     url: "https://librewolf.net/", logo: "https://cdn.simpleicons.org/librewolf",
     color: ["#0f766e", "#134e4a"],
     desc: "Firefox hardened for privacy. No telemetry, uBlock Origin built-in.",
     reason: ["Privacy out of the box", "No telemetry or sponsored content", "Based on Firefox — familiar"]
   },
   mullvad: {
-    name: "Mullvad Browser", category: "firefox", emoji: "🕶️",
+    name: "Mullvad Browser", category: "firefox", class: "Firefox-based", emoji: "🕶️",
     url: "https://mullvad.net/browser", logo: "https://cdn.simpleicons.org/mullvad",
     color: ["#facc15", "#a16207"],
     desc: "Tor Browser without Tor. Anti-fingerprinting by default.",
     reason: ["Tor-grade fingerprinting resistance", "Made with the Tor Project", "No account needed"]
   },
   waterfox: {
-    name: "Waterfox", category: "firefox", emoji: "💧",
+    name: "Waterfox", category: "firefox", class: "Firefox-based", emoji: "💧",
     url: "https://www.waterfox.net/", logo: "https://cdn.simpleicons.org/waterfox",
     color: ["#0284c7", "#075985"],
     desc: "Firefox fork focused on speed, privacy and classic extensions.",
@@ -839,49 +903,49 @@ const BROWSERS = {
 
   /* ---------- Chromium-based ---------- */
   helium: {
-    name: "Helium", category: "chromium", emoji: "🎈",
+    name: "Helium", category: "chromium", class: "Chromium-based", emoji: "🎈",
     url: "https://helium.computer/", logo: "https://cdn.simpleicons.org/helium",
     color: ["#0891b2", "#0e7490"],
     desc: "Chromium stripped to the bones. Fastest launch and rendering.",
     reason: ["Chromium-based — full extension support", "Absolutely minimal chrome", "Fastest perceived speed"]
   },
   chrome: {
-    name: "Google Chrome", category: "chromium", emoji: "🌐",
+    name: "Google Chrome", category: "chromium", class: "Chromium-based", emoji: "🌐",
     url: "https://www.google.com/chrome/", logo: "https://cdn.simpleicons.org/googlechrome",
     color: ["#dc2626", "#991b1b"],
     desc: "The world's most popular browser. Best site compatibility, deep Google integration.",
     reason: ["Best site compatibility", "Huge extension ecosystem", "Syncs across all your devices"]
   },
   chromium: {
-    name: "Chromium", category: "chromium", emoji: "🧪",
+    name: "Chromium", category: "chromium", class: "Chromium-based", emoji: "🧪",
     url: "https://www.chromium.org/getting-involved/download-chromium/", logo: "https://cdn.simpleicons.org/chromium",
     color: ["#2563eb", "#1e40af"],
     desc: "The open-source core of Chrome. No Google tracking, no proprietary blobs.",
     reason: ["Pure open-source Chromium", "No Google telemetry", "Best site compatibility, minus the tracking"]
   },
   brave: {
-    name: "Brave", category: "chromium", emoji: "🦁",
+    name: "Brave", category: "chromium", class: "Chromium-based", emoji: "🦁",
     url: "https://brave.com/download/", logo: "https://cdn.simpleicons.org/brave",
     color: ["#f97316", "#c2410c"],
     desc: "Chromium with built-in ad-block, tracker blocking and optional crypto rewards.",
     reason: ["Blocks ads and trackers by default", "Chromium speed + extension support", "Optional private search"]
   },
   edge: {
-    name: "Microsoft Edge", category: "chromium", emoji: "🌊",
+    name: "Microsoft Edge", category: "chromium", class: "Chromium-based", emoji: "🌊",
     url: "https://www.microsoft.com/edge", logo: "https://cdn.simpleicons.org/microsoftedge",
     color: ["#0ea5e9", "#0369a1"],
     desc: "Microsoft's Chromium browser. Vertical tabs, collections, deep Windows integration.",
     reason: ["Deep Windows integration", "Vertical tabs and workspaces", "Chromium compatibility"]
   },
   vivaldi: {
-    name: "Vivaldi", category: "chromium", emoji: "🎻",
+    name: "Vivaldi", category: "chromium", class: "Chromium-based", emoji: "🎻",
     url: "https://vivaldi.com/", logo: "https://cdn.simpleicons.org/vivaldi",
     color: ["#dc2626", "#991b1b"],
     desc: "The power-user's Chromium browser. Tab stacks, tiling, mail, calendar, notes.",
     reason: ["Incredibly customizable", "Built-in mail, calendar, notes", "Tab stacks and tiling"]
   },
   opera: {
-    name: "Opera", category: "chromium", emoji: "🎭",
+    name: "Opera", category: "chromium", class: "Chromium-based", emoji: "🎭",
     url: "https://www.opera.com/", logo: "https://cdn.simpleicons.org/opera",
     color: ["#dc2626", "#991b1b"],
     desc: "Chromium with free VPN, ad-block and a built-in sidebar of mini-apps.",
@@ -890,7 +954,7 @@ const BROWSERS = {
 
   /* ---------- Other engines ---------- */
   safari: {
-    name: "Safari", category: "other", emoji: "🧭",
+    name: "Safari", category: "other", class: "WebKit", emoji: "🧭",
     url: "https://www.apple.com/safari/", logo: "https://cdn.simpleicons.org/safari",
     color: ["#0284c7", "#075985"],
     desc: "Apple's browser. Fastest on Mac, incredibly power-efficient.",
@@ -898,7 +962,7 @@ const BROWSERS = {
     os: ["mac"]
   },
   gnomeweb: {
-    name: "GNOME Web", category: "other", emoji: "🦎",
+    name: "GNOME Web", category: "other", class: "WebKit", emoji: "🦎",
     url: "https://apps.gnome.org/Epiphany/", logo: "https://cdn.simpleicons.org/gnome",
     color: ["#4ade80", "#166534"],
     desc: "Epiphany — GNOME's native WebKit browser. Simple, clean, integrates with GNOME.",
@@ -906,7 +970,7 @@ const BROWSERS = {
     os: ["linux"]
   },
   falkon: {
-    name: "Falkon", category: "other", emoji: "🦅",
+    name: "Falkon", category: "other", class: "QtWebEngine", emoji: "🦅",
     url: "https://www.falkon.org/", logo: "https://cdn.simpleicons.org/falkon",
     color: ["#0891b2", "#0e7490"],
     desc: "Lightweight Qt/WebEngine browser from KDE. Very fast on older hardware.",
@@ -914,14 +978,14 @@ const BROWSERS = {
     os: ["linux"]
   },
   qutebrowser: {
-    name: "qutebrowser", category: "other", emoji: "⌨️",
+    name: "qutebrowser", category: "other", class: "QtWebEngine", emoji: "⌨️",
     url: "https://qutebrowser.org/", logo: "https://cdn.simpleicons.org/qt",
     color: ["#16a34a", "#166534"],
     desc: "Keyboard-driven browser with vim-like bindings. For terminal lovers.",
     reason: ["Vim-style keyboard control", "Minimal, distraction-free", "Highly scriptable"]
   },
   ladybird: {
-    name: "Ladybird", category: "other", emoji: "🐞",
+    name: "Ladybird", category: "other", class: "Independent engine", emoji: "🐞",
     url: "https://ladybird.org/", logo: "",
     color: ["#dc2626", "#991b1b"],
     desc: "A brand-new, independent browser engine written from scratch.",
@@ -1047,7 +1111,7 @@ const SCENARIOS = [
       { name: "Brave", url: "https://brave.com/download/", desc: "Chromium with built-in ad-block and tracker blocking. Chromium speed, less tracking.", logo: "https://cdn.simpleicons.org/brave", subscenarios: ["daily", "speed"], tag: "privacy + speed" },
       { name: "Google Chrome", url: "https://www.google.com/chrome/", desc: "The world's most popular browser. Best site compatibility and extension support.", logo: "https://cdn.simpleicons.org/googlechrome", subscenarios: ["daily"], tag: "most compatible" },
       { name: "Vivaldi", url: "https://vivaldi.com/", desc: "Power-user Chromium with tab stacks, tiling, mail, calendar and notes built in.", logo: "https://cdn.simpleicons.org/vivaldi", subscenarios: ["daily"], tag: "power user" },
-      { name: "Safari", url: "https://www.apple.com/safari/", desc: "Apple's browser. Fastest and most power-efficient on macOS.", logo: "https://cdn.simpleicons.org/safari", subscenarios: ["daily"], tag: "macOS only", os: ["mac"] }
+      { name: "Safari", url: "https://www.apple.com/safari/", desc: "Apple's browser. Fastest and most power-efficient on macOS.", logo: "https://cdn.simpleicons.org/safari", subscenarios: ["daily"], tag: "macOS only", os: ["mac"], osInd: [{ e: "🍎", t: "macOS" }] }
     ]
   },
   {
@@ -1092,7 +1156,7 @@ const SCENARIOS = [
       { name: "Gmail", url: "https://mail.google.com/", desc: "Free, huge storage, deeply integrated with Google.", logo: "https://cdn.simpleicons.org/gmail", subscenarios: ["main"] },
       { name: "TutaMail", url: "https://tuta.com/", desc: "Fast, encrypted, privacy-first.", logo: "", subscenarios: ["secure"], tag: "private" },
       { name: "Equibop", url: "https://github.com/Equicord/Equibop/releases", desc: "Enhanced Discord client with plugins and themes.", logo: "https://cdn.simpleicons.org/discord", subscenarios: ["discord"] },
-      { name: "ZapZap", url: "https://github.com/rafatosta/zapzap/releases", desc: "Enhanced WhatsApp desktop for Linux.", logo: "https://cdn.simpleicons.org/whatsapp", subscenarios: ["whatsapp"], os: ["linux"] }
+      { name: "ZapZap", url: "https://github.com/rafatosta/zapzap/releases", desc: "Enhanced WhatsApp desktop for Linux.", logo: "https://cdn.simpleicons.org/whatsapp", subscenarios: ["whatsapp"], os: ["linux"], osInd: [{ e: "🐧", t: "Linux" }] }
     ]
   },
   {
@@ -1162,12 +1226,12 @@ const SCENARIOS = [
       { id: "tweaks", title: "System Tweaks", emoji: "⚙️" }
     ],
     items: [
-      { name: "7-Zip", url: "https://www.7-zip.org/download.html", desc: "The classic free archiver.", logo: "https://cdn.simpleicons.org/7zip", subscenarios: ["compression"], tag: "essential", os: ["win"] },
-      { name: "ShareX", url: "https://getsharex.com/", desc: "Powerful screenshot and screen-recording tool on Windows.", logo: "", subscenarios: ["capture"], tag: "Windows only", os: ["win"] },
-      { name: "PowerToys", url: "https://learn.microsoft.com/windows/powertoys/", desc: "Microsoft's power-user toolkit. FancyZones, PowerRename, OCR and more.", logo: "", subscenarios: ["tweaks"], tag: "Windows only", os: ["win"] },
+      { name: "7-Zip", url: "https://www.7-zip.org/download.html", desc: "The classic free archiver.", logo: "https://cdn.simpleicons.org/7zip", subscenarios: ["compression"], tag: "essential", os: ["win"], osInd: [{ e: "🪟", t: "Windows" }, { e: "🐧", t: "Linux" }] },
+      { name: "ShareX", url: "https://getsharex.com/", desc: "Powerful screenshot and screen-recording tool on Windows.", logo: "", subscenarios: ["capture"], tag: "Windows only", os: ["win"], osInd: [{ e: "🪟", t: "Windows" }] },
+      { name: "PowerToys", url: "https://learn.microsoft.com/windows/powertoys/", desc: "Microsoft's power-user toolkit. FancyZones, PowerRename, OCR and more.", logo: "", subscenarios: ["tweaks"], tag: "Windows only", os: ["win"], osInd: [{ e: "🪟", t: "Windows" }] },
       { name: "balenaEtcher", url: "https://etcher.balena.io/", desc: "Beautiful, foolproof USB writer.", logo: "https://cdn.simpleicons.org/balena", subscenarios: ["imaging"] },
       { name: "Clonezilla", url: "https://clonezilla.org/downloads.php", desc: "Bare-metal disk imaging and cloning.", logo: "", subscenarios: ["imaging"], tag: "backup" },
-      { name: "Flameshot", url: "https://flameshot.org/", desc: "Powerful, simple screenshot tool for Linux.", logo: "", subscenarios: ["capture"], tag: "Linux", os: ["linux"] }
+      { name: "Flameshot", url: "https://flameshot.org/", desc: "Powerful, simple screenshot tool for Linux.", logo: "", subscenarios: ["capture"], tag: "Linux", os: ["linux"], osInd: [{ e: "🐧", t: "Linux" }] }
     ]
   },
   {
@@ -1219,14 +1283,15 @@ const state = {
   const oldDistro = localStorage.getItem("distro");
   const oldBrowser = localStorage.getItem("browser");
   if (oldOs && state.osList.length === 0) {
-    if (oldOs === "linux" && oldDistro) state.osList = [oldDistro];
+    if (oldOs === "linux") state.osList = ["linux"];
     else state.osList = [oldOs];
-    localStorage.setItem("osList", JSON.stringify(state.osList));
   }
   if (oldBrowser && state.browserList.length === 0) {
     state.browserList = [oldBrowser];
-    localStorage.setItem("browserList", JSON.stringify(state.browserList));
   }
+  /* Distros are gone — collapse any legacy distro ids into plain Linux. */
+  state.osList = normalizeOsList(state.osList);
+  localStorage.setItem("osList", JSON.stringify(state.osList));
   localStorage.removeItem("os");
   localStorage.removeItem("distro");
   localStorage.removeItem("browser");
@@ -1264,9 +1329,20 @@ function browserEmojiList() {
   return state.browserList.map(id => BROWSERS[id] ? BROWSERS[id].emoji : "🌐").slice(0, 3).join("");
 }
 function osTagFor(id) {
+  const c = OS_CANDIDATES[id];
+  if (c && c.cls) return c.cls;
   if (id === "win") return "win";
   if (id === "mac") return "mac";
   return "linux";
+}
+/* Legacy distro ids stored in older localStorage entries map to plain Linux. */
+function normalizeOsList(list) {
+  const out = [];
+  for (const id of list) {
+    const norm = OS_CANDIDATES[id] ? id : "linux";
+    if (!out.includes(norm)) out.push(norm);
+  }
+  return out;
 }
 function isUsingBothBrowsers() {
   return state.browserList.includes("zen") && state.browserList.includes("helium");
@@ -1291,8 +1367,10 @@ function parseHash() {
   const [a, b, c] = parts;
   switch (a) {
     case "welcome":        return { view: "welcome" };
+    case "os-choice":      return { view: "os-choice" };
     case "os-quiz":        return { view: "os-quiz" };
     case "os-result":      return { view: "os-result" };
+    case "browser-choice": return { view: "browser-choice" };
     case "browser-quiz":   return { view: "browser-quiz" };
     case "browser-result": return { view: "browser-result" };
     case "home":           return { view: "scenarios" };
@@ -1311,11 +1389,12 @@ function handleRoute() {
   const route = parseHash();
 
   if (["scenarios","all","scenario","item","search"].includes(route.view)) {
-    if (!state.osList.length) { history.replaceState(null, "", "#/welcome"); return handleRoute(); }
-    if (!state.browserList.length) { history.replaceState(null, "", "#/browser-quiz"); return handleRoute(); }
+    if (!state.osList.length) { history.replaceState(null, "", "#/os-choice"); return handleRoute(); }
+    if (!state.browserList.length) { history.replaceState(null, "", "#/browser-choice"); return handleRoute(); }
   }
-  if (route.view === "browser-quiz" && !state.osList.length) { history.replaceState(null, "", "#/os-quiz"); return handleRoute(); }
-  if (route.view === "browser-result" && !state.osList.length) { history.replaceState(null, "", "#/os-quiz"); return handleRoute(); }
+  if ((route.view === "browser-choice" || route.view === "browser-quiz") && !state.osList.length) { history.replaceState(null, "", "#/os-choice"); return handleRoute(); }
+  if (route.view === "browser-result" && !state.osList.length) { history.replaceState(null, "", "#/os-choice"); return handleRoute(); }
+  if (route.view === "os-result") { history.replaceState(null, "", "#/os-quiz"); return handleRoute(); }
   if (route.view === "scenario" && !route.scenarioId) { history.replaceState(null, "", "#/home"); return handleRoute(); }
   if (route.view === "item" && (!route.scenarioId || !route.itemName)) { history.replaceState(null, "", "#/home"); return handleRoute(); }
   if ((route.view === "scenario" || route.view === "item") && isScenarioHidden(route.scenarioId)) {
@@ -1368,7 +1447,21 @@ function osAvailable(item) {
   return state.osList.some((selId) => itemOS.includes(osTagFor(selId)));
 }
 function visibleItems(scenario) { return scenario.items.filter(osAvailable); }
+function unavailableItems(scenario) { return scenario.items.filter((it) => !osAvailable(it)); }
+function allItemsOf(scenario) {
+  const av = visibleItems(scenario), un = unavailableItems(scenario);
+  return [...av, ...un];
+}
 function visibleChildren(item) { return (item.children || []).filter(osAvailable); }
+/* OS requirement indicators shown on cards that don't run on your setup. */
+function osIndicatorsHTML(item) {
+  let list = item.osInd;
+  if (!list) {
+    const map = { win: { e: "🪟", t: "Windows" }, mac: { e: "🍎", t: "macOS" }, linux: { e: "🐧", t: "Linux" } };
+    list = (item.os || ["win", "linux", "mac"]).map((k) => map[k]).filter(Boolean);
+  }
+  return `<span class="os-ind">Needs: ${list.map((i) => `${i.e} ${escapeHTML(i.t)}`).join(" · ")}</span>`;
+}
 
 function activeScenarios() { return SCENARIOS.filter((sc) => !isScenarioHidden(sc.id)); }
 function visibleScenarios() {
@@ -1406,7 +1499,9 @@ function renderCard(item, scenario, opts) {
   const attrs = hasChildren
     ? `type="button" data-item="${escapeHTML(item.name)}"${styleAttr}`
     : `href="${escapeHTML(item.url)}" target="_blank" rel="noopener"${styleAttr}`;
+  const avail = osAvailable(item);
   const pills = [];
+  if (!avail) pills.push(osIndicatorsHTML(item));
   if (opts.subTitles && opts.subTitles.length) {
     opts.subTitles.forEach((t) => pills.push(`<span class="tag tag-sub">${escapeHTML(t)}</span>`));
   }
@@ -1416,7 +1511,7 @@ function renderCard(item, scenario, opts) {
   });
   if (hasChildren) pills.push(`<span class="tag">${children.length} add-on${children.length === 1 ? "" : "s"} →</span>`);
   return `
-    <${tag} class="card" ${attrs}>
+    <${tag} class="card${avail ? "" : " unavailable"}" ${attrs}>
       <div class="logo">${logoHTML(item)}</div>
       <div class="body">
         <div class="name"><span>${escapeHTML(item.name)}</span><span class="ext">${hasChildren ? "→" : "↗"}</span></div>
@@ -1429,18 +1524,22 @@ function renderCard(item, scenario, opts) {
 
 function renderColumnBody(items, scenario) {
   const multiSub = scenario.subscenarios.length > 1;
+  // Keep the "available first, other-OS below" order coming from the caller.
+  const pool = items.filter((it) => allItemsOf(scenario).some((g) => g.name === it.name));
   if (!multiSub) {
-    return items.map((it) => renderCard(it, scenario)).join("");
+    return pool.map((it) => renderCard(it, scenario)).join("");
   }
   const blocks = [];
   scenario.subscenarios.forEach((sub) => {
-    const subItems = items.filter((it) => it.subscenarios.includes(sub.id));
+    const subItems = pool.filter((it) => it.subscenarios.includes(sub.id));
     if (!subItems.length) return;
     blocks.push(`
       <div class="sub-label"><span>${sub.emoji}</span><span>${escapeHTML(sub.title)}</span></div>
       ${subItems.map((it) => renderCard(it, scenario, { subTitles: [] })).join("")}
     `);
   });
+  const noSub = pool.filter((it) => !(it.subscenarios || []).length);
+  if (noSub.length) blocks.push(noSub.map((it) => renderCard(it, scenario)).join(""));
   return blocks.join("");
 }
 
@@ -1475,11 +1574,58 @@ function renderWelcomeView() {
           <div>Apps & tools</div>
         </div>
       </div>
-      <button class="welcome-cta" data-action="start-quiz">
+      <button class="welcome-cta" data-action="start-setup">
         Start setup
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </button>
       <p class="welcome-hint">Takes about 90 seconds. Your answers stay on your device.</p>
+    </div>
+  `;
+}
+
+/* OS logo for choice cards / badges. */
+function osLogoHTML(o) {
+  const item = { name: o.label, url: o.url || "", logo: o.logo || "" };
+  return logoHTML(item);
+}
+
+function renderOsChoiceView() {
+  document.getElementById("toolbar").style.display = "none";
+  document.getElementById("osBadge").style.display = "none";
+  document.getElementById("browserBadge").style.display = "none";
+  resetColors();
+
+  const order = ["mac", "win", "linux"];
+  const opts = order.map((id) => {
+    const o = OS_CANDIDATES[id];
+    const sel = state.pendingOsSelection.has(id) ? " selected" : "";
+    return `
+      <button class="os-opt os-opt-${id}${sel}" data-quick-os="${id}" style="--c1:${o.color[0]};--c2:${o.color[1]}">
+        <span class="logo">${osLogoHTML(o)}</span>
+        <span class="o-label">${escapeHTML(o.label)}</span>
+        <span class="o-hint">${escapeHTML(o.hint)}</span>
+      </button>
+    `;
+  }).join("");
+
+  const count = state.pendingOsSelection.size;
+
+  return `
+    <div class="quiz-wrap">
+      <div class="quiz-card" style="--c1:#5c7cfa;--c2:#9775fa">
+        <div class="quiz-eyebrow">Step 1 · Your OS</div>
+        <h2 class="quiz-q">Which operating system do you use?</h2>
+        <p class="quiz-sub">Pick every system you live on — multiple selections are fine.</p>
+        <div class="os-choice-grid">${opts}</div>
+        <div class="quick-pick-actions">
+          <button class="btn-primary" data-action="confirm-quick-os" ${count === 0 ? "disabled" : ""}>
+            Proceed
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+          <button class="btn-secondary" data-action="start-quiz">🧭 Take the quiz instead</button>
+          <button class="show-all-btn" data-action="show-all">📦 Just show all</button>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -1508,7 +1654,8 @@ function renderOsQuizView() {
     </button>
   `).join("");
 
-  const quickChips = Object.entries(OS_CANDIDATES).map(([id, o]) => {
+  const quickChips = ["win", "mac", "linux"].map((id) => {
+    const o = OS_CANDIDATES[id];
     const sel = state.pendingOsSelection.has(id) ? " selected" : "";
     return `
       <button class="quick-chip${sel}" data-quick-os="${id}">
@@ -1532,7 +1679,7 @@ function renderOsQuizView() {
         <p class="quiz-sub">${escapeHTML(q.sub)}</p>
         <div class="quiz-options">${opts}</div>
         <div class="quiz-actions">
-          ${idx > 0 ? `<button class="btn-secondary" data-action="os-back">← Back</button>` : `<button class="btn-secondary" data-action="welcome">← Back to start</button>`}
+          ${idx > 0 ? `<button class="btn-secondary" data-action="os-back">← Back</button>` : `<button class="btn-secondary" data-action="back-os-choice">← Choose an OS directly</button>`}
         </div>
 
         <div class="quick-pick">
@@ -1570,7 +1717,7 @@ function renderOsResultView() {
   document.getElementById("browserBadge").style.display = "none";
 
   const { topId, sorted } = computeOsResult();
-  const top = OS_CANDIDATES[topId] || OS_CANDIDATES.mint;
+  const top = OS_CANDIDATES[topId] || OS_CANDIDATES.win;
   document.documentElement.style.setProperty("--c1", top.color[0]);
   document.documentElement.style.setProperty("--c2", top.color[1]);
 
@@ -1622,6 +1769,86 @@ function renderOsResultView() {
           </button>
           <button class="btn-secondary" data-action="os-restart">← Retake quiz</button>
           <a class="btn-secondary" href="${escapeHTML(top.url)}" target="_blank" rel="noopener" style="text-decoration:none">Download page ↗</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* Small badge showing the chosen OS(es) — used centered at the top of
+   the browser-selection screen. */
+function chosenOsBadgeHTML() {
+  const chips = state.osList.map((id) => {
+    const o = OS_CANDIDATES[id] || OS_CANDIDATES.linux;
+    return `
+      <span class="quick-chip" style="cursor:default;pointer-events:none">
+        <span class="logo" style="width:24px;height:24px;border-radius:7px;background:#fff;display:grid;place-items:center;overflow:hidden;padding:3px">${osLogoHTML(o)}</span>
+        <span>${escapeHTML(o.label)}</span>
+      </span>
+    `;
+  }).join("");
+  return `<div class="chosen-os">${chips}</div>`;
+}
+
+function renderBrowserChoiceView() {
+  document.getElementById("toolbar").style.display = "none";
+  document.getElementById("osBadge").style.display = "none";
+  document.getElementById("browserBadge").style.display = "none";
+  resetColors();
+
+  const colMeta = {
+    firefox:  { label: "Firefox-based",  emoji: "🦊" },
+    other:    { label: "Others",         emoji: "✨" },
+    chromium: { label: "Chromium-based", emoji: "🌐" }
+  };
+  function chipsFor(catId) {
+    const ids = Object.keys(BROWSERS).filter((id) => BROWSERS[id].category === catId && browserAvailableForOS(id));
+    if (!ids.length) return `<p style="color:var(--muted);font-size:.8rem;text-align:center">None for your OS.</p>`;
+    return ids.map((id) => {
+      const b = BROWSERS[id];
+      const sel = state.pendingBrowserSelection.has(id) ? " selected" : "";
+      return `
+        <button class="quick-chip${sel}" data-quick-browser="${id}" title="${escapeHTML(b.desc)}">
+          <span class="qc-emoji">${b.emoji}</span>
+          <span>${escapeHTML(b.name)}</span>
+          ${b.class ? `<span class="qc-engine">${escapeHTML(b.class)}</span>` : ""}
+        </button>
+      `;
+    }).join("");
+  }
+
+  const count = state.pendingBrowserSelection.size;
+
+  return `
+    <div class="quiz-wrap" style="max-width:900px">
+      ${chosenOsBadgeHTML()}
+      <div class="quiz-card" style="--c1:#c2410c;--c2:#9a3412">
+        <div class="quiz-eyebrow">Step 2 · Your browsers</div>
+        <h2 class="quiz-q">Which browsers do you use?</h2>
+        <p class="quiz-sub">Select some of them — Firefox-based on the left, Chromium-based on the right, everything else in the middle.</p>
+        <div class="browser-cols">
+          <div class="browser-col">
+            <div class="browser-col-label"><span>${colMeta.firefox.emoji}</span><span>${colMeta.firefox.label}</span></div>
+            <div class="browser-chips">${chipsFor("firefox")}</div>
+          </div>
+          <div class="browser-col browser-center-inner">
+            <div class="browser-col" style="width:100%">
+              <div class="browser-col-label"><span>${colMeta.other.emoji}</span><span>${colMeta.other.label}</span></div>
+              <div class="browser-chips">${chipsFor("other")}</div>
+            </div>
+            <button class="btn-secondary" data-action="start-browser-quiz">🧭 Take the quiz instead</button>
+          </div>
+          <div class="browser-col">
+            <div class="browser-col-label"><span>${colMeta.chromium.emoji}</span><span>${colMeta.chromium.label}</span></div>
+            <div class="browser-chips">${chipsFor("chromium")}</div>
+          </div>
+        </div>
+        <div class="quick-pick-actions">
+          <button class="btn-primary" data-action="confirm-quick-browser" ${count === 0 ? "disabled" : ""}>
+            Proceed
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+          <button class="show-all-btn" data-action="show-all">📦 Just show all</button>
         </div>
       </div>
     </div>
@@ -1698,6 +1925,7 @@ function renderBrowserQuizView() {
               Continue with ${count || "0"} browser${count === 1 ? "" : "s"}
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
             </button>
+            <button class="show-all-btn" data-action="show-all">📦 Just show all</button>
           </div>
         </div>
       </div>
@@ -1824,7 +2052,7 @@ function renderScenarioView() {
   const original = findByScenario(state.scenarioId);
   if (!original) { go("#/home"); return ""; }
   if (isScenarioHidden(original.id)) { go("#/home"); return ""; }
-  const scenario = { ...original, items: visibleItems(original) };
+  const scenario = { ...original, items: allItemsOf(original) };
   if (!scenario.items.length) { go("#/home"); return ""; }
 
   applyScenarioColor(scenario);
@@ -1837,7 +2065,10 @@ function renderScenarioView() {
 
   const columns = usedBuckets.map((key) => {
     const meta = OS_BUCKETS[key];
-    const items = buckets[key];
+    // Available-for-your-system tools on top, other-system tools listed
+    // underneath with "Needs: …" OS indicators.
+    const items = [...buckets[key].filter(osAvailable),
+                   ...buckets[key].filter((it) => !osAvailable(it))];
     return `
       <div class="column">
         <div class="column-header">
@@ -2009,8 +2240,10 @@ function render() {
   const content = document.getElementById("content");
 
   if (state.view === "welcome") content.innerHTML = renderWelcomeView();
+  else if (state.view === "os-choice") content.innerHTML = renderOsChoiceView();
   else if (state.view === "os-quiz") content.innerHTML = renderOsQuizView();
   else if (state.view === "os-result") content.innerHTML = renderOsResultView();
+  else if (state.view === "browser-choice") content.innerHTML = renderBrowserChoiceView();
   else if (state.view === "browser-quiz") content.innerHTML = renderBrowserQuizView();
   else if (state.view === "browser-result") content.innerHTML = renderBrowserResultView();
   else if (state.view === "search") content.innerHTML = renderSearchView();
@@ -2026,17 +2259,34 @@ function render() {
 function bindClicks() {
   const content = document.getElementById("content");
 
-  content.querySelectorAll('[data-action="start-quiz"]').forEach((el) => {
+  content.querySelectorAll('[data-action="start-setup"]').forEach((el) => {
     el.addEventListener("click", () => {
       state.osAnswers = {};
       state.browserAnswers = {};
-      state.pendingOsSelection = new Set();
+      state.pendingOsSelection = new Set(state.osList);
       state.pendingBrowserSelection = new Set();
+      go("#/os-choice");
+    });
+  });
+  content.querySelectorAll('[data-action="start-quiz"]').forEach((el) => {
+    el.addEventListener("click", () => {
+      state.osAnswers = {};
+      state.pendingOsSelection = new Set(state.osList);
       go("#/os-quiz");
+    });
+  });
+  content.querySelectorAll('[data-action="start-browser-quiz"]').forEach((el) => {
+    el.addEventListener("click", () => {
+      state.browserAnswers = {};
+      state.pendingBrowserSelection = new Set();
+      go("#/browser-quiz");
     });
   });
   content.querySelectorAll('[data-action="welcome"]').forEach((el) => {
     el.addEventListener("click", () => go("#/welcome"));
+  });
+  content.querySelectorAll('[data-action="back-os-choice"]').forEach((el) => {
+    el.addEventListener("click", () => go("#/os-choice"));
   });
 
   content.querySelectorAll(".quiz-opt").forEach((el) => {
@@ -2095,7 +2345,7 @@ function bindClicks() {
         Array.from(state.pendingBrowserSelection).filter(browserAvailableForOS)
       );
       state.browserAnswers = {};
-      go("#/browser-quiz");
+      go("#/browser-choice");
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   });
@@ -2123,7 +2373,7 @@ function bindClicks() {
     el.addEventListener("click", () => {
       const keys = Object.keys(state.browserAnswers);
       if (keys.length) { delete state.browserAnswers[keys[keys.length - 1]]; }
-      else { go("#/os-result"); return; }
+      else { go("#/browser-choice"); return; }
       render();
     });
   });
@@ -2138,11 +2388,11 @@ function bindClicks() {
   content.querySelectorAll('[data-action="accept-os"]').forEach((el) => {
     el.addEventListener("click", () => {
       const id = el.dataset.os;
-      state.osList = [id];
+      state.osList = normalizeOsList([id]);
       localStorage.setItem("osList", JSON.stringify(state.osList));
       state.browserAnswers = {};
       state.pendingBrowserSelection = new Set();
-      go("#/browser-quiz");
+      go("#/browser-choice");
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   });
@@ -2171,7 +2421,20 @@ function bindClicks() {
     el.addEventListener("click", () => go("#/scenario/" + state.scenarioId));
   });
   content.querySelectorAll('[data-action="show-all"]').forEach((el) => {
-    el.addEventListener("click", () => { go("#/all"); window.scrollTo({ top: 0, behavior: "smooth" }); });
+    el.addEventListener("click", () => {
+      /* Always-available escape hatch: pick sensible defaults so the full
+         catalog can be browsed without finishing the wizard. */
+      if (!state.osList.length) {
+        state.osList = ["win", "mac", "linux"];
+        localStorage.setItem("osList", JSON.stringify(state.osList));
+      }
+      if (!state.browserList.length) {
+        state.browserList = ["firefox", "google-chrome"];
+        localStorage.setItem("browserList", JSON.stringify(state.browserList));
+      }
+      go("#/all");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   });
   content.querySelectorAll('[data-item]').forEach((el) => {
     el.addEventListener("click", () => {
@@ -2229,7 +2492,7 @@ function bindTilt() {
   const CURSOR_LINK_R2 = CURSOR_LINK_R * CURSOR_LINK_R;
   const MOUSE_R = 170;              // cursor influence radius
   const MOUSE_R2 = MOUSE_R * MOUSE_R;
-  const PULSE_R = 140;              // click shockwave radius (much smaller in 1.1)
+  const PULSE_R = 26;               // click marker radius — small & instant (v1.2)
   const CRUISE = 0.28;              // relaxed drift speed (slowed down in 1.1)
   const MAX_SPEED = 0.75;           // hard speed cap (click needs headroom)
   const MAX_DOTS = 1000;            // spawned dots beyond this fade away
@@ -2264,44 +2527,12 @@ function bindTilt() {
     }
   }
 
-  /* Click / tap: shockwave ring + outward kick, plus a fresh burst of
-     spawned dots that bloom at the click point. Spawned dots fade in;
-     once the field grows past MAX_DOTS, the oldest spawned ones start
-     fading away. */
+  /* Click / tap: an instant, tiny circle marker pops at the cursor —
+     no expanding wave, no dot scatter, no spawning. The field is left
+     completely untouched. */
   function spawnPulse(x, y) {
-    pulses.push({ x, y, r: 4, life: 1 });
-    for (const d of dots) {
-      const dx = d.x - x, dy = d.y - y;
-      const dist = Math.hypot(dx, dy) || 1;
-      if (dist > PULSE_R) continue;
-      const f = (1 - dist / PULSE_R) * 8;
-      d.vx += (dx / dist) * f;
-      d.vy += (dy / dist) * f;
-    }
-    // New dots bloom around the click point.
-    for (let i = 0; i < 10; i++) {
-      const a = Math.random() * Math.PI * 2;
-      const kick = 0.4 + Math.random() * 1.4;
-      dots.push({
-        x: x + (Math.random() - 0.5) * 24,
-        y: y + (Math.random() - 0.5) * 24,
-        vx: Math.cos(a) * kick,
-        vy: Math.sin(a) * kick,
-        p: Math.random() * Math.PI * 2,
-        sp: 0.3 + Math.random() * 0.5,
-        r: 1.0 + Math.random() * 1.1,
-        z: 0.65 + Math.random() * 0.7,
-        life: 0,
-        dying: false,
-        base: false
-      });
-    }
-    // Over the cap? Oldest spawned dots begin to fade out.
-    let excess = dots.length - MAX_DOTS;
-    for (let i = 0; i < dots.length && excess > 0; i++) {
-      const d = dots[i];
-      if (!d.base && !d.dying) { d.dying = true; excess--; }
-    }
+    // Instant, tiny circle marker only — no wave, no dot scatter.
+    pulses.push({ x, y, r: 0, life: 1 });
   }
 
   function loop() {
@@ -2493,7 +2724,7 @@ document.getElementById("osBadge").addEventListener("click", () => {
   state.pendingBrowserSelection = new Set();
   localStorage.removeItem("osList");
   localStorage.removeItem("browserList");
-  history.replaceState(null, "", "#/welcome");
+  history.replaceState(null, "", "#/os-choice");
   handleRoute();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
@@ -2503,7 +2734,7 @@ document.getElementById("browserBadge").addEventListener("click", () => {
   state.browserList = [];
   state.pendingBrowserSelection = new Set();
   localStorage.removeItem("browserList");
-  history.replaceState(null, "", "#/browser-quiz");
+  history.replaceState(null, "", "#/browser-choice");
   handleRoute();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
