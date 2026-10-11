@@ -538,12 +538,6 @@
     .item-hero { padding: 22px 18px; }
     .item-hero .hero-logo { width: 54px; height: 54px; }
     .item-hero h2 { font-size: 1.35rem; }
-    /* Mobile UI: roomier cards, full-width CTA, comfortable tap targets */
-    .quiz-card { padding: 24px 18px; border-radius: 18px; }
-    .quiz-wrap, .result-wrap { margin-top: 18px; }
-    .quick-pick-actions .btn-primary { width: 100%; justify-content: center; }
-    .quick-chip { padding: 11px 14px; }
-    button, .btn-primary, .btn-secondary { touch-action: manipulation; }
   }
 </style>
 </head>
@@ -726,8 +720,6 @@ window.logoFallback = function (img) {
 const OS_CANDIDATES = {
   win:     { label: "Windows 11", emoji: "🪟", url: "https://www.microsoft.com/software-download/windows11", logo: "https://cdn.simpleicons.org/windows", color: ["#1e40af", "#0ea5e9"], desc: "The most compatible desktop OS. Widest app + game support, but heavier and less private." },
   mac:     { label: "macOS",      emoji: "🍎", url: "https://www.apple.com/macos/", logo: "https://cdn.simpleicons.org/apple", color: ["#7c3aed", "#c026d3"], desc: "Polished, beautiful, and deeply integrated with Apple hardware." },
-  ios:     { label: "iOS / iPadOS", emoji: "📱", url: "https://www.apple.com/ios/ios/", logo: "https://cdn.simpleicons.org/apple", color: ["#0e7490", "#155e75"], desc: "Apple's mobile OS. Smooth, secure, and tightly integrated with iPhone and iPad." },
-  android: { label: "Android",    emoji: "🤖", url: "https://www.android.com/", logo: "https://cdn.simpleicons.org/android", color: ["#15803d", "#166534"], desc: "Open and flexible. Customise everything, sideload freely, make it truly yours." },
   mint:    { label: "Linux Mint", emoji: "🌿", url: "https://linuxmint.com/download.php", logo: "https://cdn.simpleicons.org/linuxmint", color: ["#166534", "#14532d"], desc: "The easiest Linux — familiar layout, works out of the box, great on old PCs." },
   ubuntu:  { label: "Ubuntu",     emoji: "🟠", url: "https://ubuntu.com/download/desktop", logo: "https://cdn.simpleicons.org/ubuntu", color: ["#b45309", "#9a3412"], desc: "Polished GNOME desktop, huge community, excellent hardware support." },
   popos:   { label: "Pop!_OS",    emoji: "🔷", url: "https://pop.system76.com/", logo: "https://cdn.simpleicons.org/popos", color: ["#7c3aed", "#5b21b6"], desc: "Ubuntu-based with a tiling workflow and NVIDIA-friendly install." },
@@ -743,21 +735,6 @@ const OS_CANDIDATES = {
    ============================================================ */
 const OS_QUIZ = [
   {
-    id: "device",
-    q: "What are we setting up today?",
-    sub: "Phones and tablets get their own app picks.",
-    options: [
-      { id: "desktop", emoji: "🖥️", label: "Desktop / laptop", hint: "Windows, Mac or Linux machine",
-        scores: { win: 3, mac: 3, mint: 3, ubuntu: 3, popos: 3, debian: 3, fedora: 3, arch: 3, cachyos: 3, nixos: 3, ios: -20, android: -20 } },
-      { id: "iphone", emoji: "📱", label: "iPhone / iPad", hint: "iOS or iPadOS",
-        scores: { ios: 8, win: -20, mac: -20, mint: -20, ubuntu: -20, popos: -20, debian: -20, fedora: -20, arch: -20, cachyos: -20, nixos: -20, android: -20 } },
-      { id: "android", emoji: "🤖", label: "Android phone / tablet", hint: "Phones, tablets, foldables",
-        scores: { android: 8, win: -20, mac: -20, ios: -20, mint: -20, ubuntu: -20, popos: -20, debian: -20, fedora: -20, arch: -20, cachyos: -20, nixos: -20 } },
-      { id: "mixed", emoji: "💻", label: "Desktop + mobile", hint: "I use several devices",
-        scores: { win: 2, mac: 2, ios: 4, android: 4, mint: 1, ubuntu: 1, popos: 1, debian: 1, fedora: 1, arch: 1, cachyos: 1, nixos: 1 } }
-    ]
-  },
-  {
     id: "games",
     q: "How often do you play games?",
     sub: "This affects how compatible your OS needs to be.",
@@ -765,7 +742,7 @@ const OS_QUIZ = [
       { id: "heavy", emoji: "🎮", label: "AAA / competitive", hint: "I need full compatibility",
         scores: { win: 4, mac: 1, mint: 1, ubuntu: 1, popos: 2, fedora: 1, arch: 2, cachyos: 2, debian: 1, nixos: 1 } },
       { id: "light", emoji: "🕹️", label: "Casual / indie", hint: "Most games, lighter play",
-        scores: { win: 3, mac: 2, ios: 1, android: 2, mint: 2, ubuntu: 2, popos: 2, fedora: 2, arch: 2, cachyos: 2, debian: 2, nixos: 1 } },
+        scores: { win: 3, mac: 2, mint: 2, ubuntu: 2, popos: 2, fedora: 2, arch: 2, cachyos: 2, debian: 2, nixos: 1 } },
       { id: "rare", emoji: "🚫", label: "Rarely or never", hint: "Games don't matter here",
         scores: { win: 1, mac: 3, mint: 3, ubuntu: 3, popos: 2, fedora: 3, arch: 2, cachyos: 1, debian: 3, nixos: 2 } }
     ]
@@ -780,7 +757,7 @@ const OS_QUIZ = [
       { id: "mid", emoji: "👍", label: "A few years old", hint: "Still smooth for most things",
         scores: { win: 3, mac: 2, mint: 3, ubuntu: 3, popos: 3, fedora: 2, arch: 3, cachyos: 2, debian: 3, nixos: 2 } },
       { id: "old", emoji: "🐢", label: "Old or weak", hint: "Every bit of speed counts",
-        scores: { win: 1, mac: 1, android: 2, mint: 4, ubuntu: 2, popos: 2, fedora: 1, arch: 2, cachyos: 1, debian: 3, nixos: 1 } }
+        scores: { win: 1, mac: 1, mint: 4, ubuntu: 2, popos: 2, fedora: 1, arch: 2, cachyos: 1, debian: 3, nixos: 1 } }
     ]
   },
   {
@@ -789,11 +766,11 @@ const OS_QUIZ = [
     sub: "Your daily vibe.",
     options: [
       { id: "works", emoji: "✅", label: "It just works", hint: "I don't want to tinker",
-        scores: { win: 3, mac: 4, ios: 2, mint: 4, ubuntu: 3, popos: 3, fedora: 2, arch: 1, cachyos: 2, debian: 3, nixos: 1 } },
+        scores: { win: 3, mac: 4, mint: 4, ubuntu: 3, popos: 3, fedora: 2, arch: 1, cachyos: 2, debian: 3, nixos: 1 } },
       { id: "control", emoji: "🛠️", label: "Full control", hint: "I want to customise everything",
-        scores: { win: 1, mac: 1, android: 2, mint: 2, ubuntu: 3, popos: 3, fedora: 3, arch: 4, cachyos: 3, debian: 3, nixos: 4 } },
+        scores: { win: 1, mac: 1, mint: 2, ubuntu: 3, popos: 3, fedora: 3, arch: 4, cachyos: 3, debian: 3, nixos: 4 } },
       { id: "privacy", emoji: "🔒", label: "Privacy & freedom", hint: "No telemetry, no tracking",
-        scores: { win: 1, mac: 1, android: 2, mint: 4, ubuntu: 3, popos: 3, fedora: 3, arch: 3, cachyos: 3, debian: 4, nixos: 4 } },
+        scores: { win: 1, mac: 1, mint: 4, ubuntu: 3, popos: 3, fedora: 3, arch: 3, cachyos: 3, debian: 4, nixos: 4 } },
       { id: "performance", emoji: "⚡", label: "Raw performance", hint: "Every frame and millisecond counts",
         scores: { win: 3, mac: 3, mint: 2, ubuntu: 3, popos: 3, fedora: 3, arch: 4, cachyos: 4, debian: 2, nixos: 3 } }
     ]
@@ -825,35 +802,35 @@ const BROWSER_CATEGORIES = [
 const BROWSERS = {
   /* ---------- Firefox-based ---------- */
   zen: {
-    name: "Zen", category: "firefox", emoji: "🦊", os: ["win", "linux", "mac"],
+    name: "Zen", category: "firefox", emoji: "🦊",
     url: "https://zen-browser.app/", logo: "https://cdn.simpleicons.org/zenbrowser",
     color: ["#c2410c", "#9a3412"],
     desc: "Firefox-based, gorgeous vertical tabs, workspaces, split view.",
     reason: ["Beautiful, modern UI", "Handles dozens of tabs elegantly", "Firefox engine — anti-tracking by default"]
   },
   firefox: {
-    name: "Firefox", category: "firefox", emoji: "🔥", os: ["win", "linux", "mac", "android"],
+    name: "Firefox", category: "firefox", emoji: "🔥",
     url: "https://www.mozilla.org/firefox/new/", logo: "https://cdn.simpleicons.org/firefox",
     color: ["#c2410c", "#7c2d12"],
     desc: "Mozilla's mainstream browser. Reliable, open-source, great extension ecosystem.",
     reason: ["Independent engine — no Chromium monoculture", "Strong privacy defaults", "Huge extension library"]
   },
   librewolf: {
-    name: "LibreWolf", category: "firefox", emoji: "🐺", os: ["win", "linux", "mac"],
+    name: "LibreWolf", category: "firefox", emoji: "🐺",
     url: "https://librewolf.net/", logo: "https://cdn.simpleicons.org/librewolf",
     color: ["#0f766e", "#134e4a"],
     desc: "Firefox hardened for privacy. No telemetry, uBlock Origin built-in.",
     reason: ["Privacy out of the box", "No telemetry or sponsored content", "Based on Firefox — familiar"]
   },
   mullvad: {
-    name: "Mullvad Browser", category: "firefox", emoji: "🕶️", os: ["win", "linux", "mac"],
+    name: "Mullvad Browser", category: "firefox", emoji: "🕶️",
     url: "https://mullvad.net/browser", logo: "https://cdn.simpleicons.org/mullvad",
     color: ["#facc15", "#a16207"],
     desc: "Tor Browser without Tor. Anti-fingerprinting by default.",
     reason: ["Tor-grade fingerprinting resistance", "Made with the Tor Project", "No account needed"]
   },
   waterfox: {
-    name: "Waterfox", category: "firefox", emoji: "💧", os: ["win", "linux", "mac", "android"],
+    name: "Waterfox", category: "firefox", emoji: "💧",
     url: "https://www.waterfox.net/", logo: "https://cdn.simpleicons.org/waterfox",
     color: ["#0284c7", "#075985"],
     desc: "Firefox fork focused on speed, privacy and classic extensions.",
@@ -862,49 +839,49 @@ const BROWSERS = {
 
   /* ---------- Chromium-based ---------- */
   helium: {
-    name: "Helium", category: "chromium", emoji: "🎈", os: ["win", "linux", "mac"],
+    name: "Helium", category: "chromium", emoji: "🎈",
     url: "https://helium.computer/", logo: "https://cdn.simpleicons.org/helium",
     color: ["#0891b2", "#0e7490"],
     desc: "Chromium stripped to the bones. Fastest launch and rendering.",
     reason: ["Chromium-based — full extension support", "Absolutely minimal chrome", "Fastest perceived speed"]
   },
   chrome: {
-    name: "Google Chrome", category: "chromium", emoji: "🌐", os: ["win", "linux", "mac"],
+    name: "Google Chrome", category: "chromium", emoji: "🌐",
     url: "https://www.google.com/chrome/", logo: "https://cdn.simpleicons.org/googlechrome",
     color: ["#dc2626", "#991b1b"],
     desc: "The world's most popular browser. Best site compatibility, deep Google integration.",
     reason: ["Best site compatibility", "Huge extension ecosystem", "Syncs across all your devices"]
   },
   chromium: {
-    name: "Chromium", category: "chromium", emoji: "🧪", os: ["win", "linux", "mac"],
+    name: "Chromium", category: "chromium", emoji: "🧪",
     url: "https://www.chromium.org/getting-involved/download-chromium/", logo: "https://cdn.simpleicons.org/chromium",
     color: ["#2563eb", "#1e40af"],
     desc: "The open-source core of Chrome. No Google tracking, no proprietary blobs.",
     reason: ["Pure open-source Chromium", "No Google telemetry", "Best site compatibility, minus the tracking"]
   },
   brave: {
-    name: "Brave", category: "chromium", emoji: "🦁", os: ["win", "linux", "mac", "android"],
+    name: "Brave", category: "chromium", emoji: "🦁",
     url: "https://brave.com/download/", logo: "https://cdn.simpleicons.org/brave",
     color: ["#f97316", "#c2410c"],
     desc: "Chromium with built-in ad-block, tracker blocking and optional crypto rewards.",
     reason: ["Blocks ads and trackers by default", "Chromium speed + extension support", "Optional private search"]
   },
   edge: {
-    name: "Microsoft Edge", category: "chromium", emoji: "🌊", os: ["win", "linux", "mac", "android", "ios"],
+    name: "Microsoft Edge", category: "chromium", emoji: "🌊",
     url: "https://www.microsoft.com/edge", logo: "https://cdn.simpleicons.org/microsoftedge",
     color: ["#0ea5e9", "#0369a1"],
     desc: "Microsoft's Chromium browser. Vertical tabs, collections, deep Windows integration.",
     reason: ["Deep Windows integration", "Vertical tabs and workspaces", "Chromium compatibility"]
   },
   vivaldi: {
-    name: "Vivaldi", category: "chromium", emoji: "🎻", os: ["win", "linux", "mac"],
+    name: "Vivaldi", category: "chromium", emoji: "🎻",
     url: "https://vivaldi.com/", logo: "https://cdn.simpleicons.org/vivaldi",
     color: ["#dc2626", "#991b1b"],
     desc: "The power-user's Chromium browser. Tab stacks, tiling, mail, calendar, notes.",
     reason: ["Incredibly customizable", "Built-in mail, calendar, notes", "Tab stacks and tiling"]
   },
   opera: {
-    name: "Opera", category: "chromium", emoji: "🎭", os: ["win", "linux", "mac", "android", "ios"],
+    name: "Opera", category: "chromium", emoji: "🎭",
     url: "https://www.opera.com/", logo: "https://cdn.simpleicons.org/opera",
     color: ["#dc2626", "#991b1b"],
     desc: "Chromium with free VPN, ad-block and a built-in sidebar of mini-apps.",
@@ -916,9 +893,9 @@ const BROWSERS = {
     name: "Safari", category: "other", emoji: "🧭",
     url: "https://www.apple.com/safari/", logo: "https://cdn.simpleicons.org/safari",
     color: ["#0284c7", "#075985"],
-    desc: "Apple's browser. Fastest on Mac and iPhone, incredibly power-efficient.",
-    reason: ["Best battery life on Apple hardware", "Deep macOS / iOS integration", "iCloud sync and Apple Pay"],
-    os: ["mac", "ios"]
+    desc: "Apple's browser. Fastest on Mac, incredibly power-efficient.",
+    reason: ["Best battery life on Mac", "Deep macOS / iOS integration", "iCloud sync and Apple Pay"],
+    os: ["mac"]
   },
   gnomeweb: {
     name: "GNOME Web", category: "other", emoji: "🦎",
@@ -937,14 +914,14 @@ const BROWSERS = {
     os: ["linux"]
   },
   qutebrowser: {
-    name: "qutebrowser", category: "other", emoji: "⌨️", os: ["win", "linux", "mac"],
+    name: "qutebrowser", category: "other", emoji: "⌨️",
     url: "https://qutebrowser.org/", logo: "https://cdn.simpleicons.org/qt",
     color: ["#16a34a", "#166534"],
     desc: "Keyboard-driven browser with vim-like bindings. For terminal lovers.",
     reason: ["Vim-style keyboard control", "Minimal, distraction-free", "Highly scriptable"]
   },
   ladybird: {
-    name: "Ladybird", category: "other", emoji: "🐞", os: ["win", "linux", "mac"],
+    name: "Ladybird", category: "other", emoji: "🐞",
     url: "https://ladybird.org/", logo: "",
     color: ["#dc2626", "#991b1b"],
     desc: "A brand-new, independent browser engine written from scratch.",
@@ -961,9 +938,9 @@ const BROWSER_QUIZ = [
     q: "Speed or design?",
     sub: "What do you care about more in a browser?",
     options: [
-      { id: "speed",  emoji: "⚡", label: "Speed above all",  hint: "Every millisecond counts", scores: { helium: 4, zen: 1, safari: 2, brave: 3, firefox: 2 } },
-      { id: "design", emoji: "🎨", label: "Beautiful design", hint: "I stare at it all day",  scores: { helium: 1, zen: 4, safari: 3, brave: 2, firefox: 2 } },
-      { id: "both",   emoji: "⚖️", label: "Both matter",      hint: "Balance, please",       scores: { helium: 3, zen: 3, safari: 3, brave: 3, firefox: 3 } }
+      { id: "speed",  emoji: "⚡", label: "Speed above all",  hint: "Every millisecond counts", scores: { helium: 4, zen: 1, safari: 2 } },
+      { id: "design", emoji: "🎨", label: "Beautiful design", hint: "I stare at it all day",  scores: { helium: 1, zen: 4, safari: 3 } },
+      { id: "both",   emoji: "⚖️", label: "Both matter",      hint: "Balance, please",       scores: { helium: 3, zen: 3, safari: 3 } }
     ]
   },
   {
@@ -971,9 +948,9 @@ const BROWSER_QUIZ = [
     q: "How many tabs do you usually keep open?",
     sub: "Be honest, we won't judge.",
     options: [
-      { id: "few",  emoji: "1️⃣", label: "1 – 5 tabs",  hint: "Clean and simple",   scores: { helium: 3, zen: 2, safari: 3, brave: 2, firefox: 3 } },
-      { id: "some", emoji: "📚", label: "6 – 15 tabs", hint: "A healthy middle",   scores: { helium: 2, zen: 3, safari: 2, brave: 3, firefox: 2 } },
-      { id: "many", emoji: "🌪️", label: "20+, always", hint: "Chaos is my system", scores: { helium: 1, zen: 4, safari: 1, brave: 2, firefox: 4 } }
+      { id: "few",  emoji: "1️⃣", label: "1 – 5 tabs",  hint: "Clean and simple",   scores: { helium: 3, zen: 2, safari: 3 } },
+      { id: "some", emoji: "📚", label: "6 – 15 tabs", hint: "A healthy middle",   scores: { helium: 2, zen: 3, safari: 2 } },
+      { id: "many", emoji: "🌪️", label: "20+, always", hint: "Chaos is my system", scores: { helium: 1, zen: 4, safari: 1 } }
     ]
   },
   {
@@ -981,9 +958,9 @@ const BROWSER_QUIZ = [
     q: "How much do you care about privacy?",
     sub: "Ads, trackers, fingerprinting…",
     options: [
-      { id: "high", emoji: "🛡️", label: "Very much",  hint: "I want to be invisible",    scores: { helium: 1, zen: 4, safari: 1, brave: 4, firefox: 4 } },
-      { id: "some", emoji: "🔒", label: "Somewhat",   hint: "I don't want to be tracked", scores: { helium: 2, zen: 3, safari: 4, brave: 3, firefox: 3 } },
-      { id: "low",  emoji: "😌", label: "Not really", hint: "I just want a good browser", scores: { helium: 4, zen: 3, safari: 3, brave: 2, firefox: 2 } }
+      { id: "high", emoji: "🛡️", label: "Very much",  hint: "I want to be invisible",    scores: { helium: 1, zen: 4, safari: 1 } },
+      { id: "some", emoji: "🔒", label: "Somewhat",   hint: "I don't want to be tracked", scores: { helium: 2, zen: 3, safari: 4 } },
+      { id: "low",  emoji: "😌", label: "Not really", hint: "I just want a good browser", scores: { helium: 4, zen: 3, safari: 3 } }
     ]
   },
   {
@@ -991,8 +968,8 @@ const BROWSER_QUIZ = [
     q: "Do you rely on browser extensions?",
     sub: "Some extensions only exist for Chromium/Firefox.",
     options: [
-      { id: "yes", emoji: "🧩", label: "Yes, heavily", hint: "I need the full store",   scores: { helium: 4, zen: 2, safari: 1, brave: 3, firefox: 4 } },
-      { id: "no",  emoji: "🙅", label: "Not really",   hint: "I can live without them", scores: { helium: 2, zen: 4, safari: 4, brave: 3, firefox: 3 } }
+      { id: "yes", emoji: "🧩", label: "Yes, heavily", hint: "I need the full store",   scores: { helium: 4, zen: 2, safari: 1 } },
+      { id: "no",  emoji: "🙅", label: "Not really",   hint: "I can live without them", scores: { helium: 2, zen: 4, safari: 4 } }
     ]
   }
 ];
@@ -1003,7 +980,6 @@ const BROWSER_QUIZ = [
 const GROUPS = [
   { title: "Setup & System", scenarioIds: ["system-tools"] },
   { title: "Essentials",     scenarioIds: ["browsers", "ai", "translate", "communication", "network", "downloads", "web"] },
-  { title: "On the Go",      scenarioIds: ["mobile"] },
   { title: "Create & Work",  scenarioIds: ["office", "video-editing"] },
   { title: "Media & Fun",    scenarioIds: ["minecraft"] }
 ];
@@ -1019,8 +995,7 @@ const ICONS = {
   web: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>`,
   "system-tools": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
   office: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>`,
-  "video-editing": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M2 15h20M7 4v5M12 4v5M17 4v5M7 15v5M12 15v5M17 15v5"/></svg>`,
-  mobile: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M10.5 5.5h3"/><circle cx="12" cy="18" r=".8" fill="currentColor"/></svg>`
+  "video-editing": `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M2 15h20M7 4v5M12 4v5M17 4v5M7 15v5M12 15v5M17 15v5"/></svg>`
 };
 
 const PATTERNS = {
@@ -1034,8 +1009,7 @@ const PATTERNS = {
   web: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1" opacity=".22" fill="none"><ellipse cx="200" cy="120" rx="150" ry="105"/><ellipse cx="200" cy="120" rx="105" ry="105"/><ellipse cx="200" cy="120" rx="55" ry="105"/><line x1="50" y1="120" x2="350" y2="120"/></g></svg>`,
   "system-tools": `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1" opacity=".22" fill="none"><circle cx="90" cy="70" r="22"/><circle cx="90" cy="70" r="9"/><path d="M90 42v-6M90 104v-6M62 70h-6M124 70h-6"/><circle cx="310" cy="160" r="26"/><circle cx="310" cy="160" r="10"/><path d="M310 128v-6M310 198v-6M278 160h-6M348 160h-6"/></g></svg>`,
   office: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1.5" opacity=".2" fill="none" stroke-linecap="round"><path d="M60 50h80M60 72h120M60 94h100M60 116h110"/><path d="M60 160h80M60 182h120M60 204h100"/><path d="M260 50h80M260 72h120M260 94h100"/></g></svg>`,
-  "video-editing": `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1.5" opacity=".22"><path d="M60 60h280M60 100h280M60 140h280M60 180h280"/></g></svg>`,
-  mobile: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1" opacity=".22"><rect x="170" y="42" width="52" height="100" rx="9"/><rect x="95" y="68" width="52" height="100" rx="9"/><rect x="245" y="68" width="52" height="100" rx="9"/></g></svg>`
+  "video-editing": `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1.5" opacity=".22"><path d="M60 60h280M60 100h280M60 140h280M60 180h280"/></g></svg>`
 };
 
 /* ============================================================
@@ -1051,7 +1025,7 @@ const SCENARIOS = [
       { id: "speed", title: "Speed & Minimalism", emoji: "⚡" }
     ],
     items: [
-      { name: "Zen", url: "https://zen-browser.app/", desc: "Firefox-based, best design, packed with useful features. Medium speed — perfect for tabs you don't want to close.", logo: "https://cdn.simpleicons.org/zenbrowser", subscenarios: ["daily"], tag: "daily driver", os: ["win", "linux", "mac"],
+      { name: "Zen", url: "https://zen-browser.app/", desc: "Firefox-based, best design, packed with useful features. Medium speed — perfect for tabs you don't want to close.", logo: "https://cdn.simpleicons.org/zenbrowser", subscenarios: ["daily"], tag: "daily driver",
         childrenLabel: "Recommended extensions for Zen",
         children: [
           { name: "uBlock Origin", url: "https://ublockorigin.com/", desc: "One of the best ad-blockers.", logo: "https://cdn.simpleicons.org/ublockorigin" },
@@ -1060,7 +1034,7 @@ const SCENARIOS = [
           { name: "Wayback Machine", url: "https://addons.mozilla.org/firefox/addon/wayback-machine_new/", desc: "Instant access to archived versions of any page.", logo: "https://cdn.simpleicons.org/internetarchive" }
         ]
       },
-      { name: "Helium", url: "https://helium.computer/", desc: "Chromium-based, the fastest you can find. Minimalist design optimized for speed.", logo: "https://cdn.simpleicons.org/helium", subscenarios: ["speed"], tag: "fastest", os: ["win", "linux", "mac"],
+      { name: "Helium", url: "https://helium.computer/", desc: "Chromium-based, the fastest you can find. Minimalist design optimized for speed.", logo: "https://cdn.simpleicons.org/helium", subscenarios: ["speed"], tag: "fastest",
         childrenLabel: "Recommended extensions for Helium",
         children: [
           { name: "uBlock Origin", url: "https://ublockorigin.com/", desc: "The best ad-blocker for Chromium.", logo: "https://cdn.simpleicons.org/ublockorigin" },
@@ -1068,38 +1042,12 @@ const SCENARIOS = [
           { name: "Dark Reader", url: "https://darkreader.org/", desc: "Makes any website dark themed.", logo: "https://cdn.simpleicons.org/darkreader" }
         ]
       },
-      { name: "Firefox", url: "https://www.mozilla.org/firefox/new/", desc: "The mainstream Firefox. Independent engine, huge extension library, strong privacy defaults.", logo: "https://cdn.simpleicons.org/firefox", subscenarios: ["daily"], tag: "mainstream", os: ["win", "linux", "mac", "android"] },
-      { name: "LibreWolf", url: "https://librewolf.net/", desc: "Firefox hardened for privacy. No telemetry, uBlock Origin built in.", logo: "https://cdn.simpleicons.org/librewolf", subscenarios: ["daily"], tag: "privacy", os: ["win", "linux", "mac"] },
-      { name: "Brave", url: "https://brave.com/download/", desc: "Chromium with built-in ad-block and tracker blocking. Chromium speed, less tracking.", logo: "https://cdn.simpleicons.org/brave", subscenarios: ["daily", "speed"], tag: "privacy + speed", os: ["win", "linux", "mac", "android"] },
-      { name: "Google Chrome", url: "https://www.google.com/chrome/", desc: "The world's most popular browser. Best site compatibility and extension support.", logo: "https://cdn.simpleicons.org/googlechrome", subscenarios: ["daily"], tag: "most compatible", os: ["win", "linux", "mac"] },
-      { name: "Vivaldi", url: "https://vivaldi.com/", desc: "Power-user Chromium with tab stacks, tiling, mail, calendar and notes built in.", logo: "https://cdn.simpleicons.org/vivaldi", subscenarios: ["daily"], tag: "power user", os: ["win", "linux", "mac"] },
-      { name: "Safari", url: "https://www.apple.com/safari/", desc: "Apple's browser. Fastest and most power-efficient on Mac and iPhone.", logo: "https://cdn.simpleicons.org/safari", subscenarios: ["daily"], tag: "Apple devices", os: ["mac", "ios"] }
-    ]
-  },
-  {
-    id: "mobile", title: "Mobile Essentials", emoji: "📱",
-    desc: "The best of iOS & Android — private, free and genuinely useful",
-    color: ["#0e7490", "#9333ea"],
-    subscenarios: [
-      { id: "core",        title: "Core Apps",     emoji: "⭐" },
-      { id: "media",       title: "Media & Music", emoji: "🎧" },
-      { id: "privacy",     title: "Privacy & 2FA", emoji: "🔒" },
-      { id: "android-only", title: "Android Gems", emoji: "🤖" },
-      { id: "ios-only",    title: "iOS Gems",      emoji: "🍎" }
-    ],
-    items: [
-      { name: "LocalSend", url: "https://localsend.app/", desc: "AirDrop for everything else — send files between phone and PC over Wi-Fi. No cloud, no accounts.", logo: "", subscenarios: ["core"], tag: "my top pick", os: ["ios", "android"] },
-      { name: "Obsidian", url: "https://obsidian.md/", desc: "Markdown notes that stay yours. The mobile app works on your vault offline.", logo: "https://cdn.simpleicons.org/obsidian", subscenarios: ["core"], tag: "notes", os: ["ios", "android"] },
-      { name: "Ente Auth", url: "https://ente.io/auth/", desc: "Open-source 2FA authenticator with encrypted backup. Beats every vendor lock-in.", logo: "", subscenarios: ["core", "privacy"], tag: "2FA", os: ["ios", "android"] },
-      { name: "VLC", url: "https://www.videolan.org/vlc/", desc: "Plays every format ever shipped. Subtitles, network streams, all of it.", logo: "https://cdn.simpleicons.org/vlc", subscenarios: ["media"], tag: "plays everything", os: ["ios", "android"] },
-      { name: "AntennaPod", url: "https://antennapod.org/", desc: "Beautiful open-source podcast player. No accounts, no tracking, no ads.", logo: "", subscenarios: ["media"], tag: "podcasts", os: ["android"] },
-      { name: "Feeder", url: "https://github.com/spacecowboy/Feeder", desc: "Clean RSS reader — follow sites directly, no algorithm in the middle.", logo: "", subscenarios: ["media"], tag: "RSS", os: ["android"] },
-      { name: "Aegis Authenticator", url: "https://getaegis.app/", desc: "Free, secure, open-source 2FA app with encrypted local backups.", logo: "", subscenarios: ["privacy"], tag: "2FA", os: ["android"] },
-      { name: "NewPipe", url: "https://newpipe.net/", desc: "YouTube without ads — background play and downloads included.", logo: "", subscenarios: ["media", "android-only"], tag: "youtube, fixed", os: ["android"] },
-      { name: "Seal", url: "https://github.com/JunkFood02/Seal", desc: "Material You video/audio downloader powered by yt-dlp.", logo: "", subscenarios: ["android-only"], tag: "downloader", os: ["android"] },
-      { name: "Obtainium", url: "https://github.com/ImranR98/Obtainium", desc: "Install and update apps straight from the source — GitHub, F-Droid and more.", logo: "", subscenarios: ["android-only"], tag: "app updates, solved", os: ["android"] },
-      { name: "SideStore", url: "https://sidestore.io/", desc: "Sideload open-source apps on iPhone without a computer every 7 days.", logo: "", subscenarios: ["ios-only"], tag: "sideloading", os: ["ios"] },
-      { name: "iSH", url: "https://ish.app/", desc: "A full Linux shell running locally on iOS. For the terminally curious.", logo: "", subscenarios: ["ios-only"], tag: "terminal", os: ["ios"] }
+      { name: "Firefox", url: "https://www.mozilla.org/firefox/new/", desc: "The mainstream Firefox. Independent engine, huge extension library, strong privacy defaults.", logo: "https://cdn.simpleicons.org/firefox", subscenarios: ["daily"], tag: "mainstream" },
+      { name: "LibreWolf", url: "https://librewolf.net/", desc: "Firefox hardened for privacy. No telemetry, uBlock Origin built in.", logo: "https://cdn.simpleicons.org/librewolf", subscenarios: ["daily"], tag: "privacy" },
+      { name: "Brave", url: "https://brave.com/download/", desc: "Chromium with built-in ad-block and tracker blocking. Chromium speed, less tracking.", logo: "https://cdn.simpleicons.org/brave", subscenarios: ["daily", "speed"], tag: "privacy + speed" },
+      { name: "Google Chrome", url: "https://www.google.com/chrome/", desc: "The world's most popular browser. Best site compatibility and extension support.", logo: "https://cdn.simpleicons.org/googlechrome", subscenarios: ["daily"], tag: "most compatible" },
+      { name: "Vivaldi", url: "https://vivaldi.com/", desc: "Power-user Chromium with tab stacks, tiling, mail, calendar and notes built in.", logo: "https://cdn.simpleicons.org/vivaldi", subscenarios: ["daily"], tag: "power user" },
+      { name: "Safari", url: "https://www.apple.com/safari/", desc: "Apple's browser. Fastest and most power-efficient on macOS.", logo: "https://cdn.simpleicons.org/safari", subscenarios: ["daily"], tag: "macOS only", os: ["mac"] }
     ]
   },
   {
@@ -1143,7 +1091,6 @@ const SCENARIOS = [
     items: [
       { name: "Gmail", url: "https://mail.google.com/", desc: "Free, huge storage, deeply integrated with Google.", logo: "https://cdn.simpleicons.org/gmail", subscenarios: ["main"] },
       { name: "TutaMail", url: "https://tuta.com/", desc: "Fast, encrypted, privacy-first.", logo: "", subscenarios: ["secure"], tag: "private" },
-      { name: "Signal", url: "https://signal.org/", desc: "End-to-end encrypted messaging. The gold standard for private chat on mobile.", logo: "https://cdn.simpleicons.org/signal", subscenarios: ["secure"], tag: "encrypted", os: ["ios", "android"] },
       { name: "Equibop", url: "https://github.com/Equicord/Equibop/releases", desc: "Enhanced Discord client with plugins and themes.", logo: "https://cdn.simpleicons.org/discord", subscenarios: ["discord"] },
       { name: "ZapZap", url: "https://github.com/rafatosta/zapzap/releases", desc: "Enhanced WhatsApp desktop for Linux.", logo: "https://cdn.simpleicons.org/whatsapp", subscenarios: ["whatsapp"], os: ["linux"] }
     ]
@@ -1154,7 +1101,7 @@ const SCENARIOS = [
     color: ["#991b1b", "#7f1d1d"],
     subscenarios: [{ id: "vpn", title: "VPN / Proxy", emoji: "🔐" }],
     items: [
-      { name: "Hiddify", url: "https://hiddify.com/", desc: "Proxy / VPN client. Easy to set up.", logo: "", subscenarios: ["vpn"], os: ["win", "linux", "mac", "android"] }
+      { name: "Hiddify", url: "https://hiddify.com/", desc: "Proxy / VPN client. Easy to set up.", logo: "", subscenarios: ["vpn"] }
     ]
   },
   {
@@ -1167,8 +1114,7 @@ const SCENARIOS = [
     ],
     items: [
       { name: "Cobalt", url: "https://cobalt.tools/", desc: "Best download tool for YouTube and other sites.", logo: "", subscenarios: ["video"], tag: "recommended" },
-      { name: "NewPipe", url: "https://newpipe.net/", desc: "Lightweight YouTube frontend for Android — background play, downloads, no ads.", logo: "", subscenarios: ["video"], tag: "Android", os: ["android"] },
-      { name: "qBittorrent", url: "https://www.qbittorrent.org/download", desc: "Open-source torrent client. No ads.", logo: "https://cdn.simpleicons.org/qbittorrent", subscenarios: ["torrent"], os: ["win", "linux", "mac"] }
+      { name: "qBittorrent", url: "https://www.qbittorrent.org/download", desc: "Open-source torrent client. No ads.", logo: "https://cdn.simpleicons.org/qbittorrent", subscenarios: ["torrent"] }
     ]
   },
   {
@@ -1180,9 +1126,9 @@ const SCENARIOS = [
       { id: "alt", title: "Alternative", emoji: "🔄" }
     ],
     items: [
-      { name: "XMCL", url: "https://xmcl.app/", desc: "Best interface, innovative features, very active development.", logo: "", subscenarios: ["main"], tag: "top pick", os: ["win", "linux", "mac"],
+      { name: "XMCL", url: "https://xmcl.app/", desc: "Best interface, innovative features, very active development.", logo: "", subscenarios: ["main"], tag: "top pick",
         badges: [{ text: "Pirate ✅", color: "green", tip: "Enable Developer Options in XMCL." }] },
-      { name: "Prism Launcher", url: "https://prismlauncher.org/download", desc: "Great for old Minecraft versions and low-end PCs.", logo: "https://cdn.simpleicons.org/prismlauncher", subscenarios: ["alt"], os: ["win", "linux", "mac"],
+      { name: "Prism Launcher", url: "https://prismlauncher.org/download", desc: "Great for old Minecraft versions and low-end PCs.", logo: "https://cdn.simpleicons.org/prismlauncher", subscenarios: ["alt"],
         badges: [{ text: "Pirate ❌", color: "red", tip: "Prism does not support pirate accounts." }] }
     ]
   },
@@ -1219,8 +1165,8 @@ const SCENARIOS = [
       { name: "7-Zip", url: "https://www.7-zip.org/download.html", desc: "The classic free archiver.", logo: "https://cdn.simpleicons.org/7zip", subscenarios: ["compression"], tag: "essential", os: ["win"] },
       { name: "ShareX", url: "https://getsharex.com/", desc: "Powerful screenshot and screen-recording tool on Windows.", logo: "", subscenarios: ["capture"], tag: "Windows only", os: ["win"] },
       { name: "PowerToys", url: "https://learn.microsoft.com/windows/powertoys/", desc: "Microsoft's power-user toolkit. FancyZones, PowerRename, OCR and more.", logo: "", subscenarios: ["tweaks"], tag: "Windows only", os: ["win"] },
-      { name: "balenaEtcher", url: "https://etcher.balena.io/", desc: "Beautiful, foolproof USB writer.", logo: "https://cdn.simpleicons.org/balena", subscenarios: ["imaging"], os: ["win", "linux", "mac"] },
-      { name: "Clonezilla", url: "https://clonezilla.org/downloads.php", desc: "Bare-metal disk imaging and cloning.", logo: "", subscenarios: ["imaging"], tag: "backup", os: ["win", "linux", "mac"] },
+      { name: "balenaEtcher", url: "https://etcher.balena.io/", desc: "Beautiful, foolproof USB writer.", logo: "https://cdn.simpleicons.org/balena", subscenarios: ["imaging"] },
+      { name: "Clonezilla", url: "https://clonezilla.org/downloads.php", desc: "Bare-metal disk imaging and cloning.", logo: "", subscenarios: ["imaging"], tag: "backup" },
       { name: "Flameshot", url: "https://flameshot.org/", desc: "Powerful, simple screenshot tool for Linux.", logo: "", subscenarios: ["capture"], tag: "Linux", os: ["linux"] }
     ]
   },
@@ -1230,7 +1176,7 @@ const SCENARIOS = [
     color: ["#0369a1", "#075985"],
     subscenarios: [{ id: "suite", title: "Office Suite", emoji: "📝" }],
     items: [
-      { name: "LibreOffice", url: "https://www.libreoffice.org/download/download-libreoffice/", desc: "The definitive free office suite. Writer, Calc, Impress — full MS Office compatibility.", logo: "https://cdn.simpleicons.org/libreoffice", subscenarios: ["suite"], tag: "essential", os: ["win", "linux", "mac"] }
+      { name: "LibreOffice", url: "https://www.libreoffice.org/download/download-libreoffice/", desc: "The definitive free office suite. Writer, Calc, Impress — full MS Office compatibility.", logo: "https://cdn.simpleicons.org/libreoffice", subscenarios: ["suite"], tag: "essential" }
     ]
   },
   {
@@ -1242,8 +1188,8 @@ const SCENARIOS = [
       { id: "audio", title: "Audio", emoji: "🎵" }
     ],
     items: [
-      { name: "DaVinci Resolve", url: "https://www.blackmagicdesign.com/products/davinciresolve", desc: "Professional-grade video editor, colour grader and VFX suite.", logo: "", subscenarios: ["editing"], tag: "pro-grade free", os: ["win", "linux", "mac"] },
-      { name: "Audacity", url: "https://www.audacityteam.org/download/", desc: "The classic free audio editor.", logo: "https://cdn.simpleicons.org/audacity", subscenarios: ["audio"], tag: "essential", os: ["win", "linux", "mac"] }
+      { name: "DaVinci Resolve", url: "https://www.blackmagicdesign.com/products/davinciresolve", desc: "Professional-grade video editor, colour grader and VFX suite.", logo: "", subscenarios: ["editing"], tag: "pro-grade free" },
+      { name: "Audacity", url: "https://www.audacityteam.org/download/", desc: "The classic free audio editor.", logo: "https://cdn.simpleicons.org/audacity", subscenarios: ["audio"], tag: "essential" }
     ]
   }
 ];
@@ -1320,8 +1266,6 @@ function browserEmojiList() {
 function osTagFor(id) {
   if (id === "win") return "win";
   if (id === "mac") return "mac";
-  if (id === "ios") return "ios";
-  if (id === "android") return "android";
   return "linux";
 }
 function isUsingBothBrowsers() {
@@ -1418,13 +1362,9 @@ function resetColors() {
 function getIcon(id) { return ICONS[id] || ICONS["system-tools"]; }
 function getPattern(id) { return PATTERNS[id] || ""; }
 
-/* Every platform tag an item can target. Items without an explicit
-   `os` field are assumed cross-platform (incl. mobile). */
-const ALL_OS_TAGS = ["win", "linux", "mac", "ios", "android"];
-
 function osAvailable(item) {
   if (!state.osList.length) return true;
-  const itemOS = item.os || ALL_OS_TAGS;
+  const itemOS = item.os || ["win", "linux", "mac"];
   return state.osList.some((selId) => itemOS.includes(osTagFor(selId)));
 }
 function visibleItems(scenario) { return scenario.items.filter(osAvailable); }
@@ -1441,20 +1381,16 @@ const OS_BUCKETS = {
   win:   { id: "win",   label: "Windows",        emoji: "🪟" },
   linux: { id: "linux", label: "Linux",          emoji: "🐧" },
   mac:   { id: "mac",   label: "macOS",          emoji: "🍎" },
-  ios:   { id: "ios",   label: "iOS",            emoji: "📱" },
-  android: { id: "android", label: "Android",    emoji: "🤖" },
   cross: { id: "cross", label: "Cross-platform", emoji: "🌐" }
 };
-const BUCKET_ORDER = ["win", "mac", "ios", "android", "linux", "cross"];
+const BUCKET_ORDER = ["win", "linux", "mac", "cross"];
 
 function bucketForItem(item) {
-  const set = item.os || ALL_OS_TAGS;
+  const set = item.os || ["win", "linux", "mac"];
   if (set.length >= 2) return "cross";
   if (set.includes("win")) return "win";
-  if (set.includes("mac")) return "mac";
-  if (set.includes("ios")) return "ios";
-  if (set.includes("android")) return "android";
   if (set.includes("linux")) return "linux";
+  if (set.includes("mac")) return "mac";
   return "cross";
 }
 
@@ -1521,7 +1457,7 @@ function renderWelcomeView() {
     <div class="welcome-wrap">
       <span class="welcome-eyebrow">Setup wizard</span>
       <h2>Build your perfect <span class="grad">digital toolkit</span></h2>
-      <p>Answer a few quick questions and I'll recommend an OS, a browser, and every app you actually need — desktop or mobile. Or just pick what you already have — multi-select is fine.</p>
+      <p>Answer a few quick questions and I'll recommend an OS, a browser, and every app you actually need. Or just pick what you already have — multi-select is fine.</p>
       <div class="welcome-steps">
         <div class="welcome-step">
           <div class="n" style="--c1:#5c7cfa;--c2:#9775fa">1</div>
@@ -1543,7 +1479,7 @@ function renderWelcomeView() {
         Start setup
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </button>
-      <p class="welcome-hint">Takes about 90 seconds. Works for Windows, macOS, Linux, iOS and Android. Your answers stay on your device.</p>
+      <p class="welcome-hint">Takes about 90 seconds. Your answers stay on your device.</p>
     </div>
   `;
 }
@@ -1771,8 +1707,7 @@ function renderBrowserQuizView() {
 
 function eligibleQuizBrowserIds() {
   const set = ["zen", "helium"];
-  if (state.osList.includes("mac") || state.osList.includes("ios")) set.push("safari");
-  if (state.osList.includes("android")) set.push("firefox", "brave");
+  if (state.osList.includes("mac")) set.push("safari");
   return set;
 }
 
@@ -1806,13 +1741,9 @@ function renderBrowserResultView() {
 
   const runnersUp = sorted.slice(1, 3).map(([id]) => BROWSERS[id]).filter(Boolean);
 
-  const platformNote = state.osList.includes("ios")
-    ? "On iPhone everything runs WebKit under the hood — Safari is the native pick."
-    : state.osList.includes("android")
-    ? "Quiz candidates on Android: Firefox and Brave. (Zen and Helium are desktop-only.)"
-    : state.osList.includes("mac")
+  const platformNote = state.osList.includes("mac")
     ? "Quiz candidates on macOS: Zen, Helium and Safari."
-    : "Quiz candidates: Zen and Helium only.";
+    : "Quiz candidates: Zen and Helium only. (Add macOS to your setup if you want Safari considered.)";
 
   const topLogo = `<div class="result-logo">${logoHTML(top)}</div>`;
 
@@ -2288,41 +2219,20 @@ function bindTilt() {
   let dots = [];
   let pulses = [];
   const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, vx: 0, vy: 0 };
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
   let W = 0, H = 0;
   let t = 0;
 
-  /* ---- Device tiering ------------------------------------------
-     Low-end phones and weak machines get a cheaper scene: fewer
-     dots, 1x DPR, a 30fps cap and shorter links. Detection runs
-     once using cheap heuristics only. */
-  const CORES = navigator.hardwareConcurrency || 4;
-  const MEM_GB = navigator.deviceMemory || 0;              // 0 = unknown
-  const IS_MOBILE_UA = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  const LOW_END = CORES <= 4 || (MEM_GB > 0 && MEM_GB <= 4) || IS_MOBILE_UA;
-
-  const DPR_CAP     = LOW_END ? 1    : 2;
-  const AREA_DIV    = LOW_END ? 9000 : 5000;   // bigger div → fewer dots
-  const DOT_CAP     = LOW_END ? 240  : 550;
-  const FPS_MIN     = LOW_END ? 33.4 : 0;      // 30fps frame budget (0 = uncapped)
-  const BURST_COUNT = LOW_END ? 6    : 10;     // dots spawned per click
-
-  let dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-
-  let LINK_DIST, LINK_DIST2, CURSOR_LINK_R, CURSOR_LINK_R2, MOUSE_R, MOUSE_R2;
-  const PULSE_R = 140;              // click shockwave radius (small ring)
-  const CRUISE = 0.28;              // relaxed drift speed (slowed in 1.1)
+  const LINK_DIST = 140;            // max distance for dot-to-dot links
+  const LINK_DIST2 = LINK_DIST * LINK_DIST;
+  const CURSOR_LINK_R = 250;        // radius for cursor-to-dot links
+  const CURSOR_LINK_R2 = CURSOR_LINK_R * CURSOR_LINK_R;
+  const MOUSE_R = 170;              // cursor influence radius
+  const MOUSE_R2 = MOUSE_R * MOUSE_R;
+  const PULSE_R = 140;              // click shockwave radius (much smaller in 1.1)
+  const CRUISE = 0.28;              // relaxed drift speed (slowed down in 1.1)
   const MAX_SPEED = 0.75;           // hard speed cap (click needs headroom)
   const MAX_DOTS = 1000;            // spawned dots beyond this fade away
-  function applyTier() {
-    LINK_DIST      = LOW_END ? 110 : 140;
-    CURSOR_LINK_R  = LOW_END ? 180 : 250;
-    MOUSE_R        = LOW_END ? 140 : 170;
-    LINK_DIST2     = LINK_DIST * LINK_DIST;
-    CURSOR_LINK_R2 = CURSOR_LINK_R * CURSOR_LINK_R;
-    MOUSE_R2       = MOUSE_R * MOUSE_R;
-  }
-  applyTier();
-  const CELL = LINK_DIST;           // spatial hash cell size (= link distance)
 
   function resize() {
     W = window.innerWidth;
@@ -2335,7 +2245,7 @@ function bindTilt() {
     build();
   }
   function build() {
-    const count = Math.max(60, Math.min(DOT_CAP, Math.round((W * H) / AREA_DIV)));
+    const count = Math.max(60, Math.min(550, Math.round((W * H) / 5000)));
     dots = [];
     for (let i = 0; i < count; i++) {
       dots.push({
@@ -2369,7 +2279,7 @@ function bindTilt() {
       d.vy += (dy / dist) * f;
     }
     // New dots bloom around the click point.
-    for (let i = 0; i < BURST_COUNT; i++) {
+    for (let i = 0; i < 10; i++) {
       const a = Math.random() * Math.PI * 2;
       const kick = 0.4 + Math.random() * 1.4;
       dots.push({
@@ -2394,72 +2304,8 @@ function bindTilt() {
     }
   }
 
-  /* ---- Spatial hash ---------------------------------------------
-     Buckets dots into LINK_DIST-sized cells each frame, so link
-     checks only ever look at true neighbours. Replaces the O(n²)
-     all-pairs sweep with roughly O(n) — the single biggest
-     low-end win. */
-  let gcols = 0, grows = 0, cells = [];
-  function rebuildGrid() {
-    gcols = Math.max(1, Math.ceil(W / CELL));
-    grows = Math.max(1, Math.ceil(H / CELL));
-    const n = gcols * grows;
-    if (cells.length !== n) {
-      cells = new Array(n);
-      for (let i = 0; i < n; i++) cells[i] = [];
-    } else {
-      for (let i = 0; i < n; i++) cells[i].length = 0;
-    }
-    for (let i = 0; i < dots.length; i++) {
-      const d = dots[i];
-      let cx = (d.x / CELL) | 0;
-      let cy = (d.y / CELL) | 0;
-      if (cx < 0) cx = 0; else if (cx >= gcols) cx = gcols - 1;
-      if (cy < 0) cy = 0; else if (cy >= grows) cy = grows - 1;
-      cells[cy * gcols + cx].push(i);
-    }
-  }
-
-  /* Links are batched into opacity buckets — one stroke() call per
-     bucket instead of one per line, dropping canvas state changes
-     from hundreds to eight per frame. */
-  const LINK_BUCKETS = 8;
-  const MAX_LINK_ALPHA = 0.25;
-  const linkBuf = Array.from({ length: LINK_BUCKETS }, () => []);
-  function tryLink(ia, ib) {
-    const a = dots[ia], b = dots[ib];
-    const dx = a.x - b.x;
-    if (dx > LINK_DIST || dx < -LINK_DIST) return;
-    const dy = a.y - b.y;
-    if (dy > LINK_DIST || dy < -LINK_DIST) return;
-    const d2 = dx * dx + dy * dy;
-    if (d2 > LINK_DIST2) return;
-    const alpha = (1 - Math.sqrt(d2) / LINK_DIST) * MAX_LINK_ALPHA * Math.min(a.life, b.life);
-    if (alpha <= 0.015) return;
-    let bi = (alpha / MAX_LINK_ALPHA * LINK_BUCKETS) | 0;
-    if (bi >= LINK_BUCKETS) bi = LINK_BUCKETS - 1;
-    linkBuf[bi].push(a.x, a.y, b.x, b.y);
-  }
-  function pairCells(c1, c2) {
-    for (let a = 0; a < c1.length; a++) {
-      const ia = c1[a];
-      for (let b = 0; b < c2.length; b++) tryLink(ia, c2[b]);
-    }
-  }
-
-  let lastTs = 0, lastDraw = -Infinity;
-  function loop(now) {
-    requestAnimationFrame(loop);
-    now = now || 0;
-    if (document.hidden) { lastTs = now; return; }        // fully idle in background tabs
-    if (FPS_MIN && now - lastDraw < FPS_MIN - 1) return;  // 30fps cap on low-end
-    /* dt-normalised physics: on the 30fps tier one frame covers two
-       60fps steps, so motion speed feels identical everywhere. */
-    const dt = lastTs ? Math.min(64, now - lastTs) : 16.7;
-    lastTs = now;
-    lastDraw = now;
-    const step = Math.min(2.2, Math.max(0.5, dt / 16.7));
-    t += 0.016 * step;
+  function loop() {
+    t += 0.016;
     ctx.clearRect(0, 0, W, H);
     const isLight = document.documentElement.getAttribute("data-theme") === "light";
     const baseR = isLight ? 50 : 96;
@@ -2485,10 +2331,10 @@ function bindTilt() {
     for (let i = dots.length - 1; i >= 0; i--) {
       const d = dots[i];
       if (d.dying) {
-        d.life -= 0.035 * step;
+        d.life -= 0.035;
         if (d.life <= 0) { dots.splice(i, 1); continue; }
       } else if (d.life < 1) {
-        d.life = Math.min(1, d.life + 0.04 * step);
+        d.life = Math.min(1, d.life + 0.04);
       }
 
       // Organic steering — each dot's path curves on its own.
@@ -2526,8 +2372,8 @@ function bindTilt() {
       }
 
       // Move. (position integration — velocity becomes displacement)
-      d.x += d.vx * d.z * step;
-      d.y += d.vy * d.z * step;
+      d.x += d.vx * d.z;
+      d.y += d.vy * d.z;
 
       // Wrap around the screen edges.
       if (d.x < -20) d.x = W + 20; else if (d.x > W + 20) d.x = -20;
@@ -2537,8 +2383,8 @@ function bindTilt() {
     /* Expanding shockwave rings. */
     for (let i = pulses.length - 1; i >= 0; i--) {
       const p = pulses[i];
-      p.r += 5 * step;
-      p.life *= Math.pow(0.93, step);
+      p.r += 5;
+      p.life *= 0.93;
       if (p.life < 0.03 || p.r > PULSE_R) { pulses.splice(i, 1); continue; }
       ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${(p.life * 0.6).toFixed(3)})`;
       ctx.lineWidth = 2;
@@ -2547,43 +2393,25 @@ function bindTilt() {
       ctx.stroke();
     }
 
-    /* Constellation links — spatial hash + batched strokes. Each dot
-       is only compared against dots in its own and half its
-       neighbouring cells, and all segments sharing an opacity bucket
-       are drawn in one stroke() call (~8 strokes per frame). */
+    /* Constellation links — connect dots that drift close together. */
     ctx.lineWidth = 0.6;
-    rebuildGrid();
-    for (let cy = 0; cy < grows; cy++) {
-      const rowOff = cy * gcols;
-      for (let cx = 0; cx < gcols; cx++) {
-        const cell = cells[rowOff + cx];
-        if (!cell.length) continue;
-        // pairs inside this cell
-        for (let a = 0; a < cell.length; a++) {
-          const ia = cell[a];
-          for (let b = a + 1; b < cell.length; b++) tryLink(ia, cell[b]);
-        }
-        // half the neighbours (right, down-left, down, down-right) — each pair once
-        if (cx + 1 < gcols) pairCells(cell, cells[rowOff + 1]);
-        if (cy + 1 < grows) {
-          if (cx > 0) pairCells(cell, cells[rowOff - 1 + gcols]);
-          pairCells(cell, cells[rowOff + gcols]);
-          if (cx + 1 < gcols) pairCells(cell, cells[rowOff + gcols + 1]);
-        }
+    for (let i = 0; i < dots.length; i++) {
+      const a = dots[i];
+      for (let j = i + 1; j < dots.length; j++) {
+        const b = dots[j];
+        const dx = a.x - b.x;
+        if (dx > LINK_DIST || dx < -LINK_DIST) continue;
+        const dy = a.y - b.y;
+        if (dy > LINK_DIST || dy < -LINK_DIST) continue;
+        const d2 = dx * dx + dy * dy;
+        if (d2 > LINK_DIST2) continue;
+        const alpha = (1 - Math.sqrt(d2) / LINK_DIST) * 0.25 * Math.min(a.life, b.life);
+        ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${alpha.toFixed(3)})`;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
       }
-    }
-    const bucketAlpha = MAX_LINK_ALPHA / LINK_BUCKETS;
-    for (let bi = 0; bi < LINK_BUCKETS; bi++) {
-      const buf = linkBuf[bi];
-      if (!buf.length) continue;
-      ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${(((bi + 0.5) * bucketAlpha)).toFixed(3)})`;
-      ctx.beginPath();
-      for (let k = 0; k < buf.length; k += 4) {
-        ctx.moveTo(buf[k], buf[k + 1]);
-        ctx.lineTo(buf[k + 2], buf[k + 3]);
-      }
-      ctx.stroke();
-      buf.length = 0;
     }
 
     /* Cursor links — the pointer weaves itself into the web. */
@@ -2605,7 +2433,7 @@ function bindTilt() {
       const dx = d.x - mouse.x, dy = d.y - mouse.y;
       const d2 = dx * dx + dy * dy;
       const s = (mouse.x > -1000 && d2 < MOUSE_R2) ? 1 - Math.sqrt(d2) / MOUSE_R : 0;
-      const spd = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
+      const spd = Math.hypot(d.vx, d.vy);
       const energy = Math.min(1, Math.max(0, (spd - CRUISE) / (MAX_SPEED - CRUISE)));
       const alpha = Math.min(1, 0.22 + s * 0.4 + energy * 0.35) * d.life;
       const size = (d.r * d.z + energy * 1.2) * (0.5 + 0.5 * d.life);
@@ -2622,14 +2450,10 @@ function bindTilt() {
       ctx.arc(mouse.x, mouse.y, 2.2, 0, Math.PI * 2);
       ctx.fill();
     }
+
+    requestAnimationFrame(loop);
   }
-  /* Debounced resize — mobile keyboards and URL-bar show/hide fire
-     resize storms; rebuild only once things settle. */
-  let resizeTimer = null;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resize, 120);
-  });
+  window.addEventListener("resize", resize);
   window.addEventListener("mousemove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
   window.addEventListener("mouseleave", () => { mouse.x = -9999; mouse.y = -9999; });
   window.addEventListener("click", (e) => {
