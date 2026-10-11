@@ -2229,7 +2229,7 @@ function bindTilt() {
   const CURSOR_LINK_R2 = CURSOR_LINK_R * CURSOR_LINK_R;
   const MOUSE_R = 170;              // cursor influence radius
   const MOUSE_R2 = MOUSE_R * MOUSE_R;
-  const PULSE_R = 380;              // click shockwave radius
+  const PULSE_R = 140;              // click shockwave radius (much smaller in 1.1)
   const CRUISE = 0.28;              // relaxed drift speed (slowed down in 1.1)
   const MAX_SPEED = 0.75;           // hard speed cap (click needs headroom)
   const MAX_DOTS = 1000;            // spawned dots beyond this fade away
@@ -2383,9 +2383,9 @@ function bindTilt() {
     /* Expanding shockwave rings. */
     for (let i = pulses.length - 1; i >= 0; i--) {
       const p = pulses[i];
-      p.r += 11;
-      p.life *= 0.95;
-      if (p.life < 0.03 || p.r > Math.max(W, H)) { pulses.splice(i, 1); continue; }
+      p.r += 5;
+      p.life *= 0.93;
+      if (p.life < 0.03 || p.r > PULSE_R) { pulses.splice(i, 1); continue; }
       ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${(p.life * 0.6).toFixed(3)})`;
       ctx.lineWidth = 2;
       ctx.beginPath();
