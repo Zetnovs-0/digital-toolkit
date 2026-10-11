@@ -45,5 +45,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`✅ Digital Toolkit running at http://localhost:${PORT}`);
+  console.log(`✅ Digital Toolkit 1.1 running at http://localhost:${PORT}`);
 });

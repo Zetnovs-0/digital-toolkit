@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Digital Toolkit — Build Your Setup</title>
+<title>Digital Toolkit 1.1 — Build Your Setup</title>
 <style>
   :root {
     --bg: #0a0c10; --bg-soft: #12151c; --card: #171b24; --card-hover: #1e232e;
@@ -547,7 +547,7 @@
 
 <header class="site-header">
   <div class="header-top">
-    <h1 id="siteTitle">Digital Toolkit</h1>
+    <h1 id="siteTitle">Digital Toolkit <span style="font-size:.55em;vertical-align:.45em;color:#9775fa;-webkit-text-fill-color:#9775fa;font-weight:700;letter-spacing:.04em;">1.1</span></h1>
     <div class="header-actions">
       <button class="setup-badge" id="osBadge" style="display:none">
         <span class="sb-icon" id="osBadgeIcon">🪟</span>
@@ -2051,12 +2051,28 @@ function bindClicks() {
     });
   });
 
+  /* Quick-pick chips update in place — no re-render, so the card never
+     replays its entrance animation and the page never shifts or scrolls. */
+  function updateQuickPickButton(sel, action, noun1, nounN) {
+    const btn = content.querySelector(`[data-action="${action}"]`);
+    if (!btn) return;
+    const n = sel.size;
+    for (const node of btn.childNodes) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        node.textContent = ` Continue with ${n} ${n === 1 ? noun1 : nounN} `;
+        break;
+      }
+    }
+    btn.disabled = n === 0;
+  }
+
   content.querySelectorAll('[data-quick-os]').forEach((el) => {
     el.addEventListener("click", () => {
       const id = el.dataset.quickOs;
       if (state.pendingOsSelection.has(id)) state.pendingOsSelection.delete(id);
       else state.pendingOsSelection.add(id);
-      render();
+      el.classList.toggle("selected", state.pendingOsSelection.has(id));
+      updateQuickPickButton(state.pendingOsSelection, "confirm-quick-os", "OS", "OSes");
     });
   });
 
@@ -2065,7 +2081,8 @@ function bindClicks() {
       const id = el.dataset.quickBrowser;
       if (state.pendingBrowserSelection.has(id)) state.pendingBrowserSelection.delete(id);
       else state.pendingBrowserSelection.add(id);
-      render();
+      el.classList.toggle("selected", state.pendingBrowserSelection.has(id));
+      updateQuickPickButton(state.pendingBrowserSelection, "confirm-quick-browser", "browser", "browsers");
     });
   });
 
@@ -2213,8 +2230,9 @@ function bindTilt() {
   const MOUSE_R = 170;              // cursor influence radius
   const MOUSE_R2 = MOUSE_R * MOUSE_R;
   const PULSE_R = 380;              // click shockwave radius
-  const CRUISE = 0.6;               // relaxed drift speed
-  const MAX_SPEED = 1.6;            // hard speed cap (click needs headroom)
+  const CRUISE = 0.28;              // relaxed drift speed (slowed down in 1.1)
+  const MAX_SPEED = 0.75;           // hard speed cap (click needs headroom)
+  const MAX_DOTS = 1000;            // spawned dots beyond this fade away
 
   function resize() {
     W = window.innerWidth;
@@ -2238,21 +2256,51 @@ function bindTilt() {
         p: Math.random() * Math.PI * 2,     // steering phase
         sp: 0.3 + Math.random() * 0.5,      // steering speed
         r: 1.0 + Math.random() * 1.1,       // dot radius
-        z: 0.65 + Math.random() * 0.7       // depth: parallax speed & size
+        z: 0.65 + Math.random() * 0.7,      // depth: parallax speed & size
+        life: 1,                            // fade in/out multiplier
+        dying: false,                       // capped dots fade away
+        base: true                          // field dots are permanent
       });
     }
   }
 
-  /* Click / tap: shockwave ring + outward kick. */
+  /* Click / tap: shockwave ring + outward kick, plus a fresh burst of
+     spawned dots that bloom at the click point. Spawned dots fade in;
+     once the field grows past MAX_DOTS, the oldest spawned ones start
+     fading away. */
   function spawnPulse(x, y) {
     pulses.push({ x, y, r: 4, life: 1 });
     for (const d of dots) {
       const dx = d.x - x, dy = d.y - y;
       const dist = Math.hypot(dx, dy) || 1;
       if (dist > PULSE_R) continue;
-      const f = (1 - dist / PULSE_R) * 16;
+      const f = (1 - dist / PULSE_R) * 8;
       d.vx += (dx / dist) * f;
       d.vy += (dy / dist) * f;
+    }
+    // New dots bloom around the click point.
+    for (let i = 0; i < 10; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const kick = 0.4 + Math.random() * 1.4;
+      dots.push({
+        x: x + (Math.random() - 0.5) * 24,
+        y: y + (Math.random() - 0.5) * 24,
+        vx: Math.cos(a) * kick,
+        vy: Math.sin(a) * kick,
+        p: Math.random() * Math.PI * 2,
+        sp: 0.3 + Math.random() * 0.5,
+        r: 1.0 + Math.random() * 1.1,
+        z: 0.65 + Math.random() * 0.7,
+        life: 0,
+        dying: false,
+        base: false
+      });
+    }
+    // Over the cap? Oldest spawned dots begin to fade out.
+    let excess = dots.length - MAX_DOTS;
+    for (let i = 0; i < dots.length && excess > 0; i++) {
+      const d = dots[i];
+      if (!d.base && !d.dying) { d.dying = true; excess--; }
     }
   }
 
@@ -2278,8 +2326,17 @@ function bindTilt() {
     const mLen = mSpeed || 1;
     const flow = Math.min(1, mSpeed / 18);   // 0 when cursor rests
 
-    /* Physics update. */
-    for (const d of dots) {
+    /* Physics update. Spawned dots fade in; capped ones fade out and
+       are removed once fully gone. */
+    for (let i = dots.length - 1; i >= 0; i--) {
+      const d = dots[i];
+      if (d.dying) {
+        d.life -= 0.035;
+        if (d.life <= 0) { dots.splice(i, 1); continue; }
+      } else if (d.life < 1) {
+        d.life = Math.min(1, d.life + 0.04);
+      }
+
       // Organic steering — each dot's path curves on its own.
       d.vx += Math.sin(t * d.sp + d.p) * 0.02;
       d.vy += Math.cos(t * d.sp * 0.9 + d.p * 1.7) * 0.02;
@@ -2348,7 +2405,7 @@ function bindTilt() {
         if (dy > LINK_DIST || dy < -LINK_DIST) continue;
         const d2 = dx * dx + dy * dy;
         if (d2 > LINK_DIST2) continue;
-        const alpha = (1 - Math.sqrt(d2) / LINK_DIST) * 0.25;
+        const alpha = (1 - Math.sqrt(d2) / LINK_DIST) * 0.25 * Math.min(a.life, b.life);
         ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${alpha.toFixed(3)})`;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
@@ -2363,7 +2420,7 @@ function bindTilt() {
       const d2 = dx * dx + dy * dy;
       if (mouse.x < -1000 || d2 > CURSOR_LINK_R2) continue;
       const s = 1 - Math.sqrt(d2) / CURSOR_LINK_R;
-      ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${(s * 0.45).toFixed(3)})`;
+      ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${(s * 0.45 * d.life).toFixed(3)})`;
       ctx.lineWidth = 0.5 + s * 1.6;
       ctx.beginPath();
       ctx.moveTo(mouse.x, mouse.y);
@@ -2378,8 +2435,8 @@ function bindTilt() {
       const s = (mouse.x > -1000 && d2 < MOUSE_R2) ? 1 - Math.sqrt(d2) / MOUSE_R : 0;
       const spd = Math.hypot(d.vx, d.vy);
       const energy = Math.min(1, Math.max(0, (spd - CRUISE) / (MAX_SPEED - CRUISE)));
-      const alpha = Math.min(1, 0.22 + s * 0.4 + energy * 0.35);
-      const size = d.r * d.z + energy * 1.2;
+      const alpha = Math.min(1, 0.22 + s * 0.4 + energy * 0.35) * d.life;
+      const size = (d.r * d.z + energy * 1.2) * (0.5 + 0.5 * d.life);
       ctx.fillStyle = `rgba(${Math.round(baseR + s * 50)}, ${Math.round(baseG - s * 30)}, ${Math.round(baseB + s * 3)}, ${alpha.toFixed(3)})`;
       ctx.beginPath();
       ctx.arc(d.x, d.y, size, 0, Math.PI * 2);
