@@ -257,6 +257,33 @@
   .browser-center-inner { display: flex; flex-direction: column; align-items: center; gap: 12px; }
   @media (max-width: 760px) { .browser-cols { grid-template-columns: 1fr; } }
 
+  /* Graphical browser tiles — big logos for popular browsers, small for niche ones */
+  .browser-tiles { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; padding: 4px 0; }
+  .b-tile {
+    display: flex; flex-direction: column; align-items: center; gap: 9px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+    cursor: pointer; font-family: inherit; color: var(--text);
+    transition: border-color .1s ease-out, background .1s ease-out, transform .08s ease-out, box-shadow .1s ease-out;
+  }
+  .b-tile:hover { border-color: var(--c1, var(--accent)); background: var(--card-hover); box-shadow: 0 5px 14px rgba(0,0,0,.22); }
+  .b-tile:active { transform: scale(.95); transition-duration: .05s; }
+  .b-tile.selected { border-color: var(--c1); background: var(--card-hover); box-shadow: 0 0 0 2px var(--c1) inset, 0 6px 16px rgba(0,0,0,.25); }
+  .b-tile .logo { display: grid; place-items: center; overflow: hidden; background: #fff; border-radius: 24%; }
+  .b-tile .logo img { width: 100%; height: 100%; object-fit: contain; }
+  .b-tile .b-name { font-weight: 700; line-height: 1.15; text-align: center; }
+  .b-tile.big { width: 138px; padding: 18px 12px 14px; }
+  .b-tile.big .logo { width: 72px; height: 72px; }
+  .b-tile.big .b-name { font-size: .9rem; }
+  .b-tile.small { width: 104px; padding: 12px 8px 10px; border-radius: 14px; }
+  .b-tile.small .logo { width: 46px; height: 46px; }
+  .b-tile.small .b-name { font-size: .76rem; color: var(--muted); }
+  .b-tile.selected .b-name { color: var(--text); }
+  .b-tile.off { opacity: .45; border-style: dashed; cursor: not-allowed; }
+  .b-tile.off:hover { box-shadow: none; border-color: var(--border); background: var(--card); }
+  .b-tile.off:active { transform: none; }
+  .b-tile .os-ind { margin-top: -2px; }
+  .tiles-off-label { width: 100%; text-align: center; font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 14px; }
+
   /* Chosen OS badge — centered at the top of the selection screen */
   .chosen-os { display: flex; justify-content: center; margin-bottom: 18px; animation: enterUp .4s cubic-bezier(.2,.7,.3,1.2); }
 
@@ -395,6 +422,7 @@
 
   .show-all-wrap { display: flex; justify-content: center; margin: 34px 0 10px; }
   .show-all-wrap.bottom { margin: clamp(28px, 6vh, 72px) 0 clamp(20px, 5vh, 56px); }
+  .show-all-wrap.bottom.deep { margin: clamp(48px, 12vh, 140px) 0 clamp(36px, 9vh, 100px); }
   .show-all-btn {
     background: var(--card); border: 1px solid var(--border); color: var(--text);
     padding: 14px 32px; border-radius: 14px; cursor: pointer;
@@ -869,35 +897,35 @@ const BROWSER_CATEGORIES = [
 const BROWSERS = {
   /* ---------- Firefox-based ---------- */
   zen: {
-    name: "Zen", category: "firefox", class: "Firefox-based", emoji: "🦊",
+    name: "Zen", category: "firefox", class: "Firefox-based", emoji: "🦊", popular: false, order: 8,
     url: "https://zen-browser.app/", logo: "https://cdn.simpleicons.org/zenbrowser",
     color: ["#c2410c", "#9a3412"],
     desc: "Firefox-based, gorgeous vertical tabs, workspaces, split view.",
     reason: ["Beautiful, modern UI", "Handles dozens of tabs elegantly", "Firefox engine — anti-tracking by default"]
   },
   firefox: {
-    name: "Firefox", category: "firefox", class: "Firefox-based", emoji: "🔥",
+    name: "Firefox", category: "firefox", class: "Firefox-based", emoji: "🔥", popular: true, order: 2,
     url: "https://www.mozilla.org/firefox/new/", logo: "https://cdn.simpleicons.org/firefox",
     color: ["#c2410c", "#7c2d12"],
     desc: "Mozilla's mainstream browser. Reliable, open-source, great extension ecosystem.",
     reason: ["Independent engine — no Chromium monoculture", "Strong privacy defaults", "Huge extension library"]
   },
   librewolf: {
-    name: "LibreWolf", category: "firefox", class: "Firefox-based", emoji: "🐺",
+    name: "LibreWolf", category: "firefox", class: "Firefox-based", emoji: "🐺", popular: false, order: 10,
     url: "https://librewolf.net/", logo: "https://cdn.simpleicons.org/librewolf",
     color: ["#0f766e", "#134e4a"],
     desc: "Firefox hardened for privacy. No telemetry, uBlock Origin built-in.",
     reason: ["Privacy out of the box", "No telemetry or sponsored content", "Based on Firefox — familiar"]
   },
   mullvad: {
-    name: "Mullvad Browser", category: "firefox", class: "Firefox-based", emoji: "🕶️",
+    name: "Mullvad Browser", category: "firefox", class: "Firefox-based", emoji: "🕶️", popular: false, order: 11,
     url: "https://mullvad.net/browser", logo: "https://cdn.simpleicons.org/mullvad",
     color: ["#facc15", "#a16207"],
     desc: "Tor Browser without Tor. Anti-fingerprinting by default.",
     reason: ["Tor-grade fingerprinting resistance", "Made with the Tor Project", "No account needed"]
   },
   waterfox: {
-    name: "Waterfox", category: "firefox", class: "Firefox-based", emoji: "💧",
+    name: "Waterfox", category: "firefox", class: "Firefox-based", emoji: "💧", popular: false, order: 12,
     url: "https://www.waterfox.net/", logo: "https://cdn.simpleicons.org/waterfox",
     color: ["#0284c7", "#075985"],
     desc: "Firefox fork focused on speed, privacy and classic extensions.",
@@ -906,49 +934,49 @@ const BROWSERS = {
 
   /* ---------- Chromium-based ---------- */
   helium: {
-    name: "Helium", category: "chromium", class: "Chromium-based", emoji: "🎈",
+    name: "Helium", category: "chromium", class: "Chromium-based", emoji: "🎈", popular: false, order: 9,
     url: "https://helium.computer/", logo: "https://cdn.simpleicons.org/helium",
     color: ["#0891b2", "#0e7490"],
     desc: "Chromium stripped to the bones. Fastest launch and rendering.",
     reason: ["Chromium-based — full extension support", "Absolutely minimal chrome", "Fastest perceived speed"]
   },
   chrome: {
-    name: "Google Chrome", category: "chromium", class: "Chromium-based", emoji: "🌐",
+    name: "Google Chrome", category: "chromium", class: "Chromium-based", emoji: "🌐", popular: true, order: 1,
     url: "https://www.google.com/chrome/", logo: "https://cdn.simpleicons.org/googlechrome",
     color: ["#dc2626", "#991b1b"],
     desc: "The world's most popular browser. Best site compatibility, deep Google integration.",
     reason: ["Best site compatibility", "Huge extension ecosystem", "Syncs across all your devices"]
   },
   chromium: {
-    name: "Chromium", category: "chromium", class: "Chromium-based", emoji: "🧪",
+    name: "Chromium", category: "chromium", class: "Chromium-based", emoji: "🧪", popular: false, order: 13,
     url: "https://www.chromium.org/getting-involved/download-chromium/", logo: "https://cdn.simpleicons.org/chromium",
     color: ["#2563eb", "#1e40af"],
     desc: "The open-source core of Chrome. No Google tracking, no proprietary blobs.",
     reason: ["Pure open-source Chromium", "No Google telemetry", "Best site compatibility, minus the tracking"]
   },
   brave: {
-    name: "Brave", category: "chromium", class: "Chromium-based", emoji: "🦁",
+    name: "Brave", category: "chromium", class: "Chromium-based", emoji: "🦁", popular: true, order: 5,
     url: "https://brave.com/download/", logo: "https://cdn.simpleicons.org/brave",
     color: ["#f97316", "#c2410c"],
     desc: "Chromium with built-in ad-block, tracker blocking and optional crypto rewards.",
     reason: ["Blocks ads and trackers by default", "Chromium speed + extension support", "Optional private search"]
   },
   edge: {
-    name: "Microsoft Edge", category: "chromium", class: "Chromium-based", emoji: "🌊",
+    name: "Microsoft Edge", category: "chromium", class: "Chromium-based", emoji: "🌊", popular: true, order: 3,
     url: "https://www.microsoft.com/edge", logo: "https://cdn.simpleicons.org/microsoftedge",
     color: ["#0ea5e9", "#0369a1"],
     desc: "Microsoft's Chromium browser. Vertical tabs, collections, deep Windows integration.",
     reason: ["Deep Windows integration", "Vertical tabs and workspaces", "Chromium compatibility"]
   },
   vivaldi: {
-    name: "Vivaldi", category: "chromium", class: "Chromium-based", emoji: "🎻",
+    name: "Vivaldi", category: "chromium", class: "Chromium-based", emoji: "🎻", popular: true, order: 7,
     url: "https://vivaldi.com/", logo: "https://cdn.simpleicons.org/vivaldi",
     color: ["#dc2626", "#991b1b"],
     desc: "The power-user's Chromium browser. Tab stacks, tiling, mail, calendar, notes.",
     reason: ["Incredibly customizable", "Built-in mail, calendar, notes", "Tab stacks and tiling"]
   },
   opera: {
-    name: "Opera", category: "chromium", class: "Chromium-based", emoji: "🎭",
+    name: "Opera", category: "chromium", class: "Chromium-based", emoji: "🎭", popular: true, order: 6,
     url: "https://www.opera.com/", logo: "https://cdn.simpleicons.org/opera",
     color: ["#dc2626", "#991b1b"],
     desc: "Chromium with free VPN, ad-block and a built-in sidebar of mini-apps.",
@@ -957,7 +985,7 @@ const BROWSERS = {
 
   /* ---------- Other engines ---------- */
   safari: {
-    name: "Safari", category: "other", class: "WebKit", emoji: "🧭",
+    name: "Safari", category: "other", class: "WebKit", emoji: "🧭", popular: true, order: 4,
     url: "https://www.apple.com/safari/", logo: "https://cdn.simpleicons.org/safari",
     color: ["#0284c7", "#075985"],
     desc: "Apple's browser. Fastest on Mac, incredibly power-efficient.",
@@ -965,7 +993,7 @@ const BROWSERS = {
     os: ["mac"]
   },
   gnomeweb: {
-    name: "GNOME Web", category: "other", class: "WebKit", emoji: "🦎",
+    name: "GNOME Web", category: "other", class: "WebKit", emoji: "🦎", popular: false, order: 14,
     url: "https://apps.gnome.org/Epiphany/", logo: "https://cdn.simpleicons.org/gnome",
     color: ["#4ade80", "#166534"],
     desc: "Epiphany — GNOME's native WebKit browser. Simple, clean, integrates with GNOME.",
@@ -973,7 +1001,7 @@ const BROWSERS = {
     os: ["linux"]
   },
   falkon: {
-    name: "Falkon", category: "other", class: "QtWebEngine", emoji: "🦅",
+    name: "Falkon", category: "other", class: "QtWebEngine", emoji: "🦅", popular: false, order: 15,
     url: "https://www.falkon.org/", logo: "https://cdn.simpleicons.org/falkon",
     color: ["#0891b2", "#0e7490"],
     desc: "Lightweight Qt/WebEngine browser from KDE. Very fast on older hardware.",
@@ -981,14 +1009,14 @@ const BROWSERS = {
     os: ["linux"]
   },
   qutebrowser: {
-    name: "qutebrowser", category: "other", class: "QtWebEngine", emoji: "⌨️",
+    name: "qutebrowser", category: "other", class: "QtWebEngine", emoji: "⌨️", popular: false, order: 16,
     url: "https://qutebrowser.org/", logo: "https://cdn.simpleicons.org/qt",
     color: ["#16a34a", "#166534"],
     desc: "Keyboard-driven browser with vim-like bindings. For terminal lovers.",
     reason: ["Vim-style keyboard control", "Minimal, distraction-free", "Highly scriptable"]
   },
   ladybird: {
-    name: "Ladybird", category: "other", class: "Independent engine", emoji: "🐞",
+    name: "Ladybird", category: "other", class: "Independent engine", emoji: "🐞", popular: false, order: 17,
     url: "https://ladybird.org/", logo: "",
     color: ["#dc2626", "#991b1b"],
     desc: "A brand-new, independent browser engine written from scratch.",
@@ -1598,8 +1626,8 @@ function renderOsChoiceView() {
           <button class="btn-secondary" data-action="start-quiz">🧭 Take the quiz instead</button>
         </div>
       </div>
-      <div class="show-all-wrap bottom">
-        <button class="show-all-btn" data-action="show-all">📦 Just show all packages</button>
+      <div class="show-all-wrap bottom deep">
+        <button class="show-all-btn" data-action="show-all">📦 Just show all categories</button>
       </div>
     </div>
   `;
@@ -1771,25 +1799,31 @@ function renderBrowserChoiceView() {
   document.getElementById("browserBadge").style.display = "none";
   resetColors();
 
-  const colMeta = {
-    firefox:  { label: "Firefox-based",  emoji: "🦊" },
-    other:    { label: "Others",         emoji: "✨" },
-    chromium: { label: "Chromium-based", emoji: "🌐" }
-  };
-  function chipsFor(catId) {
-    const ids = Object.keys(BROWSERS).filter((id) => BROWSERS[id].category === catId && browserAvailableForOS(id));
-    if (!ids.length) return `<p style="color:var(--muted);font-size:.8rem;text-align:center">None for your OS.</p>`;
-    return ids.map((id) => {
-      const b = BROWSERS[id];
-      const sel = state.pendingBrowserSelection.has(id) ? " selected" : "";
-      return `
-        <button class="quick-chip${sel}" data-quick-browser="${id}" title="${escapeHTML(b.desc)}">
-          <span class="qc-emoji">${b.emoji}</span>
-          <span>${escapeHTML(b.name)}</span>
-          ${b.class ? `<span class="qc-engine">${escapeHTML(b.class)}</span>` : ""}
-        </button>
-      `;
-    }).join("");
+  /* No engine grouping — every available browser is one graphical tile.
+     Popular browsers get big tiles, niche ones small tiles. */
+  const allIds = Object.keys(BROWSERS);
+  const ids = allIds.filter((id) => browserAvailableForOS(id));
+  const offIds = allIds.filter((id) => !browserAvailableForOS(id));
+  const byPopularity = (a, b) => ((BROWSERS[b].popular ? 1 : 0) - (BROWSERS[a].popular ? 1 : 0)) || (BROWSERS[a].order || 0) - (BROWSERS[b].order || 0);
+  function tileHTML(id, extraCls, disabled) {
+    const b = BROWSERS[id];
+    const sel = state.pendingBrowserSelection.has(id) ? " selected" : "";
+    const size = b.popular ? "big" : "small";
+    const needs = (b.os || []).map((o) => ({ win: "🪟 Windows", mac: "🍎 macOS", linux: "🐧 Linux" }[o] || o)).join(", ");
+    return `
+      <button class="b-tile ${size}${extraCls}${sel}" ${disabled ? "disabled" : ""} data-quick-browser="${id}" style="--c1:${b.color[0]}" title="${escapeHTML(b.desc)}${needs ? ` — needs ${needs}` : ""}">
+        <span class="logo">${logoHTML({ name: b.name, url: b.url, logo: b.logo })}</span>
+        <span class="b-name">${escapeHTML(b.name)}</span>
+        ${needs ? `<span class="os-ind">Needs ${needs}</span>` : ""}
+      </button>
+    `;
+  }
+  /* Available browsers first (popular ones big & up front); anything that
+     doesn't run on your setup is listed LAST, below all the rest. */
+  let tiles = ids.slice().sort(byPopularity).map((id) => tileHTML(id, "", false)).join("");
+  if (offIds.length) {
+    tiles += `<div class="tiles-off-label">Not available on your system</div>`;
+    tiles += offIds.sort(byPopularity).map((id) => tileHTML(id, " off", true)).join("");
   }
 
   const count = state.pendingBrowserSelection.size;
@@ -1800,24 +1834,8 @@ function renderBrowserChoiceView() {
       <div class="quiz-card" style="--c1:#c2410c;--c2:#9a3412">
         <div class="quiz-eyebrow">Step 2 · Your browsers</div>
         <h2 class="quiz-q">Which browsers do you use?</h2>
-        <p class="quiz-sub">Select some of them — Firefox-based on the left, Chromium-based on the right, everything else in the middle.</p>
-        <div class="browser-cols">
-          <div class="browser-col">
-            <div class="browser-col-label"><span>${colMeta.firefox.emoji}</span><span>${colMeta.firefox.label}</span></div>
-            <div class="browser-chips">${chipsFor("firefox")}</div>
-          </div>
-          <div class="browser-col browser-center-inner">
-            <div class="browser-col" style="width:100%">
-              <div class="browser-col-label"><span>${colMeta.other.emoji}</span><span>${colMeta.other.label}</span></div>
-              <div class="browser-chips">${chipsFor("other")}</div>
-            </div>
-            <button class="btn-secondary" data-action="start-browser-quiz">🧭 Take the quiz instead</button>
-          </div>
-          <div class="browser-col">
-            <div class="browser-col-label"><span>${colMeta.chromium.emoji}</span><span>${colMeta.chromium.label}</span></div>
-            <div class="browser-chips">${chipsFor("chromium")}</div>
-          </div>
-        </div>
+        <p class="quiz-sub">Select some of them — pick as many as you like.</p>
+        <div class="browser-tiles">${tiles || `<p style="color:var(--muted);font-size:.8rem;text-align:center">None for your OS.</p>`}</div>
         <div class="quick-pick-actions stack">
           <button class="btn-primary" data-action="confirm-quick-browser" ${count === 0 ? "disabled" : ""}>
             Proceed
@@ -1825,8 +1843,8 @@ function renderBrowserChoiceView() {
           </button>
           <button class="btn-secondary" data-action="start-browser-quiz">🧭 Take the quiz</button>
         </div>
-        <div class="show-all-wrap bottom">
-          <button class="show-all-btn" data-action="show-all">📦 Just show all packages</button>
+        <div class="show-all-wrap bottom deep">
+          <button class="show-all-btn" data-action="show-all">📦 Just show all categories</button>
         </div>
       </div>
     </div>
@@ -1905,8 +1923,8 @@ function renderBrowserQuizView() {
             </button>
           </div>
         </div>
-        <div class="show-all-wrap bottom">
-          <button class="show-all-btn" data-action="show-all">📦 Just show all packages</button>
+        <div class="show-all-wrap bottom deep">
+          <button class="show-all-btn" data-action="show-all">📦 Just show all categories</button>
         </div>
       </div>
     </div>
@@ -2023,7 +2041,7 @@ function renderScenariosView() {
   return `
     ${groupsHTML}
     <div class="show-all-wrap">
-      <button class="show-all-btn" data-action="show-all">📦 Show everything (${total} tools)</button>
+      <button class="show-all-btn" data-action="show-everything">📦 Show every tool (${total})</button>
     </div>
   `;
 }
@@ -2393,16 +2411,19 @@ function bindClicks() {
     });
   });
 
+  content.querySelectorAll('[data-action="show-everything"]').forEach((el) => {
+    el.addEventListener("click", () => { go("#/all"); window.scrollTo({ top: 0, behavior: "smooth" }); });
+  });
   content.querySelectorAll('[data-action="home"]').forEach((el) => {
-    el.addEventListener("click", () => go("#/home"));
+    el.addEventListener("click", () => go("#/all"));
   });
   content.querySelectorAll('[data-action="back-scenario"]').forEach((el) => {
     el.addEventListener("click", () => go("#/scenario/" + state.scenarioId));
   });
   content.querySelectorAll('[data-action="show-all"]').forEach((el) => {
     el.addEventListener("click", () => {
-      /* Always-available escape hatch: pick sensible defaults so the full
-         catalog can be browsed without finishing the wizard. */
+      /* Escape hatch: skip straight to the categories page, using
+         sensible defaults if the wizard hasn't been finished yet. */
       if (!state.osList.length) {
         state.osList = ["win", "mac", "linux"];
         localStorage.setItem("osList", JSON.stringify(state.osList));
@@ -2411,7 +2432,7 @@ function bindClicks() {
         state.browserList = ["firefox", "google-chrome"];
         localStorage.setItem("browserList", JSON.stringify(state.browserList));
       }
-      go("#/all");
+      go("#/home");
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   });
@@ -2506,12 +2527,31 @@ function bindTilt() {
     }
   }
 
-  /* Click / tap: an instant, tiny circle marker pops at the cursor —
-     no expanding wave, no dot scatter, no spawning. The field is left
-     completely untouched. */
+  /* Click / tap: an instant, tiny circle marker pops at the cursor AND
+     a few brand-new dots burst out of the click point, fading in and
+     joining the swarm (they fade away again once the field is full). */
   function spawnPulse(x, y) {
-    // Instant, tiny circle marker only — no wave, no dot scatter.
     pulses.push({ x, y, r: 0, life: 1 });
+    const n = 5;
+    for (let i = 0; i < n; i++) {
+      if (dots.length >= MAX_DOTS) break;
+      const a = Math.random() * Math.PI * 2;
+      const sp = 0.6 + Math.random() * 0.9;
+      dots.push({
+        x: x + Math.cos(a) * 3,
+        y: y + Math.sin(a) * 3,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp,
+        p: Math.random() * Math.PI * 2,
+        sp: 0.3 + Math.random() * 0.5,
+        r: 1.0 + Math.random() * 1.1,
+        z: 0.65 + Math.random() * 0.7,
+        life: 0.01,
+        dying: false,
+        born: t,
+        base: false
+      });
+    }
   }
 
   function loop() {
@@ -2546,6 +2586,9 @@ function bindTilt() {
       } else if (d.life < 1) {
         d.life = Math.min(1, d.life + 0.04);
       }
+      // Click-spawned dots are temporary: they join the swarm for a
+      // few seconds, then fade away so the field keeps its balance.
+      if (!d.base && !d.dying && d.born !== undefined && t - d.born > 3.5) d.dying = true;
 
       // Organic steering — each dot's path curves on its own.
       d.vx += Math.sin(t * d.sp + d.p) * 0.02;
@@ -2667,7 +2710,7 @@ function bindTilt() {
   window.addEventListener("mousemove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
   window.addEventListener("mouseleave", () => { mouse.x = -9999; mouse.y = -9999; });
   window.addEventListener("click", (e) => {
-    if (e.target && e.target.closest && e.target.closest("a,button,input,textarea,select,label")) return;
+    // Every click — including on buttons and cards — seeds new dots.
     spawnPulse(e.clientX, e.clientY);
   });
   document.addEventListener("touchstart", (e) => {
