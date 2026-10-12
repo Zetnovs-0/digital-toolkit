@@ -680,7 +680,7 @@
 <main id="content"></main>
 
 <footer class="site-footer">
-  <p>Single-file site. Your picks persist in localStorage — reset with the badges above.</p>
+  <p>Your picks persist in localStorage — and sync to PostgreSQL when served via <code>node server.js</code>. Reset with the badges above.</p>
 </footer>
 
 <script src="logos/manifest.js"></script>
@@ -1289,6 +1289,36 @@ const state = {
 
 document.documentElement.setAttribute("data-theme", state.theme);
 let lastNonSearchRoute = "#/home";
+
+/* ============================================================
+   PICKS SYNC (PostgreSQL via /api/picks)
+   localStorage stays the instant source of truth; every committed
+   pick is mirrored to the server so it survives cleared browser
+   data. Everything is a silent no-op when the site is opened
+   straight from disk (file://) or the database is unreachable.
+   ============================================================ */
+const PicksSync = {
+  apiBase: (location.protocol === "http:" || location.protocol === "https:") ? "/api/picks" : null,
+  /* Fire-and-forget mirror of the current picks. */
+  push() {
+    if (!this.apiBase) return;
+    fetch(this.apiBase, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ osList: state.osList, browserList: state.browserList })
+    }).catch(() => {});   // server down / offline — localStorage still has it
+  },
+  /* Fetch the server copy, or null when unavailable/empty. */
+  async pull() {
+    if (!this.apiBase) return null;
+    try {
+      const res = await fetch(this.apiBase, { headers: { Accept: "application/json" } });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return (data && data.picks) || null;
+    } catch (e) { return null; }
+  }
+};
 
 function osLabelFor(id) {
   if (!id) return "—";
@@ -2297,6 +2327,7 @@ function bindClicks() {
       if (!state.pendingOsSelection.size) return;
       state.osList = Array.from(state.pendingOsSelection);
       localStorage.setItem("osList", JSON.stringify(state.osList));
+      PicksSync.push();
       state.pendingBrowserSelection = new Set(
         Array.from(state.pendingBrowserSelection).filter(browserAvailableForOS)
       );
@@ -2311,6 +2342,7 @@ function bindClicks() {
       if (!state.pendingBrowserSelection.size) return;
       state.browserList = Array.from(state.pendingBrowserSelection);
       localStorage.setItem("browserList", JSON.stringify(state.browserList));
+      PicksSync.push();
       history.replaceState(null, "", "#/home");
       handleRoute();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2346,6 +2378,7 @@ function bindClicks() {
       const id = el.dataset.os;
       state.osList = normalizeOsList([id]);
       localStorage.setItem("osList", JSON.stringify(state.osList));
+      PicksSync.push();
       state.browserAnswers = {};
       state.pendingBrowserSelection = new Set();
       go("#/browser-choice");
@@ -2357,6 +2390,7 @@ function bindClicks() {
     el.addEventListener("click", () => {
       state.browserList = [el.dataset.browser];
       localStorage.setItem("browserList", JSON.stringify(state.browserList));
+      PicksSync.push();
       history.replaceState(null, "", "#/home");
       handleRoute();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2391,6 +2425,7 @@ function bindClicks() {
         state.browserList = ["firefox", "chrome"];
         localStorage.setItem("browserList", JSON.stringify(state.browserList));
       }
+      PicksSync.push();
       go("#/home");
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -2705,6 +2740,7 @@ document.getElementById("osBadge").addEventListener("click", () => {
   state.pendingBrowserSelection = new Set();
   localStorage.removeItem("osList");
   localStorage.removeItem("browserList");
+  PicksSync.push();
   history.replaceState(null, "", "#/os-choice");
   handleRoute();
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2715,6 +2751,7 @@ document.getElementById("browserBadge").addEventListener("click", () => {
   state.browserList = [];
   state.pendingBrowserSelection = new Set();
   localStorage.removeItem("browserList");
+  PicksSync.push();
   history.replaceState(null, "", "#/browser-choice");
   handleRoute();
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2744,6 +2781,28 @@ if (!location.hash || location.hash === "#") {
   history.replaceState(null, "", "#/welcome");
 }
 handleRoute();
+
+/* Pick up picks from PostgreSQL when localStorage is empty (e.g. after
+   cleared browser data) so the wizard can be skipped. localStorage
+   always wins when it has anything in it. */
+(async function restorePicksFromServer() {
+  const picks = await PicksSync.pull();
+  if (!picks) return;
+  if (state.osList.length || state.browserList.length) return;      // local wins
+  const remoteOs = Array.isArray(picks.osList) ? picks.osList : [];
+  const remoteBr = Array.isArray(picks.browserList) ? picks.browserList : [];
+  if (!remoteOs.length && !remoteBr.length) return;
+  // Never interrupt an in-progress wizard.
+  if (state.pendingOsSelection.size || state.pendingBrowserSelection.size) return;
+  if (["os-quiz", "os-result", "browser-quiz", "browser-result"].includes(state.view)) return;
+  state.osList = normalizeOsList(remoteOs);
+  state.browserList = remoteBr.filter((id) => BROWSERS[id]);
+  localStorage.setItem("osList", JSON.stringify(state.osList));
+  localStorage.setItem("browserList", JSON.stringify(state.browserList));
+  updateBadges();
+  if (state.osList.length && state.browserList.length) go("#/home");
+  else handleRoute();
+})();
 </script>
 </body>
 </html>
