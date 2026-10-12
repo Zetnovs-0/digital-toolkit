@@ -268,9 +268,8 @@
   .b-tile:hover { border-color: var(--c1, var(--accent)); background: var(--card-hover); box-shadow: 0 5px 14px rgba(0,0,0,.22); }
   .b-tile:active { transform: scale(.95); transition-duration: .05s; }
   .b-tile.selected { border-color: var(--c1); background: var(--card-hover); box-shadow: 0 0 0 2px var(--c1) inset, 0 6px 16px rgba(0,0,0,.25); }
-  .b-tile .logo { display: grid; place-items: center; overflow: hidden; border-radius: 24%; }
+  .b-tile .logo { display: grid; place-items: center; overflow: hidden; background: #fff; border-radius: 24%; }
   .b-tile .logo img { width: 100%; height: 100%; object-fit: contain; }
-  .b-tile .logo svg { width: 64%; height: 64%; }
   .b-tile .b-name { font-weight: 700; line-height: 1.15; text-align: center; }
   .b-tile.big { width: 138px; padding: 18px 12px 14px; }
   .b-tile.big .logo { width: 72px; height: 72px; }
@@ -333,7 +332,6 @@
     box-shadow: 0 8px 22px rgba(0,0,0,.25);
   }
   .result-logo img { width: 100%; height: 100%; object-fit: contain; }
-  .result-logo svg { width: 100%; height: 100%; }
   .result-logo .letter { font-size: 1.8rem; font-weight: 800; color: #1a1f2b; }
   .result-title { font-size: 1.6rem; font-weight: 800; margin: 0 0 4px; letter-spacing: -.02em; position: relative; z-index: 1; }
   .result-desc { color: var(--muted); margin: 0; font-size: .95rem; position: relative; z-index: 1; max-width: 55ch; }
@@ -919,13 +917,6 @@ const BROWSERS = {
     desc: "Firefox hardened for privacy. No telemetry, uBlock Origin built-in.",
     reason: ["Privacy out of the box", "No telemetry or sponsored content", "Based on Firefox — familiar"]
   },
-  mullvad: {
-    name: "Mullvad Browser", category: "firefox", class: "Firefox-based", emoji: "🕶️", popular: false, order: 11,
-    url: "https://mullvad.net/browser", logo: "https://cdn.simpleicons.org/mullvad",
-    color: ["#facc15", "#a16207"],
-    desc: "Tor Browser without Tor. Anti-fingerprinting by default.",
-    reason: ["Tor-grade fingerprinting resistance", "Made with the Tor Project", "No account needed"]
-  },
   waterfox: {
     name: "Waterfox", category: "firefox", class: "Firefox-based", emoji: "💧", popular: false, order: 12,
     url: "https://www.waterfox.net/", logo: "https://cdn.simpleicons.org/waterfox",
@@ -963,13 +954,6 @@ const BROWSERS = {
     desc: "Chromium with built-in ad-block, tracker blocking and optional crypto rewards.",
     reason: ["Blocks ads and trackers by default", "Chromium speed + extension support", "Optional private search"]
   },
-  edge: {
-    name: "Microsoft Edge", category: "chromium", class: "Chromium-based", emoji: "🌊", popular: true, order: 3,
-    url: "https://www.microsoft.com/edge", logo: "https://cdn.simpleicons.org/microsoftedge",
-    color: ["#0ea5e9", "#0369a1"],
-    desc: "Microsoft's Chromium browser. Vertical tabs, collections, deep Windows integration.",
-    reason: ["Deep Windows integration", "Vertical tabs and workspaces", "Chromium compatibility"]
-  },
   vivaldi: {
     name: "Vivaldi", category: "chromium", class: "Chromium-based", emoji: "🎻", popular: true, order: 7,
     url: "https://vivaldi.com/", logo: "https://cdn.simpleicons.org/vivaldi",
@@ -993,135 +977,8 @@ const BROWSERS = {
     desc: "Apple's browser. Fastest on Mac, incredibly power-efficient.",
     reason: ["Best battery life on Mac", "Deep macOS / iOS integration", "iCloud sync and Apple Pay"],
     os: ["mac"]
-  },
-  gnomeweb: {
-    name: "GNOME Web", category: "other", class: "WebKit", emoji: "🦎", popular: false, order: 14,
-    url: "https://apps.gnome.org/Epiphany/", logo: "https://cdn.simpleicons.org/gnome",
-    color: ["#4ade80", "#166534"],
-    desc: "Epiphany — GNOME's native WebKit browser. Simple, clean, integrates with GNOME.",
-    reason: ["Native GNOME look", "WebKit engine — different from Chromium", "Lightweight and simple"],
-    os: ["linux"]
-  },
-  falkon: {
-    name: "Falkon", category: "other", class: "QtWebEngine", emoji: "🦅", popular: false, order: 15,
-    url: "https://www.falkon.org/", logo: "https://cdn.simpleicons.org/falkon",
-    color: ["#0891b2", "#0e7490"],
-    desc: "Lightweight Qt/WebEngine browser from KDE. Very fast on older hardware.",
-    reason: ["Extremely light on resources", "Great for old PCs", "Qt / KDE integration"],
-    os: ["linux"]
-  },
-  qutebrowser: {
-    name: "qutebrowser", category: "other", class: "QtWebEngine", emoji: "⌨️", popular: false, order: 16,
-    url: "https://qutebrowser.org/", logo: "https://cdn.simpleicons.org/qt",
-    color: ["#16a34a", "#166534"],
-    desc: "Keyboard-driven browser with vim-like bindings. For terminal lovers.",
-    reason: ["Vim-style keyboard control", "Minimal, distraction-free", "Highly scriptable"]
-  },
-  ladybird: {
-    name: "Ladybird", category: "other", class: "Independent engine", emoji: "🐞", popular: false, order: 17,
-    url: "https://ladybird.org/", logo: "",
-    color: ["#dc2626", "#991b1b"],
-    desc: "A brand-new, independent browser engine written from scratch.",
-    reason: ["Completely new engine", "Not Firefox, not Chromium", "Independent and open source"]
   }
 };
-
-/* ============================================================
-   GRAPHICAL BROWSER LOGOS
-   Line-art versions of each browser's logo — same style as the
-   category icons above: the recognisable SHAPE of the logo plus
-   a few distinguishing details, drawn with strokes in the
-   browser's brand color (currentColor). Unlike <img> logos these
-   can never fail to load, always look crisp, and always match
-   the site's visual language.
-   ============================================================ */
-const BROWSER_LOGO_SVG = (inner) =>
-  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
-
-const BROWSER_LOGOS = {
-  /* Zen — rounded app square with the Z swoosh */
-  zen: BROWSER_LOGO_SVG(
-    `<rect x="3.5" y="3.5" width="17" height="17" rx="5.5"/><path d="M8.3 8.5h7.4l-7.4 7h7.4"/>`
-  ),
-  /* Firefox — globe with the fox wrapping around it (open swirl + eye) */
-  firefox: BROWSER_LOGO_SVG(
-    `<path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5"/><path d="M12 3.5c3.1 0 5.9 1.6 7.4 4.2-2.4 1.5-5.6.8-7-1.6"/><circle cx="15.6" cy="10.2" r=".55" fill="currentColor" stroke="none"/>`
-  ),
-  /* LibreWolf — wolf face in a circle: ears, eyes, muzzle */
-  librewolf: BROWSER_LOGO_SVG(
-    `<circle cx="12" cy="12" r="9"/><path d="M6.6 9.9 8.1 5.4l2.7 2.7M17.4 9.9 15.9 5.4l-2.7 2.7"/><circle cx="9.5" cy="12" r=".5" fill="currentColor" stroke="none"/><circle cx="14.5" cy="12" r=".5" fill="currentColor" stroke="none"/><path d="M10.5 15.4 12 13.9l1.5 1.5-1.5 1.9z"/>`
-  ),
-  /* Mullvad — the mole: round head, beanie dome + band, two eyes */
-  mullvad: BROWSER_LOGO_SVG(
-    `<circle cx="12" cy="12" r="9"/><path d="M4.7 9.8c1.5-2.4 4.2-3.9 7.3-3.9s5.8 1.5 7.3 3.9"/><path d="M4.7 9.8h14.6"/><circle cx="9.3" cy="14.3" r=".55" fill="currentColor" stroke="none"/><circle cx="14.7" cy="14.3" r=".55" fill="currentColor" stroke="none"/>`
-  ),
-  /* Waterfox — waves in a circle with a droplet on top */
-  waterfox: BROWSER_LOGO_SVG(
-    `<circle cx="12" cy="12" r="9"/><path d="M6.6 10.3c1.8-1.8 3.6-1.8 5.4 0s3.6 1.8 5.4 0"/><path d="M6.6 14.7c1.8-1.8 3.6-1.8 5.4 0s3.6 1.8 5.4 0"/><path d="M12 3.4c.8 1.1.8 2.2 0 3.1-.8-.9-.8-2 0-3.1z"/>`
-  ),
-  /* Helium — the atom: nucleus, tilted orbit, two electrons */
-  helium: BROWSER_LOGO_SVG(
-    `<circle cx="12" cy="12" r="4.3"/><ellipse cx="12" cy="12" rx="9.2" ry="3.4" transform="rotate(-24 12 12)"/><circle cx="20.2" cy="8.3" r=".55" fill="currentColor" stroke="none"/><circle cx="3.8" cy="15.7" r=".55" fill="currentColor" stroke="none"/>`
-  ),
-  /* Chrome — ring, hub and the three segment dividers */
-  chrome: BROWSER_LOGO_SVG(
-    `<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.7"/><path d="M12 8.3V3M15.2 13.9l4.5 2.6M8.8 13.9 4.3 16.5"/>`
-  ),
-  /* Chromium — same ring, single open segment */
-  chromium: BROWSER_LOGO_SVG(
-    `<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.7"/><path d="m14.1 8.7 3.8-3.2"/>`
-  ),
-  /* Brave — lion shield with ears, eyes and muzzle */
-  brave: BROWSER_LOGO_SVG(
-    `<path d="M12 3 5.5 5.3v4.1c0 4.7 2.6 8.3 6.5 10.6 3.9-2.3 6.5-5.9 6.5-10.6V5.3z"/><path d="m9.1 9.4 1.7-1.5L12 9.4l1.2-1.5 1.7 1.5"/><circle cx="9.7" cy="12.7" r=".5" fill="currentColor" stroke="none"/><circle cx="14.3" cy="12.7" r=".5" fill="currentColor" stroke="none"/><path d="m12 14.3-1.4 1.1L12 17l1.4-1.6z"/>`
-  ),
-  /* Edge — the lowercase "e": open ring with the wave crossbar */
-  edge: BROWSER_LOGO_SVG(
-    `<path d="M17.6 5.2A8.5 8.5 0 1 0 20.5 12"/><path d="M3.9 13.1c2.7-2.7 5.5 1.5 8.1-1.1s5.4-3.2 8.5-.9"/>`
-  ),
-  /* Vivaldi — the curtain "V" with curved arms */
-  vivaldi: BROWSER_LOGO_SVG(
-    `<path d="M5 4.5c3 .4 4.9 2.4 5.4 5.4L12 19.5l1.6-9.6c.5-3 2.4-5 5.4-5.4"/>`
-  ),
-  /* Opera — the oval "O" ring */
-  opera: BROWSER_LOGO_SVG(
-    `<ellipse cx="12" cy="12" rx="6.2" ry="9"/><ellipse cx="12" cy="12" rx="2.8" ry="5.2"/>`
-  ),
-  /* Safari — compass dial with ticks and the needle */
-  safari: BROWSER_LOGO_SVG(
-    `<circle cx="12" cy="12" r="9"/><path d="M12 3v1.8M21 12h-1.8M12 21v-1.8M3 12h1.8"/><path d="m15.8 8.2-2.3 5.3-5.3 2.3 2.3-5.3z"/>`
-  ),
-  /* GNOME Web (Epiphany) — globe with a wave and a sun */
-  gnomeweb: BROWSER_LOGO_SVG(
-    `<circle cx="12" cy="12" r="9"/><path d="M3.5 13c2.8-2.4 5.6-2.4 8.4 0s5.6 2.4 8.4 0"/><circle cx="15" cy="8.5" r="1.1"/>`
-  ),
-  /* Falkon — falcon head: beak, eye and the swept-back body */
-  falkon: BROWSER_LOGO_SVG(
-    `<path d="M20.5 7c-5.6-.9-10.8 1.7-13.1 6.6-.9 1.9-1.2 4-1 6.1 1.9-1.2 4.1-1.9 6.3-2"/><path d="m20.5 7-4.7 1.3 2.9 2.5"/><circle cx="16" cy="6.6" r=".5" fill="currentColor" stroke="none"/>`
-  ),
-  /* qutebrowser — the "q" with a terminal ">" prompt inside */
-  qutebrowser: BROWSER_LOGO_SVG(
-    `<circle cx="10.8" cy="10.8" r="7"/><path d="m15.8 15.8 4.2 4.2"/><path d="M8.2 8.2l2.9 2.6-2.9 2.6"/>`
-  ),
-  /* Ladybird — the bug: split wings, antennae, spots */
-  ladybird: BROWSER_LOGO_SVG(
-    `<circle cx="12" cy="13" r="7"/><path d="M12 6v14"/><path d="m9.3 6.9-1.8-2M14.7 6.9l1.8-2"/><circle cx="9.2" cy="10.2" r=".55" fill="currentColor" stroke="none"/><circle cx="14.8" cy="10.2" r=".55" fill="currentColor" stroke="none"/><circle cx="8.4" cy="15" r=".55" fill="currentColor" stroke="none"/><circle cx="15.6" cy="15" r=".55" fill="currentColor" stroke="none"/>`
-  )
-};
-
-/* Render the graphical logo for a browser id; falls back to the image
-   chain for any browser that has no drawn logo. */
-function browserLogoHTML(id, b) {
-  return BROWSER_LOGOS[id] || logoHTML({ name: b.name, url: b.url, logo: b.logo });
-}
-
-/* Hex → translucent rgba tint, used to softly back the line-art logos. */
-function hexTint(hex, alpha) {
-  const m = /^#?([0-9a-f]{6})$/i.exec(hex || "");
-  if (!m) return "transparent";
-  const n = parseInt(m[1], 16);
-  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
-}
 
 /* ============================================================
    BROWSER QUIZ (Zen / Helium / Safari-only-on-mac)
@@ -1422,6 +1279,9 @@ const state = {
   /* Distros are gone — collapse any legacy distro ids into plain Linux. */
   state.osList = normalizeOsList(state.osList);
   localStorage.setItem("osList", JSON.stringify(state.osList));
+  /* Drop any browsers that no longer exist in the catalogue. */
+  state.browserList = state.browserList.filter((id) => BROWSERS[id]);
+  localStorage.setItem("browserList", JSON.stringify(state.browserList));
   localStorage.removeItem("os");
   localStorage.removeItem("distro");
   localStorage.removeItem("browser");
@@ -1911,7 +1771,7 @@ function renderBrowserChoiceView() {
     const needs = (b.os || []).map((o) => ({ win: "🪟 Windows", mac: "🍎 macOS", linux: "🐧 Linux" }[o] || o)).join(", ");
     return `
       <button class="b-tile ${size}${extraCls}${sel}" ${disabled ? "disabled" : ""} data-quick-browser="${id}" style="--c1:${b.color[0]}" title="${escapeHTML(b.desc)}${needs ? ` — needs ${needs}` : ""}">
-        <span class="logo" style="color:${b.color[0]};background:${hexTint(b.color[0], .13)}">${browserLogoHTML(id, b)}</span>
+        <span class="logo">${logoHTML({ name: b.name, url: b.url, logo: b.logo })}</span>
         <span class="b-name">${escapeHTML(b.name)}</span>
         ${needs ? `<span class="os-ind">Needs ${needs}</span>` : ""}
       </button>
@@ -2070,7 +1930,7 @@ function renderBrowserResultView() {
     ? "Quiz candidates on macOS: Zen, Helium and Safari."
     : "Quiz candidates: Zen and Helium only. (Add macOS to your setup if you want Safari considered.)";
 
-  const topLogo = `<div class="result-logo" style="color:${top.color[0]};background:${hexTint(top.color[0], .12)}">${BROWSER_LOGOS[topId] || logoHTML(top)}</div>`;
+  const topLogo = `<div class="result-logo">${logoHTML(top)}</div>`;
 
   return `
     <div class="result-wrap">
